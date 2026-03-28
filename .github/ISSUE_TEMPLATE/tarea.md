@@ -8,4 +8,4 @@ assignees: ''
 
 | Descripción | Tiempo estimado | Tiempo real |
 |------------ |-----------------|-------------|
-|             |                 |             | 
+|  |  |  | 

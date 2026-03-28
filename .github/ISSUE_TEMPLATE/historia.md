@@ -8,4 +8,4 @@ assignees: ''
 
 |  ID  | Nombre | Resumen | PHU |
 |------|--------|---------|-----|
-| HUXX |        |         |     |
+| HUXX |  |  |  |
