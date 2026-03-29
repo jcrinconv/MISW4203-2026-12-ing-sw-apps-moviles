@@ -6,6 +6,10 @@ labels: 'historia'
 assignees: ''
 ---
 
-|  ID  | Nombre | Resumen | PHU |
-|------|--------|---------|-----|
-| HUXX |  |  |  |
+| Identificador | HUXX |
+| --------------|------|
+| **Nombre**                  |  |
+| **Descripción**             |  | 
+| **Puntos HU**               |  |
+| **Criterios de aceptación** |  |
+|                             |  |
