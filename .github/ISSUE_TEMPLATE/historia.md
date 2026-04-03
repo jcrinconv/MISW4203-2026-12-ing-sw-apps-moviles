@@ -13,3 +13,4 @@ assignees: ''
 | **Puntos HU**               |  |
 | **Criterios de aceptación** |  |
 |                             |  |
+| Wireframe                   |  |
