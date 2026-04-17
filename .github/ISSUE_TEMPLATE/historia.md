@@ -10,7 +10,6 @@ assignees: ''
 | --------------|------|
 | **Nombre**                  |  |
 | **Descripción**             |  | 
-| **Puntos HU**               |  |
 | **Criterios de aceptación** |  |
 |                             |  |
 | **Wireframe**               |  |
