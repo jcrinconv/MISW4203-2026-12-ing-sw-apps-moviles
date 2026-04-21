@@ -15,6 +15,14 @@ class AlbumRemoteDataSource {
             .create(AlbumApiService::class.java)
     }
 
+    suspend fun fetchAlbums(): List<Album> {
+        return try {
+            apiService.getAlbums()
+        } catch (e: Exception) {
+            emptyList()
+        }
+    }
+
     suspend fun fetchAlbumById(id: Int): Album {
         return apiService.getAlbumById(id)
     }
