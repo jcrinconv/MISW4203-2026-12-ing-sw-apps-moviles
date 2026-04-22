@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.misw.app.R
 import com.misw.app.databinding.FragmentAlbumDetailBinding
 import com.misw.app.ui.adapters.TrackAdapter
 import com.misw.app.viewmodel.AlbumDetailViewModel
@@ -52,6 +53,7 @@ class AlbumDetailFragment : Fragment() {
             binding.tvRecordLabel.text = album.recordLabel
             binding.tvGenre.text = album.genre
             binding.tvDescription.text = album.description
+            binding.tvTrackCount.text = getString(R.string.track_count, album.tracks.size)
             trackAdapter.submitList(album.tracks)
         }
 
@@ -66,9 +68,10 @@ class AlbumDetailFragment : Fragment() {
     private fun formatDate(dateString: String): String {
         return try {
             val inputFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault())
-            val outputFormat = SimpleDateFormat("MMM dd, yyyy", Locale("es"))
+            val outputFormat = SimpleDateFormat("MMM d, yyyy", Locale("es"))
             val date = inputFormat.parse((dateString))
-            outputFormat.format(date!!)
+            val formatted = outputFormat.format(date!!)
+            "Lanzado en ${formatted.replaceFirstChar { it.uppercase() }}"
         } catch (e: Exception) {
             dateString
         }

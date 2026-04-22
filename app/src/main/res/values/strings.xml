@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">MISW4203</string>
+    <string name="track_count">%d canciones</string>
+    <string name="track_number">%s</string>
+    <string name="tracklist">Tracklist</string>
 </resources>
