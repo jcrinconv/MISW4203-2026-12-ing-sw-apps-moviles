@@ -15,4 +15,5 @@
     <color name="white">#FFFFFFFF</color>
     <color name="pink_vinilos">#ff71ae</color>
     <color name="purple_vinilos">#4644E8</color>
+    <color name="darkest_grey">#131313</color>
 </resources>
