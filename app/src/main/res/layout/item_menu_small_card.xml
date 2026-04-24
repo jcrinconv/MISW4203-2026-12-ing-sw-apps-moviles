@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/menu_card_container"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="8.dp"
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="?attr/selectableItemBackground"
+    app:cardBackgroundColor="#1E1E1E"
+    app:cardCornerRadius="16.dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="start"
+        android:orientation="vertical"
+        android:padding="24.dp">
+
+        <FrameLayout
+            android:id="@+id/icon_wrapper"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:background="@drawable/bg_home_button_icon">
+
+            <ImageView
+                android:id="@+id/iv_menu_icon"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_artists" />
+        </FrameLayout>
+
+        <TextView
+            android:id="@+id/tv_menu_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16.dp"
+            android:text="Titulo"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textAlignment="center" />
+
+    </LinearLayout>
+</androidx.cardview.widget.CardView>
