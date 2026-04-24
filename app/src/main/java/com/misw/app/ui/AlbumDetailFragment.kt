@@ -54,7 +54,14 @@ class AlbumDetailFragment : Fragment() {
             binding.tvGenre.text = album.genre
             binding.tvDescription.text = album.description
             binding.tvTrackCount.text = getString(R.string.track_count, album.tracks.size)
-            trackAdapter.submitList(album.tracks)
+            if (album.tracks.isEmpty()) {
+                binding.rvTracks.visibility = View.GONE
+                binding.tvNoTracks.visibility = View.VISIBLE
+            } else {
+                binding.rvTracks.visibility = View.VISIBLE
+                binding.tvNoTracks.visibility = View.GONE
+                trackAdapter.submitList(album.tracks)
+            }
         }
 
         val albumId = arguments?.getInt(ARG_ALBUM_ID) ?: error("AlbumDetailFragment requiere un albumId")
