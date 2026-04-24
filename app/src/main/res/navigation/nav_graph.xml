@@ -9,7 +9,17 @@
         android:id="@+id/homeFragment"
         android:name="com.misw.app.ui.home.HomeFragment"
         android:label="Vynils App"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home">
+        <action
+            android:id="@+id/action_homeFragment_to_albumListFragment"
+            app:destination="@id/albumListFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/albumListFragment"
+        android:name="com.misw.app.ui.albums.AlbumsListFragment"
+        android:label="Álbumes"
+        tools:layout="@layout/fragment_album_list" />
 
     <fragment
         android:id="@+id/albumDetailFragment"
@@ -20,5 +30,4 @@
             android:name="album_id"
             app:argType="integer" />
     </fragment>
-
 </navigation>
