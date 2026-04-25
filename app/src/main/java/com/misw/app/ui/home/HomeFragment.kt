@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.navigation.fragment.findNavController
 import com.misw.app.R
 import com.misw.app.databinding.FragmentHomeBinding
 import com.misw.app.databinding.ItemMenuCardBinding
@@ -80,7 +81,7 @@ class HomeFragment : Fragment() {
                 requireContext(), R.color.wild_strawberry
             )
         ) {
-            Toast.makeText(context, "Próximamente...", Toast.LENGTH_SHORT).show()
+            findNavController().navigate(R.id.action_homeFragment_to_albumListFragment)
         }
 
         val artistsBinding = ItemMenuSmallCardBinding.bind(binding.includeArtists.root)
