@@ -30,6 +30,14 @@ class HomeFragment : Fragment() {
         (activity as AppCompatActivity).supportActionBar?.title = "Vynils App"
 
         setupHomeButtons()
+
+        // Botón temporal para ir al detalle
+        binding.button.setOnClickListener {
+            val bundle = Bundle().apply {
+                putInt("album_id", 100) // ID de prueba
+            }
+            findNavController().navigate(R.id.action_homeFragment_to_albumDetailFragment, bundle)
+        }
     }
 
     private fun setupMenuButton(
