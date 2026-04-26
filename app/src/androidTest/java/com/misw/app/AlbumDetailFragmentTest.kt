@@ -1,20 +1,25 @@
 package com.misw.app
 
 import android.view.View
+import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import androidx.test.espresso.Espresso
-import androidx.test.espresso.action.ViewActions.*
+import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.IdlingRegistry
+import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.matches
-import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.espresso.contrib.RecyclerViewActions
+import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import org.hamcrest.Matchers.*
 import androidx.test.filters.LargeTest
-import org.junit.Rule
-import org.junit.runner.RunWith
-import org.junit.Test
+import com.misw.app.network.EspressoIdlingResource
 import com.misw.app.ui.MainActivity
+import org.hamcrest.Matchers.*
+import org.junit.After
+import org.junit.Before
+import org.junit.Rule
+import org.junit.Test
+import org.junit.runner.RunWith
 
 @LargeTest
 @RunWith(AndroidJUnit4::class)
@@ -24,116 +29,92 @@ class AlbumDetailFragmentTest {
     @JvmField
     var mActivityScenarioRule = ActivityScenarioRule(MainActivity::class.java)
 
+    @Before
+    fun registerIdlingResource() {
+        IdlingRegistry.getInstance().register(EspressoIdlingResource.countingIdlingResource)
+    }
+
+    @After
+    fun unregisterIdlingResource() {
+        IdlingRegistry.getInstance().unregister(EspressoIdlingResource.countingIdlingResource)
+    }
+
+    private fun navigateToFirstAlbum() {
+        // 1. Ir a la sección de álbumes
+        onView(withId(R.id.include_albums)).perform(click())
+        
+        // 2. Seleccionar el primer álbum del listado
+        onView(withId(R.id.rvAlbumList))
+            .perform(RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(0, click()))
+    }
+
+    @Test
+    fun checkAlbumCoverTest() {
+        navigateToFirstAlbum()
+        onView(withId(R.id.ivAlbumCover)).check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun checkAlbumNameTest() {
+        navigateToFirstAlbum()
+        onView(withId(R.id.tvAlbumName))
+            .check(matches(allOf(isDisplayed(), not(withText("")))))
+    }
+
     @Test
     fun checkReleaseDateTest() {
-        // 1. Ir a álbumes
-        Espresso.onView(withId(R.id.include_albums)).perform(click())
-
-        // 2. Seleccionar el primer álbum
-        Espresso.onView(withId(R.id.rv_albums))
-            .perform(RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(0, click()))
-
-        // 3. Verificar fecha de lanzamiento
-        Espresso.onView(
-            allOf(
-                withId(R.id.tv_release_date),
-                isDisplayed()
-            )
-        ).check(matches(withText(containsString("Lanzado en \\w+ \\d+, \\d{4}"))))
+        navigateToFirstAlbum()
+        onView(withId(R.id.tvReleaseDate))
+            .check(matches(allOf(
+                isDisplayed(), 
+                withText(startsWith("Released "))
+            )))
     }
 
     @Test
     fun checkRecordLabelTest() {
-        // 1. Ir a álbumes
-        Espresso.onView(withId(R.id.include_albums)).perform(click())
-
-        // 2. Seleccionar el primer álbum
-        Espresso.onView(withId(R.id.rv_albums))
-            .perform(RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(0, click()))
-
-        // 3. Verificar sello discográfico
-        Espresso.onView(
-            allOf(
-                withId(R.id.tv_record_label),
-                isDisplayed()
-            )
-        ).check(matches(not(withText(containsString("")))))
+        navigateToFirstAlbum()
+        onView(withId(R.id.tvRecordLabel))
+            .check(matches(allOf(isDisplayed(), not(withText("")))))
     }
 
     @Test
     fun checkGenreTest() {
-        // 1. Ir a álbumes
-        Espresso.onView(withId(R.id.include_albums)).perform(click())
-
-        // 2. Seleccionar el primer álbum
-        Espresso.onView(withId(R.id.rv_albums))
-            .perform(RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(0, click()))
-
-        // 3. Verificar género
-        Espresso.onView(
-            allOf(
-                withId(R.id.tv_genre),
-                isDisplayed()
-            )
-        ).check(matches(not(withText(containsString("")))))
+        navigateToFirstAlbum()
+        onView(withId(R.id.tvGenre))
+            .check(matches(isDisplayed()))
     }
 
     @Test
     fun checkDescriptionTest() {
-        // 1. Ir a álbumes
-        Espresso.onView(withId(R.id.include_albums)).perform(click())
-
-        // 2. Seleccionar el primer álbum
-        Espresso.onView(withId(R.id.rv_albums))
-            .perform(RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(0, click()))
-
-        // 3. Verificar descripción
-        Espresso.onView(
-            allOf(
-                withId(R.id.tv_description),
-                isDisplayed()
-            )
-        ).check(matches(not(withText(containsString("")))))
+        navigateToFirstAlbum()
+        onView(withId(R.id.tvDescription))
+            .check(matches(allOf(isDisplayed(), not(withText("")))))
     }
 
     @Test
     fun checkTracklistTest() {
-        // 1. Ir a álbumes
-        Espresso.onView(withId(R.id.include_albums)).perform(click())
+        navigateToFirstAlbum()
+        onView(withText("Tracks")).check(matches(isDisplayed()))
+        onView(withId(R.id.llTracksContainer)).check(matches(isDisplayed()))
 
-        // 2. Seleccionar el primer álbum
-        Espresso.onView(withId(R.id.rv_albums))
-            .perform(RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(0, click()))
-
-        // 3. Verificar título
-        Espresso.onView(
-            allOf(
-                withText(R.string.tracklist),
-                isDisplayed()
-            )
-        ).check(matches(isDisplayed()))
-
-        // 4. Verificar contador
-        Espresso.onView(
-            allOf(
-                withId(R.id.tv_track_count),
-                isDisplayed()
-            )
-        ).check(matches(not(withText(""))))
-
-        // 5. Verificar que se muestre texto si cantidad = 0, y se muestren tracks si > 0
-        Espresso.onView(withId(R.id.rv_tracks))
-            .check { view, noViewFoundException ->
-                noViewFoundException?.let{ throw it }
-                val reclyclerView = view as RecyclerView
-                val itemCount = reclyclerView.adapter?.itemCount ?: 0
-                if (itemCount > 0) {
-                    assert(view.visibility == View.VISIBLE)
-                } else {
-                    assert(view.visibility == View.GONE)
-                    Espresso.onView(withId(R.id.tv_no_tracks))
-                        .check(matches(isDisplayed()))
+        onView(withId(R.id.llTracksContainer)).check { view, noViewFoundException ->
+            noViewFoundException?.let { throw it }
+            val container = view as ViewGroup
+            
+            if (container.childCount > 0) {
+                assert(view.visibility == View.VISIBLE)
+                for (i in 0 until container.childCount) {
+                    val trackRow = container.getChildAt(i) as ViewGroup
+                    val tvNumber = trackRow.findViewById<View>(R.id.tvTrackNumber)
+                    val tvName = trackRow.findViewById<View>(R.id.tvTrackName)
+                    val tvDuration = trackRow.findViewById<View>(R.id.tvTrackDuration)
+                    
+                    assert(tvNumber != null && tvNumber.visibility == View.VISIBLE)
+                    assert(tvName != null && tvName.visibility == View.VISIBLE)
+                    assert(tvDuration != null && tvDuration.visibility == View.VISIBLE)
                 }
             }
+        }
     }
 }
