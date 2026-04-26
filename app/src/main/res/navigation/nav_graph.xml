@@ -13,6 +13,9 @@
         <action
             android:id="@+id/action_homeFragment_to_albumListFragment"
             app:destination="@id/albumListFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_albumDetailFragment"
+            app:destination="@id/albumDetailFragment" />
     </fragment>
 
     <fragment

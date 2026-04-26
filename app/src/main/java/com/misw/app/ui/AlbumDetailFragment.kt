@@ -7,11 +7,11 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import com.bumptech.glide.Glide
 import com.misw.app.R
 import com.misw.app.databinding.FragmentAlbumDetailBinding
 import com.misw.app.model.Track
 import com.misw.app.viewmodel.AlbumDetailViewModel
-import com.squareup.picasso.Picasso
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -38,10 +38,11 @@ class AlbumDetailFragment : Fragment() {
             binding.tvGenre.text = album.genre
             binding.tvRecordLabel.text = album.recordLabel
 
-            // Carga de imagen con Picasso
-            Picasso.get()
+            // Carga de imagen con Glide
+            Glide.with(this)
                 .load(album.cover)
                 .placeholder(R.drawable.ic_album)
+                .error(R.drawable.ic_album)
                 .into(binding.ivAlbumCover)
 
             // Renderizado dinámico de tracks (estilo lista del diseño)
