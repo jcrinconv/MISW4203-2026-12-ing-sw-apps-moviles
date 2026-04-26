@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="12.dp"
+    app:cardBackgroundColor="#1A1919"
+    app:cardCornerRadius="12.dp"
+    app:cardElevation="0dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="12.dp">
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/ivAlbumCover"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:scaleType="centerCrop"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:shapeAppearanceOverlay="@style/RoundedSquare" />
+
+        <TextView
+            android:id="@+id/tvAlbumName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16.dp"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toStartOf="@+id/ivChevron"
+            app:layout_constraintStart_toEndOf="@id/ivAlbumCover"
+            app:layout_constraintTop_toTopOf="@id/ivAlbumCover" />
+
+        <ImageView
+            android:id="@+id/icGenre"
+            android:layout_width="14dp"
+            android:layout_height="14dp"
+            android:layout_marginTop="4dp"
+            android:src="@drawable/ic_category"
+            app:layout_constraintStart_toStartOf="@id/tvAlbumName"
+            app:layout_constraintTop_toBottomOf="@id/tvAlbumName"
+            app:tint="@color/silver_chalice" />
+
+        <TextView
+            android:id="@+id/tvAlbumGenre"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="6.dp"
+            android:textColor="@color/silver_chalice"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="@id/icGenre"
+            app:layout_constraintEnd_toEndOf="@id/tvAlbumName"
+            app:layout_constraintStart_toEndOf="@id/icGenre"
+            app:layout_constraintTop_toTopOf="@id/icGenre" />
+
+        <ImageView
+            android:id="@+id/icDate"
+            android:layout_width="14dp"
+            android:layout_height="14dp"
+            android:layout_marginTop="4dp"
+            android:src="@drawable/ic_calendar"
+            app:layout_constraintStart_toStartOf="@id/tvAlbumName"
+            app:layout_constraintTop_toBottomOf="@id/icGenre"
+            app:tint="@color/silver_chalice" />
+
+        <TextView
+            android:id="@+id/tvAlbumDate"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="6.dp"
+            android:textColor="@color/silver_chalice"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="@id/icDate"
+            app:layout_constraintEnd_toEndOf="@id/tvAlbumName"
+            app:layout_constraintStart_toEndOf="@id/icDate"
+            app:layout_constraintTop_toTopOf="@id/icDate" />
+
+        <ImageView
+            android:id="@+id/ivChevron"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_chevron_right"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="@color/silver_chalice" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>

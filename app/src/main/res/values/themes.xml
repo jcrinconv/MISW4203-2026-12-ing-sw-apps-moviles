@@ -11,4 +11,9 @@
         <item name="android:windowBackground">@color/refresh_black</item>
         <item name="android:statusBarColor">@color/refresh_black</item>
     </style>
+
+    <style name="RoundedSquare" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">12dp</item>
+    </style>
 </resources>
