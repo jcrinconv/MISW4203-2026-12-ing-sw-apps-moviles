@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/menu_card_container"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="8.dp"
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="?attr/selectableItemBackground"
+    app:cardBackgroundColor="#1E1E1E"
+    app:cardCornerRadius="16.dp"
+    app:cardElevation="4.dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="20.dp">
+
+        <FrameLayout
+            android:id="@+id/icon_wrapper"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:background="@drawable/bg_home_button_icon"
+            android:backgroundTint="@color/pink_soft"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/iv_menu_icon"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_album"/>
+        </FrameLayout>
+
+        <TextView
+            android:id="@+id/tv_menu_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16.dp"
+            android:text="Título"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toStartOf="@+id/iv_chevron"
+            app:layout_constraintStart_toEndOf="@id/icon_wrapper"
+            app:layout_constraintTop_toTopOf="@id/icon_wrapper" />
+
+        <TextView
+            android:id="@+id/tv_menu_subtitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Subtítulo descriptivo"
+            android:textColor="#999999"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toEndOf="@id/tv_menu_title"
+            app:layout_constraintStart_toStartOf="@id/tv_menu_title"
+            app:layout_constraintTop_toBottomOf="@id/tv_menu_title" />
+
+        <ImageView
+            android:id="@+id/iv_chevron"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_chevron_right"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="#66FFFFFF" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>
