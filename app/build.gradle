@@ -16,19 +16,23 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        buildConfigField "String", "BASE_URL", '"http://10.0.2.2:3000/"'
     }
     buildFeatures {
+        buildConfig true
         viewBinding true
     }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            buildConfigField "String", "BASE_URL", '"https://vinilos-backend-6ydt.onrender.com/"'
         }
         debug {
             enableAndroidTestCoverage true
             enableUnitTestCoverage true
             testCoverageEnabled true
+            buildConfigField "String", "BASE_URL", '"https://vinilos-backend-6ydt.onrender.com/"'
         }
     }
     compileOptions {
@@ -37,10 +41,6 @@ android {
     }
     kotlinOptions {
         jvmTarget = '1.8'
-    }
-
-    buildFeatures {
-        viewBinding true
     }
 }
 
