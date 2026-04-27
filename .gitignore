@@ -92,5 +92,4 @@ lint/tmp/
 hs_err_pid*
 replay_pid*
 
-docs
 .idea
