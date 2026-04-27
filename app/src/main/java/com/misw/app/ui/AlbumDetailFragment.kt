@@ -37,6 +37,7 @@ class AlbumDetailFragment : Fragment() {
             binding.tvDescription.text = album.description
             binding.tvGenre.text = album.genre
             binding.tvRecordLabel.text = album.recordLabel
+            binding.tvTrackCount.text = getString(R.string.track_count, album.tracks.size)
 
             // Carga de imagen con Glide
             Glide.with(this)
@@ -55,21 +56,24 @@ class AlbumDetailFragment : Fragment() {
 
     private fun renderTracks(tracks: List<Track>) {
         binding.llTracksContainer.removeAllViews()
-        tracks.forEachIndexed { index, track ->
-            val trackView = layoutInflater.inflate(R.layout.item_track_row, binding.llTracksContainer, false)
-            trackView.findViewById<TextView>(R.id.tvTrackNumber).text = String.format("%02d", index + 1)
-            trackView.findViewById<TextView>(R.id.tvTrackName).text = track.name
-            trackView.findViewById<TextView>(R.id.tvTrackDuration).text = track.duration
-            binding.llTracksContainer.addView(trackView)
+        if (tracks.isNotEmpty()) {
+            tracks.forEachIndexed { index, track ->
+                val trackView = layoutInflater.inflate(R.layout.item_track, binding.llTracksContainer, false)
+                trackView.findViewById<TextView>(R.id.tvTrackNumber).text = (index + 1).toString().padStart(2, '0')
+                trackView.findViewById<TextView>(R.id.tvTrackName).text = track.name
+                trackView.findViewById<TextView>(R.id.tvTrackDuration).text = track.duration
+                binding.llTracksContainer.addView(trackView)
+            }
         }
     }
 
     private fun formatDate(dateString: String): String {
         return try {
             val inputFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault())
-            val outputFormat = SimpleDateFormat("MMMM d, yyyy", Locale.ENGLISH)
-            val date = inputFormat.parse(dateString)
-            "Released ${outputFormat.format(date!!)}"
+            val outputFormat = SimpleDateFormat("MMM d, yyyy", Locale("es"))
+            val date = inputFormat.parse((dateString))
+            val formatted = outputFormat.format(date!!)
+            "Lanzado en ${formatted.replaceFirstChar { it.uppercase() }}"
         } catch (e: Exception) {
             dateString
         }

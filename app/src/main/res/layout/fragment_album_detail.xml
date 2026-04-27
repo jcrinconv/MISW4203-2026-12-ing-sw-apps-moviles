@@ -47,87 +47,100 @@
                 android:textSize="32sp"
                 tools:text="Vapor Shadows" />
 
-            <TextView
-                android:id="@+id/tvReleaseDate"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:textColor="@color/on_surface_variant"
-                android:textSize="14sp"
-                tools:text="Released October 24, 2023" />
+                android:orientation="horizontal"
+                android:layout_marginTop="8dp">
+
+                <TextView
+                    android:id="@+id/tvReleaseDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="16sp"
+                    tools:text="Lanzado en Oct 23, 2023"/>
+
+                <View
+                    android:layout_width="3dp"
+                    android:layout_height="3dp"
+                    android:layout_marginHorizontal="8dp"
+                    android:background="@drawable/circle_separator"
+                    android:layout_gravity="center_vertical"/>
+
+                <TextView
+                    android:id="@+id/tvRecordLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="16sp"
+                    android:textColor="@color/wild_strawberry"
+                    android:textStyle="bold"
+                    tools:text="Midnight Records"/>
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tvGenre"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:paddingHorizontal="20dp"
+                android:paddingVertical="4dp"
+                android:background="@drawable/pill"
+                android:textSize="15sp"
+                android:textColor="@color/white"
+                tools:text="Synthwave"/>
 
             <TextView
                 android:id="@+id/tvDescription"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:lineSpacingExtra="4dp"
-                android:textColor="@color/on_surface_variant"
-                android:textSize="16sp"
-                tools:text="A cinematic journey through a rain-slicked metropolis..." />
+                android:layout_marginTop="16dp"
+                android:textSize="18sp"
+                android:lineSpacingMultiplier="1.4"
+                tools:text="Un viaje cinematográfico a través de una metrópolis mojada por la lluvia..."/>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
-                android:orientation="horizontal">
+                android:orientation="vertical"
+                android:paddingVertical="20dp"
+                android:paddingHorizontal="35dp"
+                android:background="@drawable/rounded_rectangle">
 
-                <TextView
-                    android:id="@+id/tvGenre"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@color/surface_container_high"
-                    android:paddingHorizontal="12dp"
-                    android:paddingVertical="4dp"
-                    android:textAllCaps="true"
-                    android:textColor="@color/on_surface_variant"
-                    android:textSize="10sp"
-                    android:textStyle="bold"
-                    tools:text="Synthwave" />
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/tracklist"
+                        android:textSize="25sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/white"/>
+
+                    <TextView
+                        android:id="@+id/tvTrackCount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="17sp"
+                        android:textColor="@android:color/darker_gray"
+                        android:layout_gravity="center_vertical"/>
+
+                </LinearLayout>
+                
+                <LinearLayout
+                    android:id="@+id/llTracksContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginTop="8dp" />
+
             </LinearLayout>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:text="RECORD LABEL"
-                android:textColor="@color/on_surface_variant"
-                android:textSize="10sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/tvRecordLabel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:textColor="@color/primary"
-                android:textStyle="bold"
-                tools:text="Midnight Records" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginTop="32dp"
-                android:background="@color/outline_variant"
-                android:alpha="0.2" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="Tracks"
-                android:textColor="@color/white"
-                android:textSize="20sp"
-                android:textStyle="bold" />
-
-            <LinearLayout
-                android:id="@+id/llTracksContainer"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:orientation="vertical" />
-
         </LinearLayout>
+
     </androidx.core.widget.NestedScrollView>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -4,5 +4,4 @@
     <string name="track_count">%d canciones</string>
     <string name="track_number">%s</string>
     <string name="tracklist">Tracklist</string>
-    <string name="no_tracks">Este álbum no tiene canciones</string>
 </resources>

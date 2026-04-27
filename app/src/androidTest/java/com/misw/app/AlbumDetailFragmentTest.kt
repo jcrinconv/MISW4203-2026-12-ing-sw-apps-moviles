@@ -73,7 +73,7 @@ class AlbumDetailFragmentTest {
                 while (parent != null && parent !is NestedScrollView && parent !is ScrollView) {
                     parent = parent.parent
                 }
-                
+
                 when (parent) {
                     is NestedScrollView -> {
                         parent.scrollTo(0, view.top)
@@ -110,9 +110,9 @@ class AlbumDetailFragmentTest {
     fun checkReleaseDateTest() {
         navigateToFirstAlbum()
         onView(withId(R.id.tvReleaseDate)).check(matches(allOf(
-                isDisplayed(), 
-                withText(startsWith("Released "))
-            )))
+            isDisplayed(),
+            withText(startsWith("Lanzado en "))
+        )))
     }
 
     @Test
@@ -138,25 +138,25 @@ class AlbumDetailFragmentTest {
     @Test
     fun checkTracklistTest() {
         navigateToFirstAlbum()
-        
-        onView(withText("Tracks")).perform(betterScrollTo()).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
+
+        onView(withText(R.string.tracklist)).perform(betterScrollTo()).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
 
         onView(withId(R.id.llTracksContainer)).perform(betterScrollTo()).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
 
         onView(withId(R.id.llTracksContainer)).check { view, noViewFoundException ->
             noViewFoundException?.let { throw it }
             val container = view as ViewGroup
-            
+
             if (container.childCount > 0) {
                 assert(view.visibility == View.VISIBLE)
-                
+
                 for (i in 0 until container.childCount) {
                     val trackRow = container.getChildAt(i) as ViewGroup
-                    
+
                     val tvNumber = trackRow.findViewById<View>(R.id.tvTrackNumber)
                     val tvName = trackRow.findViewById<View>(R.id.tvTrackName)
                     val tvDuration = trackRow.findViewById<View>(R.id.tvTrackDuration)
-                    
+
                     assert(tvNumber != null && tvNumber.visibility == View.VISIBLE)
                     assert(tvName != null && tvName.visibility == View.VISIBLE)
                     assert(tvDuration != null && tvDuration.visibility == View.VISIBLE)

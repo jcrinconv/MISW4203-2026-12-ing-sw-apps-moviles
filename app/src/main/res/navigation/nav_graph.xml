@@ -28,7 +28,7 @@
     <fragment
         android:id="@+id/albumDetailFragment"
         android:name="com.misw.app.ui.AlbumDetailFragment"
-        android:label="AlbumDetail"
+        android:label="Detalle de álbum"
         tools:layout="@layout/fragment_album_detail">
         <argument
             android:name="album_id"
