@@ -21,13 +21,19 @@ class AlbumDetailViewModel : ViewModel() {
     private val _error = MutableLiveData<String>()
     val error: LiveData<String> get() = _error
 
+    private val _isLoading = MutableLiveData<Boolean>()
+    val isLoading: LiveData<Boolean> get() = _isLoading
+
     fun loadAlbum(id: Int) {
         viewModelScope.launch {
+            _isLoading.value = true
             try {
                 _album.value = repository.getAlbumById(id)
             } catch (e: Exception) {
                 _error.value = e.message
                 Log.e("AlbumDetail", "Error: ${e.message}")
+            } finally {
+                _isLoading.value = false
             }
         }
     }

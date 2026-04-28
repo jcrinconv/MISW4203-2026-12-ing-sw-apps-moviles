@@ -83,6 +83,13 @@
             app:tint="@color/wild_strawberry" />
     </LinearLayout>
 
+    <ProgressBar
+        android:id="@+id/pbAlbumList"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvAlbumList"
         android:layout_width="match_parent"
