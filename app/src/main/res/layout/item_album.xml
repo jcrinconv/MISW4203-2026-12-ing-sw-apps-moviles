@@ -13,15 +13,23 @@
         android:layout_height="wrap_content"
         android:padding="12.dp">
 
-        <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/ivAlbumCover"
+        <com.facebook.shimmer.ShimmerFrameLayout
+            android:id="@+id/shimmerLayout"
             android:layout_width="80dp"
             android:layout_height="80dp"
-            android:scaleType="centerCrop"
+            android:background="@drawable/rounded_square_shimmer"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:shapeAppearanceOverlay="@style/RoundedSquare" />
+            app:layout_constraintTop_toTopOf="parent">
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/ivAlbumCover"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:scaleType="centerCrop"
+                app:shapeAppearanceOverlay="@style/RoundedSquare" />
+
+        </com.facebook.shimmer.ShimmerFrameLayout>
 
         <TextView
             android:id="@+id/tvAlbumName"
@@ -32,8 +40,8 @@
             android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toStartOf="@+id/ivChevron"
-            app:layout_constraintStart_toEndOf="@id/ivAlbumCover"
-            app:layout_constraintTop_toTopOf="@id/ivAlbumCover" />
+            app:layout_constraintStart_toEndOf="@id/shimmerLayout"
+            app:layout_constraintTop_toTopOf="@id/shimmerLayout" />
 
         <ImageView
             android:id="@+id/icGenre"

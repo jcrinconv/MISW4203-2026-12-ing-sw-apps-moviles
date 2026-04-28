@@ -24,6 +24,8 @@ class AlbumListFragment : Fragment() {
     private val binding get() = _binding!!
     private lateinit var albumAdapter: AlbumAdapter
 
+
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
@@ -37,6 +39,11 @@ class AlbumListFragment : Fragment() {
         setupRecyclerView()
         setupSearch()
         setupControls()
+
+        viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
+            binding.pbAlbumList.visibility = if (isLoading) View.VISIBLE else View.GONE
+            binding.rvAlbumList.visibility = if (isLoading) View.GONE else View.VISIBLE
+        }
 
         viewModel.albums.observe(viewLifecycleOwner) { albums ->
             albumAdapter.updateAlbums(albums)

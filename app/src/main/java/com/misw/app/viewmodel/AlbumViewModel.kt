@@ -32,18 +32,24 @@ class AlbumViewModel(
     private var currentCriterion = SortCriterion.NAME
     private var currentOrder = SortOrder.ASCENDING
 
+    private val _isLoading = MutableLiveData<Boolean>()
+    val isLoading: LiveData<Boolean> get() = _isLoading
+
     init {
         fetchAlbums()
     }
 
     private fun fetchAlbums() {
         viewModelScope.launch {
+            _isLoading.value = true
             try {
                 val result = repository.getAlbums()
                 originalList = result
                 applySort()
             } catch (e: Exception) {
                 _error.value = e.message ?: "Error al cargar álbumes"
+            } finally {
+                _isLoading.value = false
             }
         }
     }
