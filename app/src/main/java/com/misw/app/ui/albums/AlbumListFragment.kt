@@ -37,7 +37,6 @@ class AlbumListFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         setupRecyclerView()
-        setupSearch()
         setupControls()
 
         viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
@@ -49,7 +48,12 @@ class AlbumListFragment : Fragment() {
             albumAdapter.updateAlbums(albums)
         }
 
+        if (binding.etSearchAlbum.text.toString() != viewModel.query.value) {
+            binding.etSearchAlbum.setText(viewModel.query.value)
+        }
+
         updateSortButtonsUI(true)
+        setupSearch()
     }
 
     private fun setupControls() {
@@ -87,7 +91,7 @@ class AlbumListFragment : Fragment() {
 
     private fun setupSearch() {
         binding.etSearchAlbum.doOnTextChanged { text, _, _, _ ->
-            albumAdapter.filter(text.toString())
+            viewModel.filterAlbums(text.toString())
         }
     }
 
