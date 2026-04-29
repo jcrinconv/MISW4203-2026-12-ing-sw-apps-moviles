@@ -27,6 +27,7 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             buildConfigField "String", "BASE_URL", '"https://vinilos-backend-6ydt.onrender.com/"'
+            signingConfig signingConfigs.debug
         }
         debug {
             enableAndroidTestCoverage true
