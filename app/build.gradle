@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
+    id 'org.jetbrains.kotlin.kapt'
     id 'jacoco'
 }
 
@@ -21,6 +22,7 @@ android {
     buildFeatures {
         buildConfig true
         viewBinding true
+        dataBinding true
     }
     buildTypes {
         release {
@@ -32,7 +34,6 @@ android {
         debug {
             enableAndroidTestCoverage true
             enableUnitTestCoverage true
-            testCoverageEnabled true
             buildConfigField "String", "BASE_URL", '"http://10.0.2.2:3000/"'
         }
     }
@@ -107,8 +108,8 @@ task jacocoTestReport(type: JacocoReport, dependsOn: ['testDebugUnitTest', 'crea
     }
 
     def fileFilter = [
-        '**/R.class', '**/R$*.class', '**/BuildConfig.*', '**/Manifest*.*',
-        '**/*Test*.*', 'android/**/*.*', '**/databinding/*', '**/BR.*'
+            '**/R.class', '**/R$*.class', '**/BuildConfig.*', '**/Manifest*.*',
+            '**/*Test*.*', 'android/**/*.*', '**/databinding/*', '**/BR.*'
     ]
     def debugTree = fileTree(dir: "${buildDir}/intermediates/javac/debug/classes", excludes: fileFilter)
     def kotlinDebugTree = fileTree(dir: "${buildDir}/tmp/kotlin-classes/debug", excludes: fileFilter)

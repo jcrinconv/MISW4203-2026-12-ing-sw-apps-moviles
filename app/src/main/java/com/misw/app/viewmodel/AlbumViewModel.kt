@@ -20,15 +20,16 @@ enum class SortOrder {
 class AlbumViewModel(
     private val repository: AlbumRepository = AlbumRepositoryImpl()
 ) : ViewModel() {
-
     private val _albums = MutableLiveData<List<Album>>()
     val albums: LiveData<List<Album>> get() = _albums
+
+    private val _query = MutableLiveData<String>("")
+    val query: LiveData<String> get() = _query
 
     private val _error = MutableLiveData<String>()
     val error: LiveData<String> get() = _error
 
     private var originalList: List<Album> = emptyList()
-    
     private var currentCriterion = SortCriterion.NAME
     private var currentOrder = SortOrder.ASCENDING
 
@@ -45,7 +46,7 @@ class AlbumViewModel(
             try {
                 val result = repository.getAlbums()
                 originalList = result
-                applySort()
+                updateAlbumList()
             } catch (e: Exception) {
                 _error.value = e.message ?: "Error al cargar álbumes"
             } finally {
@@ -54,9 +55,14 @@ class AlbumViewModel(
         }
     }
 
+    fun filterAlbums(text: String) {
+        _query.value = text
+        updateAlbumList()
+    }
+
     fun setSortCriterion(criterion: SortCriterion) {
         currentCriterion = criterion
-        applySort()
+        updateAlbumList()
     }
 
     fun toggleSortOrder() {
@@ -65,26 +71,29 @@ class AlbumViewModel(
         } else {
             SortOrder.ASCENDING
         }
-        applySort()
+        updateAlbumList()
     }
 
-    private fun applySort() {
-        val sortedList = when (currentCriterion) {
+    private fun updateAlbumList() {
+        val currentText = _query.value ?: ""
+
+        val filtered = if (currentText.isEmpty()) {
+            originalList
+        } else {
+            originalList.filter { it.name.contains(currentText, ignoreCase = true) }
+        }
+
+        val processedList = when (currentCriterion) {
             SortCriterion.NAME -> {
-                if (currentOrder == SortOrder.ASCENDING) {
-                    originalList.sortedBy { it.name }
-                } else {
-                    originalList.sortedByDescending { it.name }
-                }
+                if (currentOrder == SortOrder.ASCENDING) filtered.sortedBy { it.name }
+                else filtered.sortedByDescending { it.name }
             }
             SortCriterion.RELEASE_DATE -> {
-                if (currentOrder == SortOrder.ASCENDING) {
-                    originalList.sortedBy { it.releaseDate }
-                } else {
-                    originalList.sortedByDescending { it.releaseDate }
-                }
+                if (currentOrder == SortOrder.ASCENDING) filtered.sortedBy { it.releaseDate }
+                else filtered.sortedByDescending { it.releaseDate }
             }
         }
-        _albums.value = sortedList
+
+        _albums.value = processedList
     }
 }
