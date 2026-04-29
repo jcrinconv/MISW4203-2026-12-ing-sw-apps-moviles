@@ -1,4 +1,4 @@
-package com.misw.app.ui
+package com.misw.app.ui.albums
 
 import android.graphics.drawable.Drawable
 import android.os.Bundle
