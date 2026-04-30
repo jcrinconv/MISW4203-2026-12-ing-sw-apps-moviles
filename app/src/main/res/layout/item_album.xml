@@ -27,6 +27,7 @@
                 android:layout_width="80dp"
                 android:layout_height="80dp"
                 android:scaleType="centerCrop"
+                android:importantForAccessibility="no"
                 app:shapeAppearanceOverlay="@style/RoundedSquare" />
 
         </com.facebook.shimmer.ShimmerFrameLayout>
@@ -49,6 +50,7 @@
             android:layout_height="14dp"
             android:layout_marginTop="4dp"
             android:src="@drawable/ic_category"
+            android:importantForAccessibility="no"
             app:layout_constraintStart_toStartOf="@id/tvAlbumName"
             app:layout_constraintTop_toBottomOf="@id/tvAlbumName"
             app:tint="@color/silver_chalice" />
@@ -71,6 +73,7 @@
             android:layout_height="14dp"
             android:layout_marginTop="4dp"
             android:src="@drawable/ic_calendar"
+            android:importantForAccessibility="no"
             app:layout_constraintStart_toStartOf="@id/tvAlbumName"
             app:layout_constraintTop_toBottomOf="@id/icGenre"
             app:tint="@color/silver_chalice" />
@@ -92,6 +95,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_chevron_right"
+            android:importantForAccessibility="no"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
