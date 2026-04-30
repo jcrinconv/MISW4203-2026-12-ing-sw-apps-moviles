@@ -1,6 +1,4 @@
-package com.misw.app.models
-
-import com.misw.app.model.Album
+package com.misw.app.model
 
 data class Musician(
     val id: Int,
@@ -8,5 +6,6 @@ data class Musician(
     val image: String,
     val description: String,
     val birthDate: String,
-    val albums: List<Album> = emptyList()
+    val albums: List<Album>,
+    val performerPrizes: List<PerformerPrize>
 )
