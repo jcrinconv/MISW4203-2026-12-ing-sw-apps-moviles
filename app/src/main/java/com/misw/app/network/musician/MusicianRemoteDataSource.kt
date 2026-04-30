@@ -15,4 +15,8 @@ class MusicianRemoteDataSource {
             emptyList()
         }
     }
+
+    suspend fun fetchMusicianById(id: Int): Musician {
+        return musicianApiService.getMusicianById(id)
+    }
 }
