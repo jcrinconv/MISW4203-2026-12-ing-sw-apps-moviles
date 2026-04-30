@@ -13,6 +13,9 @@
         <action
             android:id="@+id/action_homeFragment_to_albumListFragment"
             app:destination="@id/albumListFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_musicianListFragment"
+            app:destination="@id/musicianListFragment" />
     </fragment>
 
     <fragment
@@ -33,5 +36,12 @@
         <argument
             android:name="album_id"
             app:argType="integer" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/musicianListFragment"
+        android:name="com.misw.app.ui.musicians.MusicianListFragment"
+        android:label="Artistas"
+        tools:layout="@layout/fragment_musician_list">
     </fragment>
 </navigation>

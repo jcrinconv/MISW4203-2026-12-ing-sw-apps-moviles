@@ -3,18 +3,32 @@ package com.misw.app.ui.adapters
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.misw.app.databinding.ItemMusicianBinding
 import com.misw.app.model.Musician
 
-class MusicianAdapter() : RecyclerView.Adapter<MusicianAdapter.MusicianViewHolder>() {
+class MusicianAdapter(private val onMusicianClick: (Int) -> Unit) : 
+    RecyclerView.Adapter<MusicianAdapter.MusicianViewHolder>() {
 
     private var musicians: List<Musician> = emptyList()
+
+    fun updateMusicians(newMusicians: List<Musician>) {
+        this.musicians = newMusicians
+        notifyDataSetChanged()
+    }
 
     inner class MusicianViewHolder(private val binding: ItemMusicianBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(musician: Musician) {
-            TODO("Implement load musician card")
+            binding.tvMusicianName.text = musician.name
+            Glide.with(binding.ivArtistImage.context)
+                .load(musician.image)
+                .into(binding.ivArtistImage)
+            
+            binding.root.setOnClickListener {
+                onMusicianClick(musician.id)
+            }
         }
     }
 
