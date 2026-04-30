@@ -28,4 +28,12 @@
     <color name="pink_soft">#22FF4081</color>
     <color name="purple_vinilos">#4644E8</color>
     <color name="silver_chalice">#adaaaa</color>
+    <color name="prize_purple_solid">#1f1641</color>
+    <color name="prize_purple_stroke">#352a62</color>
+    <color name="prize_purple_text">#bbb2e5</color>
+    <color name="prize_pink_solid">#3e212e</color>
+    <color name="prize_pink_stroke">#5f3347</color>
+    <color name="prize_pink_text">#fe88b7</color>
+    <color name="prize_gray_solid">#171717</color>
+    <color name="prize_gray_stroke">#262625</color>
 </resources>
