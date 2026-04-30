@@ -15,8 +15,7 @@ import com.bumptech.glide.request.target.Target
 class AlbumAdapter(private val onAlbumClick: (Int) -> Unit) :
     RecyclerView.Adapter<AlbumAdapter.AlbumViewHolder>() {
 
-    private var albumsList: List<Album> = emptyList()
-    private var filteredAlbumsList: List<Album> = emptyList()
+    private var albums: List<Album> = emptyList()
 
     inner class AlbumViewHolder(private val binding: ItemAlbumBinding) :
         RecyclerView.ViewHolder(binding.root) {
@@ -28,8 +27,10 @@ class AlbumAdapter(private val onAlbumClick: (Int) -> Unit) :
 
             binding.shimmerLayout.startShimmer()
 
-            Glide.with(binding.root.context).load(album.cover).centerCrop()
-                .listener(object: RequestListener<Drawable> {
+            Glide.with(binding.root.context)
+                .load(album.cover)
+                .centerCrop()
+                .listener(object : RequestListener<Drawable> {
                     override fun onResourceReady(
                         resource: Drawable,
                         model: Any,
@@ -41,6 +42,7 @@ class AlbumAdapter(private val onAlbumClick: (Int) -> Unit) :
                         binding.shimmerLayout.hideShimmer()
                         return false
                     }
+
                     override fun onLoadFailed(
                         e: GlideException?,
                         model: Any?,
@@ -66,23 +68,13 @@ class AlbumAdapter(private val onAlbumClick: (Int) -> Unit) :
     }
 
     override fun onBindViewHolder(holder: AlbumViewHolder, position: Int) {
-        holder.bind(filteredAlbumsList[position])
+        holder.bind(albums[position])
     }
 
-    override fun getItemCount(): Int = filteredAlbumsList.size
+    override fun getItemCount(): Int = albums.size
 
     fun updateAlbums(newAlbums: List<Album>) {
-        this.albumsList = newAlbums
-        this.filteredAlbumsList = newAlbums
-        notifyDataSetChanged()
-    }
-
-    fun filter(query: String) {
-        filteredAlbumsList = if (query.isEmpty()) {
-            albumsList
-        } else {
-            albumsList.filter { it.name.contains(query, ignoreCase = true) }
-        }
+        this.albums = newAlbums
         notifyDataSetChanged()
     }
 }
