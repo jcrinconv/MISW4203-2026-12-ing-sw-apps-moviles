@@ -14,16 +14,22 @@
         android:layout_height="wrap_content"
         android:padding="16.dp">
 
-        <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/ivArtistImage"
+        <com.facebook.shimmer.ShimmerFrameLayout
+            android:id="@+id/shimmerLayout"
             android:layout_width="70dp"
             android:layout_height="70dp"
-            android:scaleType="centerCrop"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:shapeAppearanceOverlay="@style/CircleImage"
-            tools:src="@tools:sample/avatars" />
+            app:layout_constraintTop_toTopOf="parent">
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/ivArtistImage"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                app:shapeAppearanceOverlay="@style/CircleImage"
+                tools:src="@tools:sample/avatars" />
+        </com.facebook.shimmer.ShimmerFrameLayout>
 
         <TextView
             android:id="@+id/tvMusicianName"
@@ -33,10 +39,10 @@
             android:textColor="@color/white"
             android:textSize="20sp"
             android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="@id/ivArtistImage"
+            app:layout_constraintBottom_toBottomOf="@id/shimmerLayout"
             app:layout_constraintEnd_toStartOf="@+id/ivChevron"
-            app:layout_constraintStart_toEndOf="@id/ivArtistImage"
-            app:layout_constraintTop_toTopOf="@id/ivArtistImage"
+            app:layout_constraintStart_toEndOf="@id/shimmerLayout"
+            app:layout_constraintTop_toTopOf="@id/shimmerLayout"
             tools:text="Nombre del Músico" />
 
         <ImageView
