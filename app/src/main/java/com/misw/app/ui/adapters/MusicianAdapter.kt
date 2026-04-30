@@ -29,13 +29,19 @@ class MusicianAdapter(private val onMusicianClick: (Int) -> Unit) :
         fun bind(musician: Musician) {
             binding.tvMusicianName.text = musician.name
             
+            // Set dynamic content description for accessibility
+            binding.ivArtistImage.contentDescription = binding.root.context.getString(
+                R.string.musician_image_description, 
+                musician.name
+            )
+            
             binding.shimmerLayout.startShimmer()
 
             Glide.with(binding.root.context)
                 .load(musician.image)
                 .centerCrop()
                 .placeholder(R.drawable.ic_artists)
-                .error(R.drawable.ic_artists) // Imagen por defecto si falla la carga o permisos
+                .error(R.drawable.ic_artists)
                 .listener(object : RequestListener<Drawable> {
                     override fun onResourceReady(
                         resource: Drawable,

@@ -25,6 +25,7 @@
                 android:layout_width="20dp"
                 android:layout_height="24dp"
                 android:src="@drawable/ic_search"
+                android:contentDescription="@null"
                 app:tint="@color/silver_chalice" />
 
             <EditText
@@ -33,7 +34,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="12dp"
                 android:background="@android:color/transparent"
-                android:hint="Buscar artista..."
+                android:hint="@string/search_hint_artist"
+                android:inputType="text"
+                android:autofillHints="name"
                 android:textColor="@color/white"
                 android:textColorHint="@color/silver_chalice" />
         </LinearLayout>
