@@ -48,11 +48,6 @@ class MusicianViewModel : ViewModel() {
         }
     }
 
-    fun filterMusicians(text: String) {
-        _query.value = text
-        updateMusicianList()
-    }
-
     // fun toggleSortOrder() {
     //    currentOrder = if (currentOrder == SortOrder.ASCENDING) {
     //        SortOrder.DESCENDING
@@ -61,6 +56,11 @@ class MusicianViewModel : ViewModel() {
     //    }
     //    updateMusicianList()
     // }
+
+    fun filterMusicians(text: String) {
+        _query.value = text
+        updateMusicianList()
+    }
 
     private fun updateMusicianList() {
         val currentText = _query.value ?: ""
