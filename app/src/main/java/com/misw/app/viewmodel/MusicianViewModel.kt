@@ -16,11 +16,13 @@ class MusicianViewModel : ViewModel() {
     private val _musicians = MutableLiveData<List<Musician>>()
     val musicians: LiveData<List<Musician>> get() = _musicians
 
-    private val _error = MutableLiveData<String>()
-    val error: LiveData<String> get() = _error
+    private val _query = MutableLiveData<String>("")
+    val query: LiveData<String> get() = _query
+
+    private val _error = MutableLiveData<String?>()
+    val error: LiveData<String?> get() = _error
 
     private var originalList: List<Musician> = emptyList()
-
     private var currentOrder = SortOrder.ASCENDING
 
     private val _isLoading = MutableLiveData<Boolean>()
@@ -30,13 +32,14 @@ class MusicianViewModel : ViewModel() {
         fetchMusicians()
     }
 
-    private fun fetchMusicians() {
+    fun fetchMusicians() {
         viewModelScope.launch {
             _isLoading.value = true
+            _error.value = null
             try {
                 val result = repository.getMusicians()
                 originalList = result
-                updateAlbumList()
+                updateMusicianList()
             } catch (e: Exception) {
                 _error.value = e.message ?: "Error al cargar artistas"
             } finally {
@@ -45,19 +48,32 @@ class MusicianViewModel : ViewModel() {
         }
     }
 
-    fun toggleSortOrder() {
-        currentOrder = if (currentOrder == SortOrder.ASCENDING) {
-            SortOrder.DESCENDING
-        } else {
-            SortOrder.ASCENDING
-        }
-        updateAlbumList()
+    // fun toggleSortOrder() {
+    //    currentOrder = if (currentOrder == SortOrder.ASCENDING) {
+    //        SortOrder.DESCENDING
+    //    } else {
+    //        SortOrder.ASCENDING
+    //    }
+    //    updateMusicianList()
+    // }
+
+    fun filterMusicians(text: String) {
+        _query.value = text
+        updateMusicianList()
     }
 
-    private fun updateAlbumList() {
+    private fun updateMusicianList() {
+        val currentText = _query.value ?: ""
+
+        val filtered = if (currentText.isEmpty()) {
+            originalList
+        } else {
+            originalList.filter { it.name.contains(currentText, ignoreCase = true) }
+        }
+
         val processedList =
-            if (currentOrder == SortOrder.ASCENDING) originalList.sortedBy { it.name }
-            else originalList.sortedByDescending { it.name }
+            if (currentOrder == SortOrder.ASCENDING) filtered.sortedBy { it.name }
+            else filtered.sortedByDescending { it.name }
 
         _musicians.value = processedList
     }

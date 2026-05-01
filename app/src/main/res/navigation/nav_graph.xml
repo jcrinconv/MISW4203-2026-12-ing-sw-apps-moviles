@@ -13,6 +13,9 @@
         <action
             android:id="@+id/action_homeFragment_to_albumListFragment"
             app:destination="@id/albumListFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_musicianListFragment"
+            app:destination="@id/musicianListFragment" />
     </fragment>
 
     <fragment
@@ -32,6 +35,26 @@
         tools:layout="@layout/fragment_album_detail">
         <argument
             android:name="album_id"
+            app:argType="integer" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/musicianListFragment"
+        android:name="com.misw.app.ui.musicians.MusicianListFragment"
+        android:label="Artistas"
+        tools:layout="@layout/fragment_musician_list">
+        <action
+            android:id="@+id/action_musicianListFragment_to_musicianDetailFragment"
+            app:destination="@id/musicianDetailFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/musicianDetailFragment"
+        android:name="com.misw.app.ui.musicians.MusicianDetailFragment"
+        android:label="Detalle del artista"
+        tools:layout="@layout/fragment_musician_detail">
+        <argument
+            android:name="musician_id"
             app:argType="integer" />
     </fragment>
 </navigation>
