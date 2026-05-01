@@ -48,14 +48,14 @@ class MusicianViewModel : ViewModel() {
         }
     }
 
-    // fun toggleSortOrder() {
-    //    currentOrder = if (currentOrder == SortOrder.ASCENDING) {
-    //        SortOrder.DESCENDING
-    //    } else {
-    //        SortOrder.ASCENDING
-    //    }
-    //    updateMusicianList()
-    // }
+     fun toggleSortOrder() {
+        currentOrder = if (currentOrder == SortOrder.ASCENDING) {
+            SortOrder.DESCENDING
+        } else {
+            SortOrder.ASCENDING
+        }
+        updateMusicianList()
+     }
 
     fun filterMusicians(text: String) {
         _query.value = text
