@@ -9,6 +9,7 @@ import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
+import com.google.android.material.shape.ShapeAppearanceModel
 import com.misw.app.R
 import com.misw.app.databinding.ItemMusicianBinding
 import com.misw.app.model.Musician
@@ -63,6 +64,8 @@ class MusicianAdapter(private val onMusicianClick: (Int) -> Unit) :
                     ): Boolean {
                         binding.shimmerLayout.stopShimmer()
                         binding.shimmerLayout.hideShimmer()
+                        binding.shimmerLayout.background = null
+                        binding.ivMusicianImage.shapeAppearanceModel = ShapeAppearanceModel()
                         return false
                     }
                 })

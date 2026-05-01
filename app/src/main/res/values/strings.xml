@@ -12,4 +12,5 @@
     <string name="swap_order_description">Cambiar orden de clasificación</string>
     <string name="no_artists_found">No se encontraron artistas</string>
     <string name="error_loading_artists">Error al cargar los artistas. Por favor intenta de nuevo.</string>
+    <string name="trophy_description">ícono de trofeo</string>
 </resources>
