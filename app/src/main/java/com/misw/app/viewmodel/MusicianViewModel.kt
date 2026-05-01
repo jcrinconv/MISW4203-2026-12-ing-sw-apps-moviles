@@ -21,6 +21,8 @@ class MusicianViewModel : ViewModel() {
 
     private var originalList: List<Musician> = emptyList()
 
+    private var currentOrder = SortOrder.ASCENDING
+
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> get() = _isLoading
 
@@ -34,12 +36,29 @@ class MusicianViewModel : ViewModel() {
             try {
                 val result = repository.getMusicians()
                 originalList = result
-                _musicians.value = result
+                updateAlbumList()
             } catch (e: Exception) {
                 _error.value = e.message ?: "Error al cargar artistas"
             } finally {
                 _isLoading.value = false
             }
         }
+    }
+
+    fun toggleSortOrder() {
+        currentOrder = if (currentOrder == SortOrder.ASCENDING) {
+            SortOrder.DESCENDING
+        } else {
+            SortOrder.ASCENDING
+        }
+        updateAlbumList()
+    }
+
+    private fun updateAlbumList() {
+        val processedList =
+            if (currentOrder == SortOrder.ASCENDING) originalList.sortedBy { it.name }
+            else originalList.sortedByDescending { it.name }
+
+        _musicians.value = processedList
     }
 }
