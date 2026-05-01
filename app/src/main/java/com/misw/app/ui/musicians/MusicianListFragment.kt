@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.misw.app.R
 import com.misw.app.databinding.FragmentMusicianListBinding
@@ -37,7 +38,13 @@ class MusicianListFragment : Fragment() {
 
     private fun setupRecyclerView() {
         musicianAdapter = MusicianAdapter { musicianId ->
-            // Navegación a detalle
+            val bundle = Bundle().apply {
+                putInt("musician_id", musicianId)
+            }
+            findNavController().navigate(
+                R.id.action_musicianListFragment_to_musicianDetailFragment,
+                bundle
+            )
         }
 
         binding.rvMusicians.apply {
