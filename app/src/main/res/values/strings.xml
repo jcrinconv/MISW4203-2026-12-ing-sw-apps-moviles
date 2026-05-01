@@ -4,4 +4,13 @@
     <string name="track_count">%d canciones</string>
     <string name="track_number">%s</string>
     <string name="tracklist">Tracklist</string>
+    <string name="musician_image_description">Imagen del artista %s</string>
+    <string name="search_hint_artist">Buscar artista…</string>
+    <string name="search_hint_album">Buscar álbum…</string>
+    <string name="sort_name">NOMBRE (A-Z)</string>
+    <string name="sort_date">FECHA</string>
+    <string name="swap_order_description">Cambiar orden de clasificación</string>
+    <string name="no_artists_found">No se encontraron artistas</string>
+    <string name="error_loading_artists">Error al cargar los artistas. Por favor intenta de nuevo.</string>
+    <string name="swap_order_button">Botón de cambio de orden ascendete o descendente</string>
 </resources>

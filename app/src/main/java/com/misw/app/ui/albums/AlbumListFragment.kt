@@ -25,7 +25,6 @@ class AlbumListFragment : Fragment() {
     private lateinit var albumAdapter: AlbumAdapter
 
 
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
@@ -48,8 +47,8 @@ class AlbumListFragment : Fragment() {
             albumAdapter.updateAlbums(albums)
         }
 
-        if (binding.etSearchAlbum.text.toString() != viewModel.query.value) {
-            binding.etSearchAlbum.setText(viewModel.query.value)
+        if (binding.searchBar.etSearchAlbum.text.toString() != viewModel.query.value) {
+            binding.searchBar.etSearchAlbum.setText(viewModel.query.value)
         }
 
         updateSortButtonsUI(true)
@@ -67,10 +66,10 @@ class AlbumListFragment : Fragment() {
             updateSortButtonsUI(isNameSelected = false)
         }
 
-        binding.btnSwapOrder.setOnClickListener {
+        binding.btnSwapOrder.ibSwapOrder.setOnClickListener {
             viewModel.toggleSortOrder()
             // Rotación visual del icono de swap
-            binding.btnSwapOrder.animate().rotationBy(180f).setDuration(300).start()
+            binding.btnSwapOrder.ibSwapOrder.animate().rotationBy(180f).setDuration(300).start()
         }
     }
 
@@ -90,13 +89,13 @@ class AlbumListFragment : Fragment() {
     }
 
     private fun setupSearch() {
-        binding.etSearchAlbum.doOnTextChanged { text, _, _, _ ->
+        binding.searchBar.etSearchAlbum.doOnTextChanged { text, _, _, _ ->
             viewModel.filterAlbums(text.toString())
         }
     }
 
     private fun setupRecyclerView() {
-        albumAdapter = AlbumAdapter() { albumId ->
+        albumAdapter = AlbumAdapter { albumId ->
             val bundle = Bundle().apply {
                 putInt("album_id", albumId)
             }

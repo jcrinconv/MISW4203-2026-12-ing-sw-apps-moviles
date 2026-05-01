@@ -1,20 +1,76 @@
 package com.misw.app.ui.adapters
 
+import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.request.RequestListener
+import com.bumptech.glide.request.target.Target
+import com.misw.app.R
 import com.misw.app.databinding.ItemMusicianBinding
 import com.misw.app.model.Musician
 
-class MusicianAdapter() : RecyclerView.Adapter<MusicianAdapter.MusicianViewHolder>() {
+class MusicianAdapter(private val onMusicianClick: (Int) -> Unit) : 
+    RecyclerView.Adapter<MusicianAdapter.MusicianViewHolder>() {
 
     private var musicians: List<Musician> = emptyList()
+
+    fun updateMusicians(newMusicians: List<Musician>) {
+        this.musicians = newMusicians
+        notifyDataSetChanged()
+    }
 
     inner class MusicianViewHolder(private val binding: ItemMusicianBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(musician: Musician) {
-            TODO("Implement load musician card")
+            binding.tvMusicianName.text = musician.name
+            
+            // Set dynamic content description for accessibility
+            binding.ivMusicianImage.contentDescription = binding.root.context.getString(
+                R.string.musician_image_description,
+                musician.name
+            )
+            
+            binding.shimmerLayout.startShimmer()
+
+            Glide.with(binding.root.context)
+                .load(musician.image)
+                .centerCrop()
+                .placeholder(R.drawable.ic_artists)
+                .error(R.drawable.ic_artists)
+                .listener(object : RequestListener<Drawable> {
+                    override fun onResourceReady(
+                        resource: Drawable,
+                        model: Any,
+                        target: Target<Drawable>?,
+                        dataSource: DataSource,
+                        isFirstResource: Boolean
+                    ): Boolean {
+                        binding.shimmerLayout.stopShimmer()
+                        binding.shimmerLayout.hideShimmer()
+                        return false
+                    }
+
+                    override fun onLoadFailed(
+                        e: GlideException?,
+                        model: Any?,
+                        target: Target<Drawable>,
+                        isFirstResource: Boolean
+                    ): Boolean {
+                        binding.shimmerLayout.stopShimmer()
+                        binding.shimmerLayout.hideShimmer()
+                        return false
+                    }
+                })
+                .into(binding.ivMusicianImage)
+            
+            binding.root.setOnClickListener {
+                onMusicianClick(musician.id)
+            }
         }
     }
 

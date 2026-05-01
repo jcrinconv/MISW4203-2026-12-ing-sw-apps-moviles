@@ -13,10 +13,6 @@ enum class SortCriterion {
     NAME, RELEASE_DATE
 }
 
-enum class SortOrder {
-    ASCENDING, DESCENDING
-}
-
 class AlbumViewModel(
     private val repository: AlbumRepository = AlbumRepositoryImpl()
 ) : ViewModel() {

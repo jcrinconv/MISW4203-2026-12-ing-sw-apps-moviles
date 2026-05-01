@@ -17,6 +17,7 @@ import com.misw.app.network.RetrofitClient
 import com.misw.app.ui.MainActivity
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
+import org.hamcrest.CoreMatchers.allOf
 import org.hamcrest.CoreMatchers.containsString
 import org.junit.After
 import org.junit.Before
@@ -68,7 +69,14 @@ class AlbumsListTest {
 
     @Test
     fun testVisibilityOfAllComponents() {
-        onView(withId(R.id.etSearchAlbum)).check(matches(isDisplayed()))
+        // La nueva UI usa searchBar y botones de ordenamiento
+        onView(withId(R.id.searchBar)).check(matches(isDisplayed()))
+
+        onView(withId(R.id.btnSortName)).check(matches(isDisplayed()))
+        onView(withId(R.id.btnSortDate)).check(matches(isDisplayed()))
+
+        onView(withId(R.id.btnSwapOrder)).check(matches(isDisplayed()))
+
         onView(withId(R.id.rvAlbumList)).check(matches(isDisplayed()))
     }
 
@@ -76,7 +84,10 @@ class AlbumsListTest {
     fun testSearchFiltering() {
         val albumToSearch = "Buscando América"
 
-        onView(withId(R.id.etSearchAlbum))
+        // Para un layout <include> con un EditText dentro (searchBar), hay que buscar el id interno. 
+        // Asumiendo que el EditText tiene id etSearchAlbum o similar dentro de search_bar.xml
+        // Pero basándonos en la estructura, busquemos cualquier EditText que sea descendiente del searchBar
+        onView(allOf(isAssignableFrom(android.widget.EditText::class.java), isDescendantOfA(withId(R.id.searchBar))))
             .perform(replaceText(albumToSearch), closeSoftKeyboard())
 
         onView(withId(R.id.rvAlbumList))
@@ -88,7 +99,7 @@ class AlbumsListTest {
         // Escenario negativo usando un valor generado por Faker que no existe en nuestro JSON inicial
         val nonExistentAlbum = "Fake-" + faker.lorem().characters(10)
 
-        onView(withId(R.id.etSearchAlbum))
+        onView(allOf(isAssignableFrom(android.widget.EditText::class.java), isDescendantOfA(withId(R.id.searchBar))))
             .perform(replaceText(nonExistentAlbum), closeSoftKeyboard())
 
         onView(withId(R.id.rvAlbumList))
@@ -97,10 +108,10 @@ class AlbumsListTest {
 
     @Test
     fun testSearchAndClearRestoresList() {
-        onView(withId(R.id.etSearchAlbum))
+        onView(allOf(isAssignableFrom(android.widget.EditText::class.java), isDescendantOfA(withId(R.id.searchBar))))
             .perform(replaceText("Buscando"), closeSoftKeyboard())
 
-        onView(withId(R.id.etSearchAlbum))
+        onView(allOf(isAssignableFrom(android.widget.EditText::class.java), isDescendantOfA(withId(R.id.searchBar))))
             .perform(replaceText(""), closeSoftKeyboard())
 
         onView(withId(R.id.rvAlbumList))
