@@ -41,7 +41,7 @@ class MusicianAdapter(private val onMusicianClick: (Int) -> Unit) :
             Glide.with(binding.root.context)
                 .load(musician.image)
                 .centerCrop()
-                .placeholder(R.drawable.ic_artists)
+                //.placeholder(R.drawable.ic_artists)
                 .error(R.drawable.ic_artists)
                 .listener(object : RequestListener<Drawable> {
                     override fun onResourceReady(
