@@ -11,7 +11,7 @@ import java.io.InputStream
 import com.bumptech.glide.load.model.GlideUrl
 
 @GlideModule
-class AppGlideModule : AppGlideModule() {
+class MyAppGlideModule : AppGlideModule() {
     override fun registerComponents(context: Context, glide: Glide, registry: Registry) {
         val client = OkHttpClient.Builder()
             .addInterceptor { chain ->
