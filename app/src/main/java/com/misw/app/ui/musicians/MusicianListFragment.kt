@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -30,6 +31,7 @@ class MusicianListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupRecyclerView()
+        setupSearch()
         observeViewModel()
     }
 
@@ -42,6 +44,16 @@ class MusicianListFragment : Fragment() {
             layoutManager = LinearLayoutManager(context)
             adapter = musicianAdapter
             setHasFixedSize(true)
+        }
+    }
+
+    private fun setupSearch() {
+        if (binding.etSearchAlbum.text.toString() != viewModel.query.value) {
+            binding.etSearchAlbum.setText(viewModel.query.value)
+        }
+
+        binding.etSearchAlbum.doOnTextChanged { text, _, _, _ ->
+            viewModel.filterMusicians(text.toString())
         }
     }
 
