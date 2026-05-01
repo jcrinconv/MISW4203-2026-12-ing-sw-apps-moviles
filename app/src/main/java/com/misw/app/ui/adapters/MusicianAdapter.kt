@@ -30,8 +30,8 @@ class MusicianAdapter(private val onMusicianClick: (Int) -> Unit) :
             binding.tvMusicianName.text = musician.name
             
             // Set dynamic content description for accessibility
-            binding.ivArtistImage.contentDescription = binding.root.context.getString(
-                R.string.musician_image_description, 
+            binding.ivMusicianImage.contentDescription = binding.root.context.getString(
+                R.string.musician_image_description,
                 musician.name
             )
             
@@ -66,7 +66,7 @@ class MusicianAdapter(private val onMusicianClick: (Int) -> Unit) :
                         return false
                     }
                 })
-                .into(binding.ivArtistImage)
+                .into(binding.ivMusicianImage)
             
             binding.root.setOnClickListener {
                 onMusicianClick(musician.id)
