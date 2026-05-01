@@ -41,7 +41,7 @@ class AlbumsListTest {
 
     @Test
     fun testVisibilityOfAllComponents() {
-        onView(withId(R.id.etSearchAlbum)).check(matches(isDisplayed()))
+        onView(withId(R.id.searchBar)).check(matches(isDisplayed()))
 
         onView(withId(R.id.btnSortName)).check(matches(isDisplayed()))
         onView(withId(R.id.btnSortDate)).check(matches(isDisplayed()))
@@ -75,7 +75,7 @@ class AlbumsListTest {
     fun testSwapOrderButton() {
         onView(withId(R.id.btnSwapOrder)).perform(click())
 
-        onView(withId(R.id.etSearchAlbum)).check(matches(isDisplayed()))
+        onView(withId(R.id.searchBar)).check(matches(isDisplayed()))
     }
 
     @Test

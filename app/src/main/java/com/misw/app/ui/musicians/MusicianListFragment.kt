@@ -22,8 +22,7 @@ class MusicianListFragment : Fragment() {
     private val viewModel: MusicianViewModel by viewModels()
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         _binding = FragmentMusicianListBinding.inflate(inflater, container, false)
         return binding.root
@@ -32,8 +31,16 @@ class MusicianListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupRecyclerView()
+        setupControls()
         setupSearch()
         observeViewModel()
+    }
+
+    private fun setupControls() {
+        binding.btnSwapOrder.ibSwapOrder.setOnClickListener {
+            viewModel.toggleSortOrder()
+            binding.btnSwapOrder.ibSwapOrder.animate().rotationBy(180f).setDuration(300).start()
+        }
     }
 
     private fun setupRecyclerView() {
@@ -42,8 +49,7 @@ class MusicianListFragment : Fragment() {
                 putInt("musician_id", musicianId)
             }
             findNavController().navigate(
-                R.id.action_musicianListFragment_to_musicianDetailFragment,
-                bundle
+                R.id.action_musicianListFragment_to_musicianDetailFragment, bundle
             )
         }
 
@@ -55,11 +61,11 @@ class MusicianListFragment : Fragment() {
     }
 
     private fun setupSearch() {
-        if (binding.etSearchAlbum.text.toString() != viewModel.query.value) {
-            binding.etSearchAlbum.setText(viewModel.query.value)
+        if (binding.searchBar.etSearchAlbum.text.toString() != viewModel.query.value) {
+            binding.searchBar.etSearchAlbum.setText(viewModel.query.value)
         }
 
-        binding.etSearchAlbum.doOnTextChanged { text, _, _, _ ->
+        binding.searchBar.etSearchAlbum.doOnTextChanged { text, _, _, _ ->
             viewModel.filterMusicians(text.toString())
         }
     }
@@ -90,12 +96,14 @@ class MusicianListFragment : Fragment() {
                 binding.tvEmptyState.text = error
                 binding.ivEmptyState.setImageResource(android.R.drawable.stat_notify_error)
             }
+
             musicians.isEmpty() -> {
                 binding.llEmptyState.visibility = View.VISIBLE
                 binding.rvMusicians.visibility = View.GONE
                 binding.tvEmptyState.text = getString(R.string.no_artists_found)
                 binding.ivEmptyState.setImageResource(R.drawable.ic_artists)
             }
+
             else -> {
                 binding.llEmptyState.visibility = View.GONE
                 binding.rvMusicians.visibility = View.VISIBLE
