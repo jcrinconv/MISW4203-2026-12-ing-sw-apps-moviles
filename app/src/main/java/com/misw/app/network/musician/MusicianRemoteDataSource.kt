@@ -9,11 +9,7 @@ class MusicianRemoteDataSource {
     }
 
     suspend fun fetchMusicians(): List<Musician> {
-        return try {
-            musicianApiService.getMusicians()
-        } catch (e: Exception) {
-            emptyList()
-        }
+        return musicianApiService.getMusicians()
     }
 
     suspend fun fetchMusicianById(id: Int): Musician {

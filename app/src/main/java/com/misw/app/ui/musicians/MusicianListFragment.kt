@@ -4,10 +4,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.misw.app.R
 import com.misw.app.databinding.FragmentMusicianListBinding
 import com.misw.app.ui.adapters.MusicianAdapter
 import com.misw.app.viewmodel.MusicianViewModel
@@ -48,15 +48,38 @@ class MusicianListFragment : Fragment() {
     private fun observeViewModel() {
         viewModel.musicians.observe(viewLifecycleOwner) { musicians ->
             musicianAdapter.updateMusicians(musicians)
+            updateUIState(musicians, viewModel.error.value)
+        }
+
+        viewModel.error.observe(viewLifecycleOwner) { errorMessage ->
+            updateUIState(viewModel.musicians.value ?: emptyList<Any>(), errorMessage)
         }
 
         viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
             binding.pbAlbumList.visibility = if (isLoading) View.VISIBLE else View.GONE
+            if (isLoading) {
+                binding.llEmptyState.visibility = View.GONE
+            }
         }
+    }
 
-        viewModel.error.observe(viewLifecycleOwner) { errorMessage ->
-            if (errorMessage != null) {
-                Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_SHORT).show()
+    private fun updateUIState(musicians: List<*>, error: String?) {
+        when {
+            error != null -> {
+                binding.llEmptyState.visibility = View.VISIBLE
+                binding.rvMusicians.visibility = View.GONE
+                binding.tvEmptyState.text = error
+                binding.ivEmptyState.setImageResource(android.R.drawable.stat_notify_error)
+            }
+            musicians.isEmpty() -> {
+                binding.llEmptyState.visibility = View.VISIBLE
+                binding.rvMusicians.visibility = View.GONE
+                binding.tvEmptyState.text = getString(R.string.no_artists_found)
+                binding.ivEmptyState.setImageResource(R.drawable.ic_artists)
+            }
+            else -> {
+                binding.llEmptyState.visibility = View.GONE
+                binding.rvMusicians.visibility = View.VISIBLE
             }
         }
     }

@@ -16,11 +16,10 @@ class MusicianViewModel : ViewModel() {
     private val _musicians = MutableLiveData<List<Musician>>()
     val musicians: LiveData<List<Musician>> get() = _musicians
 
-    private val _error = MutableLiveData<String>()
-    val error: LiveData<String> get() = _error
+    private val _error = MutableLiveData<String?>()
+    val error: LiveData<String?> get() = _error
 
     private var originalList: List<Musician> = emptyList()
-
     private var currentOrder = SortOrder.ASCENDING
 
     private val _isLoading = MutableLiveData<Boolean>()
@@ -30,13 +29,14 @@ class MusicianViewModel : ViewModel() {
         fetchMusicians()
     }
 
-    private fun fetchMusicians() {
+    fun fetchMusicians() {
         viewModelScope.launch {
             _isLoading.value = true
+            _error.value = null
             try {
                 val result = repository.getMusicians()
                 originalList = result
-                updateAlbumList()
+                updateMusicianList()
             } catch (e: Exception) {
                 _error.value = e.message ?: "Error al cargar artistas"
             } finally {
@@ -51,10 +51,10 @@ class MusicianViewModel : ViewModel() {
         } else {
             SortOrder.ASCENDING
         }
-        updateAlbumList()
+        updateMusicianList()
     }
 
-    private fun updateAlbumList() {
+    private fun updateMusicianList() {
         val processedList =
             if (currentOrder == SortOrder.ASCENDING) originalList.sortedBy { it.name }
             else originalList.sortedByDescending { it.name }
