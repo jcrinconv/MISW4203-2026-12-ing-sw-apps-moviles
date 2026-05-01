@@ -10,4 +10,8 @@ class MusicianRepositoryImpl(
     override suspend fun getMusicians(): List<Musician> {
         return remoteDataSource.fetchMusicians()
     }
+
+    override suspend fun getMusicianById(id: Int): Musician {
+        return remoteDataSource.fetchMusicianById(id)
+    }
 }

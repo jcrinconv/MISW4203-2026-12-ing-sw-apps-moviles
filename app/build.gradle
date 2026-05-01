@@ -2,6 +2,7 @@ plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
     id 'org.jetbrains.kotlin.kapt'
+    id 'kotlin-kapt'
     id 'jacoco'
 }
 
@@ -75,6 +76,8 @@ dependencies {
 
     // Carga de imágenes
     implementation 'com.github.bumptech.glide:glide:4.16.0'
+    implementation 'com.github.bumptech.glide:okhttp3-integration:4.16.0'
+    kapt 'com.github.bumptech.glide:compiler:4.16.0'
 
     // Testing
     testImplementation 'junit:junit:4.13.2'
@@ -90,6 +93,9 @@ dependencies {
 
     // Shimmer para la carga de imágenes
     implementation 'com.facebook.shimmer:shimmer:0.5.0'
+
+    //Layout
+    implementation "com.google.android.flexbox:flexbox:3.0.0"
 }
 
 jacoco {

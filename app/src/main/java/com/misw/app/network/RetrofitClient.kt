@@ -2,6 +2,7 @@ package com.misw.app.network
 
 import com.misw.app.BuildConfig
 import com.misw.app.network.musician.MusicianApiService
+import com.misw.app.network.prize.PrizeApiService
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -34,7 +35,11 @@ object RetrofitClient {
         retrofit.create(AlbumApiService::class.java)
     }
 
-    val musicianApiService: MusicianApiService by lazy{
+    val musicianApiService: MusicianApiService by lazy {
         retrofit.create(MusicianApiService::class.java)
+    }
+
+    val prizeApiService: PrizeApiService by lazy {
+        retrofit.create(PrizeApiService::class.java)
     }
 }
