@@ -1,16 +1,18 @@
 package com.misw.app.viewmodel
 
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.misw.app.R
 import com.misw.app.model.Musician
 import com.misw.app.network.musician.MusicianRemoteDataSource
 import com.misw.app.repository.musician.MusicianRepository
 import com.misw.app.repository.musician.MusicianRepositoryImpl
 import kotlinx.coroutines.launch
 
-class MusicianViewModel : ViewModel() {
+class MusicianViewModel(application: Application) : AndroidViewModel(application) {
     private val repository: MusicianRepository = MusicianRepositoryImpl(MusicianRemoteDataSource())
 
     private val _musicians = MutableLiveData<List<Musician>>()
@@ -40,8 +42,8 @@ class MusicianViewModel : ViewModel() {
                 val result = repository.getMusicians()
                 originalList = result
                 updateMusicianList()
-            } catch (e: Exception) {
-                _error.value = e.message ?: "Error al cargar artistas"
+            } catch (_: Exception) {
+                _error.value =  getApplication<Application>().getString(R.string.error_loading_content)
             } finally {
                 _isLoading.value = false
             }
