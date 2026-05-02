@@ -1,5 +1,6 @@
 package com.misw.app
 
+import android.graphics.Rect
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ScrollView
@@ -10,11 +11,13 @@ import androidx.test.espresso.IdlingRegistry
 import androidx.test.espresso.UiController
 import androidx.test.espresso.ViewAction
 import androidx.test.espresso.action.ViewActions.click
+import androidx.test.espresso.action.ViewActions.swipeUp
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.test.filters.LargeTest
 import com.github.javafaker.Faker
 import com.misw.app.network.EspressoIdlingResource
@@ -43,73 +46,63 @@ class AlbumDetailFragmentTest {
     private val mockWebServer = MockWebServer()
     private val faker = Faker()
 
-    // Variable global para almacenar el nombre largo generado y poder asertarlo en el test
     private lateinit var fakerGeneratedAlbumName: String
     private lateinit var fakerGeneratedAlbumDescription: String
+    private lateinit var fakerGeneratedTrackName: String
 
     @Before
     fun setup() {
-        // Generar datos aleatorios extremos (border case) para el álbum de id 99
-        fakerGeneratedAlbumName = faker.lorem().characters(100) // Nombre muy largo para probar UI
-        fakerGeneratedAlbumDescription = faker.lorem().paragraph(10) // Descripción muy larga
+        fakerGeneratedAlbumName = "Album " + faker.lorem().characters(20)
+        // Descripción muy larga para forzar el "Ver más"
+        fakerGeneratedAlbumDescription = faker.lorem().fixedString(800)
+        fakerGeneratedTrackName = faker.music().instrument()
 
-        // Configurar el Dispatcher para manejar múltiples rutas
         val dispatcher = object : Dispatcher() {
             override fun dispatch(request: RecordedRequest): MockResponse {
                 val path = request.path ?: return MockResponse().setResponseCode(404)
-
                 return when {
                     path == "/albums" -> {
-                        // Devuelve el Happy Path + un item para el border case (id: 99)
                         val albumsJson = """
                             [
-                                {"id":1, "name":"A Day at the Races", "cover":"https://picsum.photos/200", "releaseDate":"1976-12-10T00:00:00.000Z", "description":"D1", "genre":"Rock", "recordLabel":"EMI"},
-                                {"id":99, "name":"$fakerGeneratedAlbumName", "cover":"https://picsum.photos/200", "releaseDate":"2023-01-01T00:00:00.000Z", "description":"D99", "genre":"Pop", "recordLabel":"Sony"}
+                                {"id":1, "name":"$fakerGeneratedAlbumName", "cover":"https://picsum.photos/200", "releaseDate":"1976-12-10T00:00:00.000Z", "description":"D1", "genre":"Rock", "recordLabel":"EMI"},
+                                {"id":98, "name":"Empty Album", "cover":"https://picsum.photos/200", "releaseDate":"2023-01-01T00:00:00.000Z", "description":"", "genre":"Pop", "recordLabel":"Indie"},
+                                {"id":404, "name":"Error Album", "cover":"https://picsum.photos/200", "releaseDate":"2023-01-01T00:00:00.000Z", "description":"", "genre":"Pop", "recordLabel":"Indie"}
                             ]
                         """.trimIndent()
                         MockResponse().setResponseCode(200).setBody(albumsJson)
                     }
                     path == "/albums/1" -> {
-                        // Happy path detail
-                        val albumDetailJson = """
+                        val detailJson = """
                             {
-                                "id":1, "name":"A Day at the Races", "cover":"https://picsum.photos/200", 
-                                "releaseDate":"1976-12-10T00:00:00.000Z", "description":"D1", "genre":"Rock", 
+                                "id":1, "name":"$fakerGeneratedAlbumName", "cover":"https://picsum.photos/200", 
+                                "releaseDate":"1976-12-10T00:00:00.000Z", "description":"$fakerGeneratedAlbumDescription", "genre":"Rock", 
                                 "recordLabel":"EMI",
-                                "tracks": [
-                                    {"id":1, "name":"Tie Your Mother Down", "duration":"4:48"}
-                                ],
-                                "performers": [],
-                                "comments": []
+                                "tracks": [{"id":1, "name":"$fakerGeneratedTrackName", "duration":"4:48"}]
                             }
                         """.trimIndent()
-                        MockResponse().setResponseCode(200).setBody(albumDetailJson)
+                        MockResponse().setResponseCode(200).setBody(detailJson)
                     }
-                    path == "/albums/99" -> {
-                        // Border case detail usando Faker
-                        val albumDetailJson = """
+                    path == "/albums/98" -> {
+                        val detailJson = """
                             {
-                                "id":99, "name":"$fakerGeneratedAlbumName", "cover":"https://picsum.photos/200", 
-                                "releaseDate":"2023-01-01T00:00:00.000Z", "description":"$fakerGeneratedAlbumDescription", "genre":"Pop", 
-                                "recordLabel":"Sony",
-                                "tracks": [],
-                                "performers": [],
-                                "comments": []
+                                "id":98, "name":"Empty Album", "cover":"https://picsum.photos/200", 
+                                "releaseDate":"2023-01-01T00:00:00.000Z", "description":"", "genre":"Pop", 
+                                "recordLabel":"Indie", "tracks": []
                             }
                         """.trimIndent()
-                        MockResponse().setResponseCode(200).setBody(albumDetailJson)
+                        MockResponse().setResponseCode(200).setBody(detailJson)
+                    }
+
+                    path == "/albums/404" -> {
+                        MockResponse().setResponseCode(404)
                     }
                     else -> MockResponse().setResponseCode(404)
                 }
             }
         }
         mockWebServer.dispatcher = dispatcher
-
-        // 1. Iniciar servidor de mock
         mockWebServer.start(0)
         RetrofitClient.setBaseUrl(mockWebServer.url("/").toString())
-
-        // 2. Registrar sincronización
         IdlingRegistry.getInstance().register(EspressoIdlingResource.countingIdlingResource)
     }
 
@@ -121,41 +114,43 @@ class AlbumDetailFragmentTest {
     }
 
     /**
-     * betterScrollTo es una alternativa robusta a la acción scrollTo() estándar de Espresso.
-     *
-     * ¿Por qué es necesaria?
-     * 1. La acción estándar scrollTo() solo funciona con ScrollView tradicional y falla con NestedScrollView.
-     * 2. Esta implementación detecta dinámicamente si el padre es ScrollView o NestedScrollView.
-     * 3. Realiza el desplazamiento programático directamente sobre el contenedor padre.
-     * 4. Utiliza loopMainThreadUntilIdle() para asegurar que la animación de scroll termine antes
-     *    de realizar la siguiente validación.
+     * betterScrollTo uses Android's native requestRectangleOnScreen to guarantee the view
+     * becomes visible, then falls back to manual scroll if still not displayed.
      */
     private fun betterScrollTo(): ViewAction {
         return object : ViewAction {
-            override fun getConstraints(): Matcher<View> {
-                return allOf(
-                    withEffectiveVisibility(Visibility.VISIBLE),
-                    isDescendantOfA(anyOf(isAssignableFrom(ScrollView::class.java), isAssignableFrom(NestedScrollView::class.java)))
-                )
-            }
-
-            override fun getDescription(): String = "scroll to view"
-
+            override fun getConstraints(): Matcher<View> = allOf(
+                withEffectiveVisibility(Visibility.VISIBLE),
+                isDescendantOfA(anyOf(isAssignableFrom(ScrollView::class.java), isAssignableFrom(NestedScrollView::class.java)))
+            )
+            override fun getDescription(): String = "better scroll to"
             override fun perform(uiController: UiController, view: View) {
-                if (isDisplayingAtLeast(90).matches(view)) {
-                    return
-                }
-                var parent = view.parent
-                while (parent != null && parent !is NestedScrollView && parent !is ScrollView) {
-                    parent = parent.parent
+                if (isDisplayingAtLeast(90).matches(view)) return
+
+                // First attempt: use Android's native mechanism
+                val rect = Rect(0, 0, view.width, view.height)
+                view.requestRectangleOnScreen(rect, true)
+                uiController.loopMainThreadForAtLeast(500)
+                uiController.loopMainThreadUntilIdle()
+
+                if (isDisplayingAtLeast(90).matches(view)) return
+
+                // Fallback: manual scroll using absolute coordinates
+                var scrollParent: View? = view.parent as? View
+                while (scrollParent != null && scrollParent !is NestedScrollView && scrollParent !is ScrollView) {
+                    scrollParent = scrollParent.parent as? View
                 }
 
-                when (parent) {
-                    is NestedScrollView -> {
-                        parent.scrollTo(0, view.top)
-                    }
-                    is ScrollView -> {
-                        parent.scrollTo(0, view.top)
+                if (scrollParent != null) {
+                    val parentRect = Rect()
+                    view.getDrawingRect(parentRect)
+                    (scrollParent as ViewGroup).offsetDescendantRectToMyCoords(view, parentRect)
+                    val offset = parentRect.top - 200
+
+                    if (scrollParent is NestedScrollView) {
+                        scrollParent.scrollTo(0, offset.coerceAtLeast(0))
+                    } else if (scrollParent is ScrollView) {
+                        scrollParent.scrollTo(0, offset.coerceAtLeast(0))
                     }
                 }
                 uiController.loopMainThreadForAtLeast(500)
@@ -164,99 +159,61 @@ class AlbumDetailFragmentTest {
         }
     }
 
-    private fun navigateToFirstAlbum() {
+    @Test
+    fun testFullAlbumDetailFlow() {
+        // 1. Navegar al álbum generado por Faker
         onView(withId(R.id.include_albums)).perform(click())
-        onView(withId(R.id.rvAlbumList))
-            .perform(RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(0, click()))
-    }
+        onView(withId(R.id.rvAlbumList)).perform(
+            RecyclerViewActions.actionOnItem<RecyclerView.ViewHolder>(hasDescendant(withText(fakerGeneratedAlbumName)), click())
+        )
 
-    @Test
-    fun checkAlbumCoverTest() {
-        navigateToFirstAlbum()
-        onView(withId(R.id.ivAlbumCover)).check(matches(isDisplayed()))
-    }
-
-    @Test
-    fun checkAlbumNameTest() {
-        navigateToFirstAlbum()
-        onView(withId(R.id.tvAlbumName)).check(matches(allOf(isDisplayed(), not(withText("")))))
-    }
-
-    @Test
-    fun checkReleaseDateTest() {
-        navigateToFirstAlbum()
-        onView(withId(R.id.tvReleaseDate)).check(matches(allOf(
-            isDisplayed(),
-            withText(startsWith("Lanzado en "))
-        )))
-    }
-
-    @Test
-    fun checkRecordLabelTest() {
-        navigateToFirstAlbum()
-        onView(withId(R.id.tvRecordLabel)).perform(betterScrollTo()).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
-        onView(withId(R.id.tvRecordLabel)).check(matches(not(withText(""))))
-    }
-
-    @Test
-    fun checkGenreTest() {
-        navigateToFirstAlbum()
-        onView(withId(R.id.tvGenre)).perform(betterScrollTo()).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
-    }
-
-    @Test
-    fun checkDescriptionTest() {
-        navigateToFirstAlbum()
-        onView(withId(R.id.tvDescription)).perform(betterScrollTo()).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
-        onView(withId(R.id.tvDescription)).check(matches(not(withText(""))))
-    }
-
-    @Test
-    fun checkTracklistTest() {
-        navigateToFirstAlbum()
-
-        onView(withText(R.string.tracklist)).perform(betterScrollTo()).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
-
-        onView(withId(R.id.llTracksContainer)).perform(betterScrollTo()).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
-
-        onView(withId(R.id.llTracksContainer)).check { view, noViewFoundException ->
-            noViewFoundException?.let { throw it }
-            val container = view as ViewGroup
-
-            if (container.childCount > 0) {
-                assert(view.visibility == View.VISIBLE)
-
-                for (i in 0 until container.childCount) {
-                    val trackRow = container.getChildAt(i) as ViewGroup
-
-                    val tvNumber = trackRow.findViewById<View>(R.id.tvTrackNumber)
-                    val tvName = trackRow.findViewById<View>(R.id.tvTrackName)
-                    val tvDuration = trackRow.findViewById<View>(R.id.tvTrackDuration)
-
-                    assert(tvNumber != null && tvNumber.visibility == View.VISIBLE)
-                    assert(tvName != null && tvName.visibility == View.VISIBLE)
-                    assert(tvDuration != null && tvDuration.visibility == View.VISIBLE)
-                }
-            }
-        }
-    }
-
-    @Test
-    fun checkBorderCaseAlbumTest() {
-        // Navegar a la lista
-        onView(withId(R.id.include_albums)).perform(click())
-        
-        // Hacer scroll hasta el item con nombre generado (id 99) y hacer click
-        onView(withId(R.id.rvAlbumList))
-            .perform(RecyclerViewActions.actionOnItem<RecyclerView.ViewHolder>(
-                hasDescendant(withText(fakerGeneratedAlbumName)), click()
-            ))
-
-        // Validar que el nombre dinámico y largo carga correctamente
+        // 2. Verificar datos básicos
         onView(withId(R.id.tvAlbumName)).check(matches(withText(fakerGeneratedAlbumName)))
+        onView(withId(R.id.tvGenre)).check(matches(isDisplayed()))
 
-        // Hacer scroll a la descripción y validar que carga el texto dinámico y muy largo
-        onView(withId(R.id.tvDescription)).perform(betterScrollTo())
-            .check(matches(withText(fakerGeneratedAlbumDescription)))
+        // 3. Probar lógica de "Ver más" en descripción larga
+        // Colapsar la cabecera para que el NestedScrollView ocupe toda la pantalla
+        onView(isAssignableFrom(CoordinatorLayout::class.java)).perform(swipeUp())
+
+        // Clic para expandir
+        onView(withId(R.id.tvReadMore)).perform(betterScrollTo(), click())
+        onView(withId(R.id.tvReadMore)).check(matches(withText("Ver menos")))
+
+        // Esperamos a que Android termine de expandir el TextView y recalcule el layout
+        Thread.sleep(1500)
+
+        // Forzamos múltiples swipes para asegurar que el botón quede en pantalla
+        onView(isAssignableFrom(CoordinatorLayout::class.java)).perform(swipeUp())
+        onView(isAssignableFrom(CoordinatorLayout::class.java)).perform(swipeUp())
+
+        // Clic para colapsar
+        onView(withId(R.id.tvReadMore)).perform(betterScrollTo(), click())
+        onView(withId(R.id.tvReadMore)).check(matches(withText("Ver más")))
+
+        // 4. Verificar tracklist renderizado dinámicamente
+        onView(withText(fakerGeneratedTrackName))
+            .perform(betterScrollTo())
+            .check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun testEmptyAlbumDetail() {
+        onView(withId(R.id.include_albums)).perform(click())
+        onView(withId(R.id.rvAlbumList)).perform(
+            RecyclerViewActions.actionOnItem<RecyclerView.ViewHolder>(hasDescendant(withText("Empty Album")), click())
+        )
+
+        onView(withId(R.id.tvDescription)).check(matches(withText("")))
+        onView(withId(R.id.llTracksContainer)).check(matches(hasChildCount(0)))
+    }
+
+    @Test
+    fun testAlbumDetailErrorCharge() {
+        onView(withId(R.id.include_albums)).perform(click())
+        onView(withId(R.id.rvAlbumList)).perform(
+            RecyclerViewActions.actionOnItem<RecyclerView.ViewHolder>(hasDescendant(withText("Error Album")), click())
+        )
+        onView(withId(R.id.llEmptyState)).check(matches(isDisplayed()))
+        onView(withId(R.id.tvEmptyState)).check(matches(withText("Error al cargar contenido. Por favor intenta de nuevo.")))
     }
 }

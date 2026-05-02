@@ -38,15 +38,22 @@ class AlbumDetailFragment : Fragment() {
 
         viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
             binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
-            binding.nestedScrollView.visibility = if (isLoading) View.GONE else View.VISIBLE
+            if (isLoading) {
+                binding.nestedScrollView.visibility = View.GONE
+                binding.llEmptyState.visibility = View.GONE
+            } else if (viewModel.error.value == null) {
+                binding.nestedScrollView.visibility = View.VISIBLE
+            }
+        }
+
+        viewModel.error.observe(viewLifecycleOwner) { errorMessage ->
+            updateUIState(viewModel.album.value, errorMessage)
         }
 
         viewModel.album.observe(viewLifecycleOwner) { album ->
-            binding.tvAlbumName.text = album.name
-            binding.tvReleaseDate.text = formatDate(album.releaseDate)
-            binding.tvDescription.text = album.description
-            binding.tvGenre.text = album.genre
-            binding.tvRecordLabel.text = album.recordLabel
+            updateUIState(album, viewModel.error.value)
+            
+            updateUI(album)
             binding.tvTrackCount.text = getString(R.string.track_count, album.tracks.size)
 
             binding.shimmerLayout.startShimmer()
@@ -87,6 +94,60 @@ class AlbumDetailFragment : Fragment() {
 
         val albumId = arguments?.getInt("album_id") ?: 100
         viewModel.loadAlbum(albumId)
+    }
+
+    private fun updateUIState(album: com.misw.app.model.Album?, error: String?) {
+        when {
+            error != null -> {
+                binding.llEmptyState.visibility = View.VISIBLE
+                binding.nestedScrollView.visibility = View.GONE
+                binding.tvEmptyState.text = getString(R.string.error_loading_content)
+                binding.ivEmptyState.setImageResource(android.R.drawable.stat_notify_error)
+            }
+            album == null -> {
+                binding.llEmptyState.visibility = View.VISIBLE
+                binding.nestedScrollView.visibility = View.GONE
+                binding.tvEmptyState.text = getString(R.string.error_loading_content)
+                binding.ivEmptyState.setImageResource(android.R.drawable.stat_notify_error)
+            }
+            else -> {
+                binding.llEmptyState.visibility = View.GONE
+                binding.nestedScrollView.visibility = View.VISIBLE
+            }
+        }
+    }
+
+    private fun updateUI(album: com.misw.app.model.Album) {
+        binding.tvAlbumName.text = album.name
+        binding.tvReleaseDate.text = formatDate(album.releaseDate)
+        binding.tvRecordLabel.text = album.recordLabel
+        binding.tvGenre.text = album.genre
+        binding.tvDescription.text = album.description
+
+        // Lógica de "Ver más" para la descripción
+        binding.tvDescription.post {
+            val tv = binding.tvDescription
+            if (tv.layout != null) {
+                val lines = tv.layout.lineCount
+                if (lines > 0 && tv.layout.getEllipsisCount(lines - 1) > 0) {
+                    binding.tvReadMore.visibility = View.VISIBLE
+                    var isExpanded = false
+                    
+                    binding.tvReadMore.setOnClickListener {
+                        isExpanded = !isExpanded
+                        if (isExpanded) {
+                            tv.maxLines = Integer.MAX_VALUE
+                            binding.tvReadMore.text = "Ver menos"
+                        } else {
+                            tv.maxLines = 3
+                            binding.tvReadMore.text = "Ver más"
+                        }
+                    }
+                } else {
+                    binding.tvReadMore.visibility = View.GONE
+                }
+            }
+        }
     }
 
     private fun renderTracks(tracks: List<Track>) {
