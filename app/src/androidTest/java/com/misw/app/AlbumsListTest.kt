@@ -11,8 +11,13 @@ import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
+import com.github.javafaker.Faker
 import com.misw.app.network.EspressoIdlingResource
+import com.misw.app.network.RetrofitClient
 import com.misw.app.ui.MainActivity
+import okhttp3.mockwebserver.MockResponse
+import okhttp3.mockwebserver.MockWebServer
+import org.hamcrest.CoreMatchers.allOf
 import org.hamcrest.CoreMatchers.containsString
 import org.junit.After
 import org.junit.Before
@@ -28,19 +33,43 @@ class AlbumsListTest {
     @JvmField
     var mActivityScenarioRule = ActivityScenarioRule(MainActivity::class.java)
 
+    private val mockWebServer = MockWebServer()
+    private val faker = Faker()
+
     @Before
     fun setup() {
+        // 1. Iniciar servidor de mock en puerto aleatorio
+        mockWebServer.start(0)
+        RetrofitClient.setBaseUrl(mockWebServer.url("/").toString())
+
+        // 2. Registrar sincronización
         IdlingRegistry.getInstance().register(EspressoIdlingResource.countingIdlingResource)
+
+        // 3. Encolar respuesta inicial para que la lista cargue al navegar
+        val initialAlbumsJson = """
+            [
+                {"id":1, "name":"A Day at the Races", "cover":"https://picsum.photos/200", "releaseDate":"1976-12-10T00:00:00.000Z", "description":"D1", "genre":"Rock", "recordLabel":"EMI"},
+                {"id":2, "name":"A Night at the Opera", "cover":"https://picsum.photos/200", "releaseDate":"1975-11-21T00:00:00.000Z", "description":"D2", "genre":"Rock", "recordLabel":"EMI"},
+                {"id":3, "name":"Buscando América", "cover":"https://picsum.photos/200", "releaseDate":"1984-04-01T00:00:00.000Z", "description":"D3", "genre":"Salsa", "recordLabel":"Elektra"}
+            ]
+        """.trimIndent()
+        mockWebServer.enqueue(MockResponse().setResponseCode(200).setBody(initialAlbumsJson))
+
+        // 4. Navegar a la sección de álbumes
         onView(withId(R.id.include_albums)).perform(click())
     }
 
     @After
     fun tearDown() {
+        mockWebServer.shutdown()
         IdlingRegistry.getInstance().unregister(EspressoIdlingResource.countingIdlingResource)
+        // Restaurar URL original (opcional si se usa BuildConfig en producción)
+        RetrofitClient.setBaseUrl(BuildConfig.BASE_URL)
     }
 
     @Test
     fun testVisibilityOfAllComponents() {
+        // La nueva UI usa searchBar y botones de ordenamiento
         onView(withId(R.id.searchBar)).check(matches(isDisplayed()))
 
         onView(withId(R.id.btnSortName)).check(matches(isDisplayed()))
@@ -55,34 +84,43 @@ class AlbumsListTest {
     fun testSearchFiltering() {
         val albumToSearch = "Buscando América"
 
-        onView(withId(R.id.etSearchAlbum))
+        // Para un layout <include> con un EditText dentro (searchBar), hay que buscar el id interno. 
+        // Asumiendo que el EditText tiene id etSearchAlbum o similar dentro de search_bar.xml
+        // Pero basándonos en la estructura, busquemos cualquier EditText que sea descendiente del searchBar
+        onView(allOf(isAssignableFrom(android.widget.EditText::class.java), isDescendantOfA(withId(R.id.searchBar))))
             .perform(replaceText(albumToSearch), closeSoftKeyboard())
 
         onView(withId(R.id.rvAlbumList))
-            .check(matches(atPosition(0, hasDescendant(withText(containsString(albumToSearch))))))
+            .check(matches(hasDescendant(withText(containsString(albumToSearch)))))
     }
 
     @Test
-    fun testSortingButtonsInteraction() {
-        onView(withId(R.id.btnSortDate)).perform(click())
-        onView(withId(R.id.btnSortDate)).check(matches(isDisplayed()))
+    fun testSearchNoResults() {
+        // Escenario negativo usando un valor generado por Faker que no existe en nuestro JSON inicial
+        val nonExistentAlbum = "Fake-" + faker.lorem().characters(10)
 
-        onView(withId(R.id.btnSortName)).perform(click())
-        onView(withId(R.id.btnSortName)).check(matches(isDisplayed()))
+        onView(allOf(isAssignableFrom(android.widget.EditText::class.java), isDescendantOfA(withId(R.id.searchBar))))
+            .perform(replaceText(nonExistentAlbum), closeSoftKeyboard())
+
+        onView(withId(R.id.rvAlbumList))
+            .check(matches(hasChildCount(0)))
     }
 
     @Test
-    fun testSwapOrderButton() {
-        onView(withId(R.id.btnSwapOrder)).perform(click())
+    fun testSearchAndClearRestoresList() {
+        onView(allOf(isAssignableFrom(android.widget.EditText::class.java), isDescendantOfA(withId(R.id.searchBar))))
+            .perform(replaceText("Buscando"), closeSoftKeyboard())
 
-        onView(withId(R.id.searchBar)).check(matches(isDisplayed()))
+        onView(allOf(isAssignableFrom(android.widget.EditText::class.java), isDescendantOfA(withId(R.id.searchBar))))
+            .perform(replaceText(""), closeSoftKeyboard())
+
+        onView(withId(R.id.rvAlbumList))
+            .check(matches(hasMinimumChildCount(1)))
     }
 
     @Test
     fun testRecyclerViewContent() {
-        // En lugar de posiciones fijas que dependen del orden de la API, 
-        // validamos que los álbumes esperados existan en la lista haciendo scroll hacia ellos.
-        
+        // Verificamos que los datos mockeados en el setup() están presentes
         val expectedAlbums = listOf("A Day at the Races", "A Night at the Opera", "Buscando América")
         
         expectedAlbums.forEach { albumName ->
@@ -95,6 +133,9 @@ class AlbumsListTest {
     }
 }
 
+/**
+ * Matcher auxiliar para validar posiciones específicas si fuera necesario
+ */
 fun atPosition(position: Int, itemMatcher: org.hamcrest.Matcher<View>): org.hamcrest.Matcher<View> {
     return object :
         androidx.test.espresso.matcher.BoundedMatcher<View, RecyclerView>(

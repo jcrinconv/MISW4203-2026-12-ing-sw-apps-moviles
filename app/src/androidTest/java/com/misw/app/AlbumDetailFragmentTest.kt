@@ -16,8 +16,14 @@ import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
+import com.github.javafaker.Faker
 import com.misw.app.network.EspressoIdlingResource
+import com.misw.app.network.RetrofitClient
 import com.misw.app.ui.MainActivity
+import okhttp3.mockwebserver.Dispatcher
+import okhttp3.mockwebserver.MockResponse
+import okhttp3.mockwebserver.MockWebServer
+import okhttp3.mockwebserver.RecordedRequest
 import org.hamcrest.Matcher
 import org.hamcrest.Matchers.*
 import org.junit.After
@@ -34,14 +40,84 @@ class AlbumDetailFragmentTest {
     @JvmField
     var mActivityScenarioRule = ActivityScenarioRule(MainActivity::class.java)
 
+    private val mockWebServer = MockWebServer()
+    private val faker = Faker()
+
+    // Variable global para almacenar el nombre largo generado y poder asertarlo en el test
+    private lateinit var fakerGeneratedAlbumName: String
+    private lateinit var fakerGeneratedAlbumDescription: String
+
     @Before
-    fun registerIdlingResource() {
+    fun setup() {
+        // Generar datos aleatorios extremos (border case) para el álbum de id 99
+        fakerGeneratedAlbumName = faker.lorem().characters(100) // Nombre muy largo para probar UI
+        fakerGeneratedAlbumDescription = faker.lorem().paragraph(10) // Descripción muy larga
+
+        // Configurar el Dispatcher para manejar múltiples rutas
+        val dispatcher = object : Dispatcher() {
+            override fun dispatch(request: RecordedRequest): MockResponse {
+                val path = request.path ?: return MockResponse().setResponseCode(404)
+
+                return when {
+                    path == "/albums" -> {
+                        // Devuelve el Happy Path + un item para el border case (id: 99)
+                        val albumsJson = """
+                            [
+                                {"id":1, "name":"A Day at the Races", "cover":"https://picsum.photos/200", "releaseDate":"1976-12-10T00:00:00.000Z", "description":"D1", "genre":"Rock", "recordLabel":"EMI"},
+                                {"id":99, "name":"$fakerGeneratedAlbumName", "cover":"https://picsum.photos/200", "releaseDate":"2023-01-01T00:00:00.000Z", "description":"D99", "genre":"Pop", "recordLabel":"Sony"}
+                            ]
+                        """.trimIndent()
+                        MockResponse().setResponseCode(200).setBody(albumsJson)
+                    }
+                    path == "/albums/1" -> {
+                        // Happy path detail
+                        val albumDetailJson = """
+                            {
+                                "id":1, "name":"A Day at the Races", "cover":"https://picsum.photos/200", 
+                                "releaseDate":"1976-12-10T00:00:00.000Z", "description":"D1", "genre":"Rock", 
+                                "recordLabel":"EMI",
+                                "tracks": [
+                                    {"id":1, "name":"Tie Your Mother Down", "duration":"4:48"}
+                                ],
+                                "performers": [],
+                                "comments": []
+                            }
+                        """.trimIndent()
+                        MockResponse().setResponseCode(200).setBody(albumDetailJson)
+                    }
+                    path == "/albums/99" -> {
+                        // Border case detail usando Faker
+                        val albumDetailJson = """
+                            {
+                                "id":99, "name":"$fakerGeneratedAlbumName", "cover":"https://picsum.photos/200", 
+                                "releaseDate":"2023-01-01T00:00:00.000Z", "description":"$fakerGeneratedAlbumDescription", "genre":"Pop", 
+                                "recordLabel":"Sony",
+                                "tracks": [],
+                                "performers": [],
+                                "comments": []
+                            }
+                        """.trimIndent()
+                        MockResponse().setResponseCode(200).setBody(albumDetailJson)
+                    }
+                    else -> MockResponse().setResponseCode(404)
+                }
+            }
+        }
+        mockWebServer.dispatcher = dispatcher
+
+        // 1. Iniciar servidor de mock
+        mockWebServer.start(0)
+        RetrofitClient.setBaseUrl(mockWebServer.url("/").toString())
+
+        // 2. Registrar sincronización
         IdlingRegistry.getInstance().register(EspressoIdlingResource.countingIdlingResource)
     }
 
     @After
-    fun unregisterIdlingResource() {
+    fun tearDown() {
+        mockWebServer.shutdown()
         IdlingRegistry.getInstance().unregister(EspressoIdlingResource.countingIdlingResource)
+        RetrofitClient.setBaseUrl(BuildConfig.BASE_URL)
     }
 
     /**
@@ -163,5 +239,24 @@ class AlbumDetailFragmentTest {
                 }
             }
         }
+    }
+
+    @Test
+    fun checkBorderCaseAlbumTest() {
+        // Navegar a la lista
+        onView(withId(R.id.include_albums)).perform(click())
+        
+        // Hacer scroll hasta el item con nombre generado (id 99) y hacer click
+        onView(withId(R.id.rvAlbumList))
+            .perform(RecyclerViewActions.actionOnItem<RecyclerView.ViewHolder>(
+                hasDescendant(withText(fakerGeneratedAlbumName)), click()
+            ))
+
+        // Validar que el nombre dinámico y largo carga correctamente
+        onView(withId(R.id.tvAlbumName)).check(matches(withText(fakerGeneratedAlbumName)))
+
+        // Hacer scroll a la descripción y validar que carga el texto dinámico y muy largo
+        onView(withId(R.id.tvDescription)).perform(betterScrollTo())
+            .check(matches(withText(fakerGeneratedAlbumDescription)))
     }
 }
