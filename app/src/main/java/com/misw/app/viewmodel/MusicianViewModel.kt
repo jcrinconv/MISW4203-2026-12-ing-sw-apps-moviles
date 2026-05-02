@@ -42,7 +42,7 @@ class MusicianViewModel(application: Application) : AndroidViewModel(application
                 val result = repository.getMusicians()
                 originalList = result
                 updateMusicianList()
-            } catch (e: Exception) {
+            } catch (_: Exception) {
                 _error.value =  getApplication<Application>().getString(R.string.error_loading_content)
             } finally {
                 _isLoading.value = false
