@@ -10,6 +10,7 @@ import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
+import com.github.javafaker.Faker
 import com.misw.app.network.EspressoIdlingResource
 import com.misw.app.network.RetrofitClient
 import com.misw.app.ui.MainActivity
@@ -33,6 +34,7 @@ class AlbumsListTest {
     var mActivityScenarioRule = ActivityScenarioRule(MainActivity::class.java)
 
     private val mockWebServer = MockWebServer()
+    private val faker = Faker()
 
     @Before
     fun setup() {
@@ -85,7 +87,7 @@ class AlbumsListTest {
 
     @Test
     fun testSearchNoResults() {
-        val nonExistentAlbum = "NonExistentAlbum123"
+        val nonExistentAlbum = "Fake-" + faker.lorem().characters(10)
 
         onView(allOf(isAssignableFrom(android.widget.EditText::class.java), isDescendantOfA(withId(R.id.searchBar))))
             .perform(replaceText(nonExistentAlbum), closeSoftKeyboard())
