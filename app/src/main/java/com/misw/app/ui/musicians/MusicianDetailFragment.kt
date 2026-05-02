@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -93,16 +94,14 @@ class MusicianDetailFragment : Fragment() {
                     R.layout.item_prize,
                     container,
                     false
-                ) as TextView
-
-                pillView.text = "Sin premios"
+                )
                 pillView.setBackgroundResource(R.drawable.pill_prize_gray)
-                pillView.setTextColor(
+                pillView.findViewById<ImageView>(R.id.ivTrophy).setImageResource(R.drawable.ic_sad_face)
+                pillView.findViewById<TextView>(R.id.tvPrize).text = "Sin premios"
+                pillView.findViewById<TextView>(R.id.tvPrize).setTextColor(
                     ContextCompat.getColor(pillView.context, R.color.silver_chalice)
                 )
-
                 container.addView(pillView)
-
                 return@observe
             }
 
@@ -111,17 +110,17 @@ class MusicianDetailFragment : Fragment() {
                     R.layout.item_prize,
                     container,
                     false
-                ) as TextView
-
-                pillView.text = prize.name
-
+                )
+                pillView.findViewById<TextView>(R.id.tvPrize).text = prize.name
                 if (index%2 != 0) {
                     pillView.setBackgroundResource(R.drawable.pill_prize_pink)
-                    pillView.setTextColor(
+                    pillView.findViewById<ImageView>(R.id.ivTrophy).setColorFilter(
+                        ContextCompat.getColor(pillView.context, R.color.prize_pink_text)
+                    )
+                    pillView.findViewById<TextView>(R.id.tvPrize).setTextColor(
                         ContextCompat.getColor(pillView.context, R.color.prize_pink_text)
                     )
                 }
-
                 container.addView(pillView)
             }
         }
