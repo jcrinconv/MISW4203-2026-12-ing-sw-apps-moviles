@@ -63,16 +63,15 @@ class AlbumListFragment : Fragment() {
 
     private fun updateSortButtonsUI(isNameSelected: Boolean) {
         val pink = ContextCompat.getColor(requireContext(), R.color.wild_strawberry)
-        val transparent = Color.TRANSPARENT
         val white = Color.WHITE
         val gray = Color.GRAY
 
         binding.btnSortName.backgroundTintList =
-            ColorStateList.valueOf(if (isNameSelected) pink else transparent)
+            ColorStateList.valueOf(if (isNameSelected) pink else Color.TRANSPARENT)
         binding.btnSortName.setTextColor(if (isNameSelected) white else gray)
 
         binding.btnSortDate.backgroundTintList =
-            ColorStateList.valueOf(if (isNameSelected) transparent else pink)
+            ColorStateList.valueOf(if (isNameSelected) Color.TRANSPARENT else pink)
         binding.btnSortDate.setTextColor(if (isNameSelected) gray else white)
     }
 

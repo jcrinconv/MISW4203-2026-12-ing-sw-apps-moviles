@@ -1,6 +1,5 @@
 package com.misw.app
 
-import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.IdlingRegistry
@@ -11,7 +10,6 @@ import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
-import com.github.javafaker.Faker
 import com.misw.app.network.EspressoIdlingResource
 import com.misw.app.network.RetrofitClient
 import com.misw.app.ui.MainActivity
@@ -35,18 +33,13 @@ class AlbumsListTest {
     var mActivityScenarioRule = ActivityScenarioRule(MainActivity::class.java)
 
     private val mockWebServer = MockWebServer()
-    private val faker = Faker()
 
     @Before
     fun setup() {
-        // 1. Iniciar servidor de mock en puerto aleatorio
         mockWebServer.start(0)
         RetrofitClient.setBaseUrl(mockWebServer.url("/").toString())
-
-        // 2. Registrar sincronización
         IdlingRegistry.getInstance().register(EspressoIdlingResource.countingIdlingResource)
 
-        // 3. Encolar respuesta inicial para que la lista cargue al navegar
         val initialAlbumsJson = """
             [
                 {"id":1, "name":"A Day at the Races", "cover":"https://picsum.photos/200", "releaseDate":"1976-12-10T00:00:00.000Z", "description":"D1", "genre":"Rock", "recordLabel":"EMI"},
@@ -54,17 +47,14 @@ class AlbumsListTest {
                 {"id":3, "name":"Buscando América", "cover":"https://picsum.photos/200", "releaseDate":"1984-04-01T00:00:00.000Z", "description":"D3", "genre":"Salsa", "recordLabel":"Elektra"}
             ]
         """.trimIndent()
-        mockWebServer.enqueue(MockResponse().setResponseCode(200).setBody(initialAlbumsJson))
-
-        // 4. Navegar a la sección de álbumes
-        onView(withId(R.id.include_albums)).perform(click())
+        
+        navigateToAlbums(200, initialAlbumsJson)
     }
 
     @After
     fun tearDown() {
         mockWebServer.shutdown()
         IdlingRegistry.getInstance().unregister(EspressoIdlingResource.countingIdlingResource)
-        // Restaurar URL original (opcional si se usa BuildConfig en producción)
         RetrofitClient.setBaseUrl(BuildConfig.BASE_URL)
     }
 
