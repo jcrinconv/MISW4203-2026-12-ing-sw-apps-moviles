@@ -37,22 +37,10 @@ class AlbumListFragment : Fragment() {
 
         setupRecyclerView()
         setupControls()
-
-        viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
-            binding.pbAlbumList.visibility = if (isLoading) View.VISIBLE else View.GONE
-            binding.rvAlbumList.visibility = if (isLoading) View.GONE else View.VISIBLE
-        }
-
-        viewModel.albums.observe(viewLifecycleOwner) { albums ->
-            albumAdapter.updateAlbums(albums)
-        }
-
-        if (binding.searchBar.etSearchAlbum.text.toString() != viewModel.query.value) {
-            binding.searchBar.etSearchAlbum.setText(viewModel.query.value)
-        }
+        setupSearch()
+        observeViewModel()
 
         updateSortButtonsUI(true)
-        setupSearch()
     }
 
     private fun setupControls() {
@@ -89,6 +77,10 @@ class AlbumListFragment : Fragment() {
     }
 
     private fun setupSearch() {
+        if (binding.searchBar.etSearchAlbum.text.toString() != viewModel.query.value) {
+            binding.searchBar.etSearchAlbum.setText(viewModel.query.value)
+        }
+
         binding.searchBar.etSearchAlbum.doOnTextChanged { text, _, _, _ ->
             viewModel.filterAlbums(text.toString())
         }
@@ -109,6 +101,47 @@ class AlbumListFragment : Fragment() {
             layoutManager = LinearLayoutManager(context)
             adapter = albumAdapter
             setHasFixedSize(true)
+        }
+    }
+
+    private fun observeViewModel() {
+        viewModel.albums.observe(viewLifecycleOwner) { albums ->
+            albumAdapter.updateAlbums(albums)
+            updateUIState(albums, viewModel.error.value)
+        }
+
+        viewModel.error.observe(viewLifecycleOwner) { errorMessage ->
+            updateUIState(viewModel.albums.value ?: emptyList<Any>(), errorMessage)
+        }
+
+        viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
+            binding.pbAlbumList.visibility = if (isLoading) View.VISIBLE else View.GONE
+            if (isLoading) {
+                binding.llEmptyState.visibility = View.GONE
+            }
+        }
+    }
+
+    private fun updateUIState(albums: List<*>, error: String?) {
+        when {
+            error != null -> {
+                binding.llEmptyState.visibility = View.VISIBLE
+                binding.rvAlbumList.visibility = View.GONE
+                binding.tvEmptyState.text = error
+                binding.ivEmptyState.setImageResource(android.R.drawable.stat_notify_error)
+            }
+
+            albums.isEmpty() -> {
+                binding.llEmptyState.visibility = View.VISIBLE
+                binding.rvAlbumList.visibility = View.GONE
+                binding.tvEmptyState.text = getString(R.string.no_albums_found)
+                binding.ivEmptyState.setImageResource(R.drawable.ic_album)
+            }
+
+            else -> {
+                binding.llEmptyState.visibility = View.GONE
+                binding.rvAlbumList.visibility = View.VISIBLE
+            }
         }
     }
 

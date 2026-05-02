@@ -9,11 +9,7 @@ class AlbumRemoteDataSource {
     }
 
     suspend fun fetchAlbums(): List<Album> {
-        return try {
-            albumApiService.getAlbums()
-        } catch (e: Exception) {
-            emptyList()
-        }
+        return albumApiService.getAlbums()
     }
 
     suspend fun fetchAlbumById(id: Int): Album {
