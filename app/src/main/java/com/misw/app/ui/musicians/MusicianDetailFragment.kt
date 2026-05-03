@@ -55,7 +55,23 @@ class MusicianDetailFragment : Fragment() {
 
         viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
             binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
-            binding.nestedScrollView.visibility = if (isLoading) View.GONE else View.VISIBLE
+            if (isLoading) {
+                binding.nestedScrollView.visibility = View.GONE
+                binding.llEmptyState.visibility = View.GONE
+            } else if (viewModel.error.value == null) {
+                binding.nestedScrollView.visibility = View.VISIBLE
+            }
+        }
+
+        viewModel.error.observe(viewLifecycleOwner) { error ->
+            if (error != null) {
+                binding.llEmptyState.visibility = View.VISIBLE
+                binding.nestedScrollView.visibility = View.GONE
+                binding.tvEmptyState.text = getString(R.string.error_loading_content)
+            } else if (viewModel.isLoading.value == false) {
+                binding.llEmptyState.visibility = View.GONE
+                binding.nestedScrollView.visibility = View.VISIBLE
+            }
         }
 
         viewModel.musician.observe(viewLifecycleOwner) { musician ->

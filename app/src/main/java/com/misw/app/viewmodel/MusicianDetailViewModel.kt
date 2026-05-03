@@ -48,6 +48,7 @@ class MusicianDetailViewModel : ViewModel() {
     fun loadMusician(id: Int) {
         viewModelScope.launch {
             _isLoading.value = true
+            _error.value = null
             try {
                 val musician = musicianRepository.getMusicianById(id)
                 _musician.value = musician
