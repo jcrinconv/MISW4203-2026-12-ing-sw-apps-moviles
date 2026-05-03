@@ -1,5 +1,7 @@
 package com.misw.app.ui.musicians
 
+import android.content.res.ColorStateList
+import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,23 +10,29 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.ContextCompat
+import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import com.misw.app.databinding.FragmentMusicianDetailBinding
-import com.misw.app.viewmodel.MusicianDetailViewModel
+import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
+import com.google.android.material.shape.ShapeAppearanceModel
 import com.misw.app.R
+import com.misw.app.databinding.FragmentMusicianDetailBinding
+import com.misw.app.ui.adapters.AlbumAdapter
+import com.misw.app.viewmodel.MusicianDetailViewModel
+import com.misw.app.viewmodel.SortCriterion
 import java.text.SimpleDateFormat
 import java.util.Locale
-import com.google.android.material.shape.ShapeAppearanceModel
 
 class MusicianDetailFragment : Fragment() {
 
     private val viewModel : MusicianDetailViewModel by viewModels()
+    private lateinit var albumAdapter: AlbumAdapter
 
     private var _binding: FragmentMusicianDetailBinding? = null
     private val binding get() = _binding!!
@@ -40,6 +48,10 @@ class MusicianDetailFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        setupRecyclerView()
+        setupControls()
+        setupSearch()
 
         viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
             binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
@@ -125,8 +137,66 @@ class MusicianDetailFragment : Fragment() {
             }
         }
 
+        viewModel.albums.observe(viewLifecycleOwner) { albums ->
+            albumAdapter.updateAlbums(albums)
+        }
+
         val musicianId = arguments?.getInt("musician_id") ?: 100
         viewModel.loadMusician(musicianId)
+    }
+
+    private fun setupControls() {
+        binding.btnSortName.setOnClickListener {
+            viewModel.setSortCriterion(SortCriterion.NAME)
+            updateSortButtonsUI(isNameSelected = true)
+        }
+
+        binding.btnSortDate.setOnClickListener {
+            viewModel.setSortCriterion(SortCriterion.RELEASE_DATE)
+            updateSortButtonsUI(isNameSelected = false)
+        }
+
+        binding.btnSwapOrder.ibSwapOrder.setOnClickListener {
+            viewModel.toggleSortOrder()
+            binding.btnSwapOrder.ibSwapOrder.animate().rotationBy(180f).setDuration(300).start()
+        }
+    }
+
+    private fun updateSortButtonsUI(isNameSelected: Boolean) {
+        val pink = ContextCompat.getColor(requireContext(), R.color.wild_strawberry)
+        val transparent = Color.TRANSPARENT
+        val white = Color.WHITE
+        val gray = Color.GRAY
+
+        binding.btnSortName.backgroundTintList =
+            ColorStateList.valueOf(if (isNameSelected) pink else transparent)
+        binding.btnSortName.setTextColor(if (isNameSelected) white else gray)
+
+        binding.btnSortDate.backgroundTintList =
+            ColorStateList.valueOf(if (isNameSelected) transparent else pink)
+        binding.btnSortDate.setTextColor(if (isNameSelected) gray else white)
+    }
+
+    private fun setupSearch() {
+        binding.searchBar.etSearchAlbum.doOnTextChanged { text, _, _, _ ->
+            viewModel.filterAlbums(text.toString())
+        }
+    }
+
+    private fun setupRecyclerView() {
+        albumAdapter = AlbumAdapter { albumId ->
+            val bundle = Bundle().apply {
+                putInt("album_id", albumId)
+            }
+            findNavController().navigate(
+                R.id.action_musicianDetailFragment_to_albumDetailFragment, bundle
+            )
+        }
+        binding.rvAlbums.apply {
+            layoutManager = LinearLayoutManager(context)
+            adapter = albumAdapter
+            setHasFixedSize(true)
+        }
     }
 
     private fun formatDate(dateString: String): String {
