@@ -1,17 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:gravity="center">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <ImageButton
-        android:id="@+id/ibSwapOrder"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:background="@drawable/bg_sort_button"
-        android:contentDescription="@string/swap_order_button"
-        android:importantForAccessibility="no"
-        android:src="@drawable/ic_sort"
-        app:tint="@color/wild_strawberry" />
-</LinearLayout>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center">
+
+        <ImageButton
+            android:id="@+id/ibSwapOrder"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@drawable/bg_sort_button"
+            android:contentDescription="@string/swap_order_button"
+            android:importantForAccessibility="no"
+            android:src="@drawable/ic_sort"
+            app:tint="@color/wild_strawberry" />
+    </LinearLayout>
+</layout>
