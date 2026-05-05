@@ -16,6 +16,9 @@
         <action
             android:id="@+id/action_homeFragment_to_musicianListFragment"
             app:destination="@id/musicianListFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_collectorListFragment"
+            app:destination="@id/collectorListFragment" />
     </fragment>
 
     <fragment
@@ -60,4 +63,12 @@
             android:id="@+id/action_musicianDetailFragment_to_albumDetailFragment"
             app:destination="@id/albumDetailFragment" />
     </fragment>
+
+    <fragment
+        android:id="@+id/collectorListFragment"
+        android:name="com.misw.app.ui.collectors.CollectorListFragment"
+        android:label="Coleccionistas"
+        tools:layout="@layout/fragment_collector_list">
+    </fragment>
+
 </navigation>
