@@ -1,25 +1,27 @@
 package com.misw.app.viewmodel
 
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.misw.app.R
 import com.misw.app.model.Album
 import com.misw.app.repository.AlbumRepository
 import com.misw.app.repository.AlbumRepositoryImpl
 import kotlinx.coroutines.launch
 
-class AlbumViewModel(
+class AlbumViewModel(application: Application) : AndroidViewModel(application) {
     private val repository: AlbumRepository = AlbumRepositoryImpl()
-) : ViewModel() {
+
     private val _albums = MutableLiveData<List<Album>>()
     val albums: LiveData<List<Album>> get() = _albums
 
     private val _query = MutableLiveData<String>("")
     val query: LiveData<String> get() = _query
 
-    private val _error = MutableLiveData<String>()
-    val error: LiveData<String> get() = _error
+    private val _error = MutableLiveData<String?>()
+    val error: LiveData<String?> get() = _error
 
     private var originalList: List<Album> = emptyList()
     private var currentCriterion = SortCriterion.NAME
@@ -35,12 +37,13 @@ class AlbumViewModel(
     private fun fetchAlbums() {
         viewModelScope.launch {
             _isLoading.value = true
+            _error.value = null
             try {
                 val result = repository.getAlbums()
                 originalList = result
                 updateAlbumList()
-            } catch (e: Exception) {
-                _error.value = e.message ?: "Error al cargar álbumes"
+            } catch (_: Exception) {
+                _error.value = getApplication<Application>().getString(R.string.error_loading_content)
             } finally {
                 _isLoading.value = false
             }
