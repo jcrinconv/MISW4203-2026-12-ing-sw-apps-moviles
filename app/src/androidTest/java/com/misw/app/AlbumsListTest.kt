@@ -1,6 +1,5 @@
 package com.misw.app
 
-import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.IdlingRegistry
@@ -19,6 +18,7 @@ import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import org.hamcrest.CoreMatchers.allOf
 import org.hamcrest.CoreMatchers.containsString
+import org.hamcrest.CoreMatchers.not
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -38,14 +38,10 @@ class AlbumsListTest {
 
     @Before
     fun setup() {
-        // 1. Iniciar servidor de mock en puerto aleatorio
         mockWebServer.start(0)
         RetrofitClient.setBaseUrl(mockWebServer.url("/").toString())
-
-        // 2. Registrar sincronización
         IdlingRegistry.getInstance().register(EspressoIdlingResource.countingIdlingResource)
 
-        // 3. Encolar respuesta inicial para que la lista cargue al navegar
         val initialAlbumsJson = """
             [
                 {"id":1, "name":"A Day at the Races", "cover":"https://picsum.photos/200", "releaseDate":"1976-12-10T00:00:00.000Z", "description":"D1", "genre":"Rock", "recordLabel":"EMI"},
@@ -53,30 +49,28 @@ class AlbumsListTest {
                 {"id":3, "name":"Buscando América", "cover":"https://picsum.photos/200", "releaseDate":"1984-04-01T00:00:00.000Z", "description":"D3", "genre":"Salsa", "recordLabel":"Elektra"}
             ]
         """.trimIndent()
-        mockWebServer.enqueue(MockResponse().setResponseCode(200).setBody(initialAlbumsJson))
-
-        // 4. Navegar a la sección de álbumes
-        onView(withId(R.id.include_albums)).perform(click())
+        
+        navigateToAlbums(200, initialAlbumsJson)
     }
 
     @After
     fun tearDown() {
         mockWebServer.shutdown()
         IdlingRegistry.getInstance().unregister(EspressoIdlingResource.countingIdlingResource)
-        // Restaurar URL original (opcional si se usa BuildConfig en producción)
         RetrofitClient.setBaseUrl(BuildConfig.BASE_URL)
+    }
+
+    private fun navigateToAlbums(responseCode: Int = 200, responseBody: String = "[]") {
+        mockWebServer.enqueue(MockResponse().setResponseCode(responseCode).setBody(responseBody))
+        onView(withId(R.id.include_albums)).perform(click())
     }
 
     @Test
     fun testVisibilityOfAllComponents() {
-        // La nueva UI usa searchBar y botones de ordenamiento
         onView(withId(R.id.searchBar)).check(matches(isDisplayed()))
-
         onView(withId(R.id.btnSortName)).check(matches(isDisplayed()))
         onView(withId(R.id.btnSortDate)).check(matches(isDisplayed()))
-
         onView(withId(R.id.btnSwapOrder)).check(matches(isDisplayed()))
-
         onView(withId(R.id.rvAlbumList)).check(matches(isDisplayed()))
     }
 
@@ -84,9 +78,6 @@ class AlbumsListTest {
     fun testSearchFiltering() {
         val albumToSearch = "Buscando América"
 
-        // Para un layout <include> con un EditText dentro (searchBar), hay que buscar el id interno. 
-        // Asumiendo que el EditText tiene id etSearchAlbum o similar dentro de search_bar.xml
-        // Pero basándonos en la estructura, busquemos cualquier EditText que sea descendiente del searchBar
         onView(allOf(isAssignableFrom(android.widget.EditText::class.java), isDescendantOfA(withId(R.id.searchBar))))
             .perform(replaceText(albumToSearch), closeSoftKeyboard())
 
@@ -96,14 +87,34 @@ class AlbumsListTest {
 
     @Test
     fun testSearchNoResults() {
-        // Escenario negativo usando un valor generado por Faker que no existe en nuestro JSON inicial
         val nonExistentAlbum = "Fake-" + faker.lorem().characters(10)
 
         onView(allOf(isAssignableFrom(android.widget.EditText::class.java), isDescendantOfA(withId(R.id.searchBar))))
             .perform(replaceText(nonExistentAlbum), closeSoftKeyboard())
 
-        onView(withId(R.id.rvAlbumList))
-            .check(matches(hasChildCount(0)))
+        onView(withId(R.id.rvAlbumList)).check(matches(not(isDisplayed())))
+        onView(withId(R.id.llEmptyState)).check(matches(isDisplayed()))
+        onView(withId(R.id.tvEmptyState)).check(matches(withText(R.string.no_albums_found)))
+    }
+
+    @Test
+    fun testEmptyListFromServer() {
+        androidx.test.espresso.Espresso.pressBack()
+        navigateToAlbums(200, "[]")
+
+        onView(withId(R.id.llEmptyState)).check(matches(isDisplayed()))
+        onView(withId(R.id.tvEmptyState)).check(matches(withText(R.string.no_albums_found)))
+        onView(withId(R.id.rvAlbumList)).check(matches(not(isDisplayed())))
+    }
+
+    @Test
+    fun testServerError() {
+        androidx.test.espresso.Espresso.pressBack()
+        navigateToAlbums(500, "Internal Server Error")
+        
+        onView(withId(R.id.llEmptyState)).check(matches(isDisplayed()))
+        onView(withId(R.id.tvEmptyState)).check(matches(withText(R.string.error_loading_content)))
+        onView(withId(R.id.rvAlbumList)).check(matches(not(isDisplayed())))
     }
 
     @Test
@@ -120,7 +131,6 @@ class AlbumsListTest {
 
     @Test
     fun testRecyclerViewContent() {
-        // Verificamos que los datos mockeados en el setup() están presentes
         val expectedAlbums = listOf("A Day at the Races", "A Night at the Opera", "Buscando América")
         
         expectedAlbums.forEach { albumName ->
@@ -129,26 +139,6 @@ class AlbumsListTest {
                     hasDescendant(withText(containsString(albumName)))
                 ))
                 .check(matches(hasDescendant(withText(containsString(albumName)))))
-        }
-    }
-}
-
-/**
- * Matcher auxiliar para validar posiciones específicas si fuera necesario
- */
-fun atPosition(position: Int, itemMatcher: org.hamcrest.Matcher<View>): org.hamcrest.Matcher<View> {
-    return object :
-        androidx.test.espresso.matcher.BoundedMatcher<View, RecyclerView>(
-            RecyclerView::class.java
-        ) {
-        override fun describeTo(description: org.hamcrest.Description) {
-            description.appendText("has item at position $position: ")
-            itemMatcher.describeTo(description)
-        }
-
-        override fun matchesSafely(view: RecyclerView): Boolean {
-            val viewHolder = view.findViewHolderForAdapterPosition(position) ?: return false
-            return itemMatcher.matches(viewHolder.itemView)
         }
     }
 }
