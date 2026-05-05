@@ -9,10 +9,6 @@ import com.misw.app.repository.AlbumRepository
 import com.misw.app.repository.AlbumRepositoryImpl
 import kotlinx.coroutines.launch
 
-enum class SortCriterion {
-    NAME, RELEASE_DATE
-}
-
 class AlbumViewModel(
     private val repository: AlbumRepository = AlbumRepositoryImpl()
 ) : ViewModel() {

@@ -185,6 +185,7 @@ class AlbumDetailFragmentTest {
         // Forzamos múltiples swipes para asegurar que el botón quede en pantalla
         onView(isAssignableFrom(CoordinatorLayout::class.java)).perform(swipeUp())
         onView(isAssignableFrom(CoordinatorLayout::class.java)).perform(swipeUp())
+        Thread.sleep(1000) // Esperamos a que termine el scroll (fling)
 
         // Clic para colapsar
         onView(withId(R.id.tvReadMore)).perform(betterScrollTo(), click())
