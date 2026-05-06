@@ -18,8 +18,13 @@ class CollectorViewModel(application: Application) : AndroidViewModel(applicatio
     private val _collectors = MutableLiveData<List<Collector>>()
     val collectors: LiveData<List<Collector>> get() = _collectors
 
+    private val _query = MutableLiveData<String>("")
+    val query: LiveData<String> get() = _query
+
     private val _error = MutableLiveData<String?>()
     val error: LiveData<String?> get() = _error
+
+    private var originalList: List<Collector> = emptyList()
 
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> get() = _isLoading
@@ -33,13 +38,32 @@ class CollectorViewModel(application: Application) : AndroidViewModel(applicatio
             _isLoading.value = true
             _error.value = null
             try {
-                _collectors.value = repository.getCollectors() // cambiar
+                val result = repository.getCollectors()
+                originalList = result
+                updateCollectorsList()
             } catch (_: Exception) {
-                _error.value = getApplication<Application>().getString(R.string.error_loading_content)
+                _error.value =
+                    getApplication<Application>().getString(R.string.error_loading_content)
             } finally {
                 _isLoading.value = false
             }
         }
     }
-    
+
+    fun filterCollectors(text: String) {
+        _query.value = text
+        updateCollectorsList()
+    }
+
+    private fun updateCollectorsList() {
+        val currentText = _query.value ?: ""
+
+        val filtered = if (currentText.isEmpty()) {
+            originalList
+        } else {
+            originalList.filter { it.name.contains(currentText, ignoreCase = true) }
+        }
+
+        _collectors.value = filtered
+    }
 }
