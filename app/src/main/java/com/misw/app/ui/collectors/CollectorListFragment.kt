@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -32,6 +33,7 @@ class CollectorListFragment : Fragment() {
 
         setupRecyclerView()
         observeViewModel()
+        setupSearch()
     }
 
     private fun setupRecyclerView() {
@@ -45,6 +47,16 @@ class CollectorListFragment : Fragment() {
             layoutManager = LinearLayoutManager(context)
             adapter = collectorAdapter
             setHasFixedSize(true)
+        }
+    }
+
+    private fun setupSearch() {
+        if (binding.collectorsSearchBar.etSearchAlbum.text.toString() != viewModel.query.value) {
+            binding.collectorsSearchBar.etSearchAlbum.setText(viewModel.query.value)
+        }
+
+        binding.collectorsSearchBar.etSearchAlbum.doOnTextChanged { text, _, _, _ ->
+            viewModel.filterCollectors(text.toString())
         }
     }
 
@@ -68,7 +80,7 @@ class CollectorListFragment : Fragment() {
         }
     }
 
-    private fun updateUIState(collectors: List<*>, error:String?) {
+    private fun updateUIState(collectors: List<*>, error: String?) {
         when {
             error != null -> {
                 binding.llEmptyState.visibility = View.VISIBLE
