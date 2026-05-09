@@ -2,14 +2,15 @@ package com.misw.app.ui.adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.misw.app.databinding.ItemCollectorBinding
 import com.misw.app.model.Collector
 
 class CollectorAdapter(private val onCollectorClick: (Int) -> Unit) :
-    RecyclerView.Adapter<CollectorAdapter.CollectorViewHolder>() {
+    ListAdapter<Collector, CollectorAdapter.CollectorViewHolder>(CollectorDiffCallback()) {
 
-    private var collectors: List<Collector> = emptyList()
     inner class CollectorViewHolder(private val binding: ItemCollectorBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
@@ -29,13 +30,20 @@ class CollectorAdapter(private val onCollectorClick: (Int) -> Unit) :
     }
 
     override fun onBindViewHolder(holder: CollectorViewHolder, position: Int) {
-        holder.bind(collectors[position])
+        holder.bind(getItem(position))
     }
 
-    override fun getItemCount(): Int = collectors.size
-
     fun updateCollectors(newCollectors: List<Collector>) {
-        this.collectors = newCollectors
-        notifyDataSetChanged()
+        submitList(newCollectors)
+    }
+
+    class CollectorDiffCallback : DiffUtil.ItemCallback<Collector>() {
+        override fun areItemsTheSame(oldItem: Collector, newItem: Collector): Boolean {
+            return oldItem.id == newItem.id
+        }
+
+        override fun areContentsTheSame(oldItem: Collector, newItem: Collector): Boolean {
+            return oldItem == newItem
+        }
     }
 }

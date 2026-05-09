@@ -3,6 +3,8 @@ package com.misw.app.ui.adapters
 import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
@@ -15,13 +17,10 @@ import com.misw.app.databinding.ItemMusicianBinding
 import com.misw.app.model.Musician
 
 class MusicianAdapter(private val onMusicianClick: (Int) -> Unit) : 
-    RecyclerView.Adapter<MusicianAdapter.MusicianViewHolder>() {
-
-    private var musicians: List<Musician> = emptyList()
+    ListAdapter<Musician, MusicianAdapter.MusicianViewHolder>(MusicianDiffCallback()) {
 
     fun updateMusicians(newMusicians: List<Musician>) {
-        this.musicians = newMusicians
-        notifyDataSetChanged()
+        submitList(newMusicians)
     }
 
     inner class MusicianViewHolder(private val binding: ItemMusicianBinding) :
@@ -41,7 +40,6 @@ class MusicianAdapter(private val onMusicianClick: (Int) -> Unit) :
             Glide.with(binding.root.context)
                 .load(musician.image)
                 .centerCrop()
-                //.placeholder(R.drawable.ic_artists)
                 .error(R.drawable.ic_artists)
                 .listener(object : RequestListener<Drawable> {
                     override fun onResourceReady(
@@ -84,8 +82,16 @@ class MusicianAdapter(private val onMusicianClick: (Int) -> Unit) :
     }
 
     override fun onBindViewHolder(holder: MusicianViewHolder, position: Int) {
-        holder.bind(musicians[position])
+        holder.bind(getItem(position))
     }
 
-    override fun getItemCount(): Int = musicians.size
+    class MusicianDiffCallback : DiffUtil.ItemCallback<Musician>() {
+        override fun areItemsTheSame(oldItem: Musician, newItem: Musician): Boolean {
+            return oldItem.id == newItem.id
+        }
+
+        override fun areContentsTheSame(oldItem: Musician, newItem: Musician): Boolean {
+            return oldItem == newItem
+        }
+    }
 }

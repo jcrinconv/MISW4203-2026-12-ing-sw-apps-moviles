@@ -54,7 +54,7 @@ class AlbumDetailFragment : Fragment() {
             updateUIState(album, viewModel.error.value)
             
             updateUI(album)
-            binding.tvTrackCount.text = getString(R.string.track_count, album.tracks.size)
+            binding.tvTrackCount.text = resources.getQuantityString(R.plurals.track_count, album.tracks.size, album.tracks.size)
 
             binding.shimmerLayout.startShimmer()
 
@@ -137,10 +137,10 @@ class AlbumDetailFragment : Fragment() {
                         isExpanded = !isExpanded
                         if (isExpanded) {
                             tv.maxLines = Integer.MAX_VALUE
-                            binding.tvReadMore.text = "Ver menos"
+                            binding.tvReadMore.text = getString(R.string.see_less_label)
                         } else {
                             tv.maxLines = 3
-                            binding.tvReadMore.text = "Ver más"
+                            binding.tvReadMore.text = getString(R.string.see_more_label)
                         }
                     }
                 } else {
@@ -155,7 +155,7 @@ class AlbumDetailFragment : Fragment() {
         if (tracks.isNotEmpty()) {
             tracks.forEachIndexed { index, track ->
                 val trackView = layoutInflater.inflate(R.layout.item_track, binding.llTracksContainer, false)
-                trackView.findViewById<TextView>(R.id.tvTrackNumber).text = (index + 1).toString().padStart(2, '0')
+                trackView.findViewById<TextView>(R.id.tvTrackNumber).text = getString(R.string.track_index_format, index + 1)
                 trackView.findViewById<TextView>(R.id.tvTrackName).text = track.name
                 trackView.findViewById<TextView>(R.id.tvTrackDuration).text = track.duration
                 binding.llTracksContainer.addView(trackView)
@@ -166,11 +166,11 @@ class AlbumDetailFragment : Fragment() {
     private fun formatDate(dateString: String): String {
         return try {
             val inputFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault())
-            val outputFormat = SimpleDateFormat("MMM d, yyyy", Locale("es"))
+            val outputFormat = SimpleDateFormat("MMM d, yyyy", Locale.forLanguageTag("es"))
             val date = inputFormat.parse((dateString))
             val formatted = outputFormat.format(date!!)
             "Lanzado en ${formatted.replaceFirstChar { it.uppercase() }}"
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             dateString
         }
     }

@@ -5,17 +5,10 @@
 
     <!-- Design System Colors -->
     <color name="background">#0e0e0e</color>
-    <color name="surface_container">#1a1919</color>
-    <color name="surface_container_high">#201f1f</color>
-    <color name="on_surface">#ffffff</color>
-    <color name="on_surface_variant">#adaaaa</color>
-    <color name="primary">#ff88b7</color>
-    <color name="outline_variant">#484847</color>
 
     <!-- Legacy/Other Colors -->
     <color name="bright_ube">#9F8EFF</color>
     <color name="cod_gray">#1E1E1E</color>
-    <color name="darkest_grey">#131313</color>
     <color name="malibu">#7FC5FF</color>
     <color name="purple_500">#FF6200EE</color>
     <color name="purple_700">#FF3700B3</color>

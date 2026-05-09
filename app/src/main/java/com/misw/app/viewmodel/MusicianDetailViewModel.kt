@@ -27,7 +27,6 @@ class MusicianDetailViewModel(application: Application) : AndroidViewModel(appli
     val albums: LiveData<List<Album>> get() = _albums
 
     private val _query = MutableLiveData<String>("")
-    val query: LiveData<String> get() = _query
 
     private var originalAlbums: List<Album> = emptyList()
     private var currentSortCriterion = SortCriterion.NAME
