@@ -10,6 +10,8 @@ import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
+import androidx.test.platform.app.InstrumentationRegistry
+import com.misw.app.network.CacheManager
 import com.misw.app.network.EspressoIdlingResource
 import com.misw.app.network.RetrofitClient
 import com.misw.app.ui.MainActivity
@@ -38,6 +40,9 @@ class MusicianListTest {
         mockWebServer.start(0)
         RetrofitClient.setBaseUrl(mockWebServer.url("/").toString())
         IdlingRegistry.getInstance().register(EspressoIdlingResource.countingIdlingResource)
+        
+        // Limpiar cache antes de cada test
+        CacheManager.getInstance(InstrumentationRegistry.getInstrumentation().targetContext).clearCache()
     }
 
     @After
