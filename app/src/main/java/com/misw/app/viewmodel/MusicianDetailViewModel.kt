@@ -1,6 +1,7 @@
 package com.misw.app.viewmodel
 
-import androidx.lifecycle.ViewModel
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
@@ -9,13 +10,12 @@ import android.util.Log
 import com.misw.app.model.Album
 import com.misw.app.model.Musician
 import com.misw.app.model.MusicianPrizeItem
-import com.misw.app.network.musician.MusicianRemoteDataSource
 import com.misw.app.repository.musician.MusicianRepository
 import com.misw.app.repository.musician.MusicianRepositoryImpl
 
-class MusicianDetailViewModel : ViewModel() {
+class MusicianDetailViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val musicianRepository : MusicianRepository = MusicianRepositoryImpl(MusicianRemoteDataSource())
+    private val musicianRepository : MusicianRepository = MusicianRepositoryImpl(application)
 
     private val _musician = MutableLiveData<Musician>()
     val musician: LiveData<Musician> get() = _musician

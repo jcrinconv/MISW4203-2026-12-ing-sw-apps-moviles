@@ -4,6 +4,7 @@ import android.content.Context
 import com.misw.app.model.Album
 import com.misw.app.model.Collector
 import com.misw.app.model.Musician
+import com.misw.app.model.PerformerPrize
 
 class CacheManager private constructor() {
     companion object {
@@ -23,6 +24,7 @@ class CacheManager private constructor() {
 
     private val albumDetails = mutableMapOf<Int, Album>()
     private val musicianDetails = mutableMapOf<Int, Musician>()
+    private val performerPrizes = mutableMapOf<Int, List<PerformerPrize>>()
 
     fun addAlbums(newAlbums: List<Album>) {
         if (albums.isEmpty()) {
@@ -68,5 +70,13 @@ class CacheManager private constructor() {
 
     fun getMusicianDetail(id: Int): Musician? {
         return musicianDetails[id]
+    }
+
+    fun addPerformerPrizes(musicianId: Int, prizes: List<PerformerPrize>) {
+        performerPrizes[musicianId] = prizes
+    }
+
+    fun getPerformerPrizes(musicianId: Int): List<PerformerPrize>? {
+        return performerPrizes[musicianId]
     }
 }
