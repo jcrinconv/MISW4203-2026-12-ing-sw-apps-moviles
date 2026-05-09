@@ -1,7 +1,6 @@
 package com.misw.app.viewmodel
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
@@ -10,18 +9,13 @@ import android.util.Log
 import com.misw.app.model.Album
 import com.misw.app.model.Musician
 import com.misw.app.model.MusicianPrizeItem
-import com.misw.app.network.prize.PrizeRemoteDataSource
+import com.misw.app.network.musician.MusicianRemoteDataSource
 import com.misw.app.repository.musician.MusicianRepository
 import com.misw.app.repository.musician.MusicianRepositoryImpl
-import com.misw.app.repository.prize.PrizeRepository
-import com.misw.app.repository.prize.PrizeRepositoryImpl
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
 
-class MusicianDetailViewModel(application: Application) : AndroidViewModel(application) {
+class MusicianDetailViewModel : ViewModel() {
 
-    private val musicianRepository : MusicianRepository = MusicianRepositoryImpl(application)
-    private val prizeRepository : PrizeRepository = PrizeRepositoryImpl(PrizeRemoteDataSource())
+    private val musicianRepository : MusicianRepository = MusicianRepositoryImpl(MusicianRemoteDataSource())
 
     private val _musician = MutableLiveData<Musician>()
     val musician: LiveData<Musician> get() = _musician
@@ -33,7 +27,6 @@ class MusicianDetailViewModel(application: Application) : AndroidViewModel(appli
     val albums: LiveData<List<Album>> get() = _albums
 
     private val _query = MutableLiveData<String>("")
-    @Suppress("unused")
     val query: LiveData<String> get() = _query
 
     private var originalAlbums: List<Album> = emptyList()
@@ -54,20 +47,12 @@ class MusicianDetailViewModel(application: Application) : AndroidViewModel(appli
                 val musician = musicianRepository.getMusicianById(id)
                 _musician.value = musician
 
-                val prizesList = if (musician.performerPrizes.isEmpty()) {
-                    emptyList()
-                } else {
-                    musician.performerPrizes.map { performerPrize ->
-                        async {
-                            val prize = prizeRepository.getPrizeById(performerPrize.id)
-                            MusicianPrizeItem(
-                                name = prize.name,
-                                premiationDate = performerPrize.premiationDate
-                            )
-                        }
-                    }.awaitAll()
+                val prizesList = musicianRepository.getPerformerPrizesByMusicianId(id).map { performerPrize ->
+                    MusicianPrizeItem(
+                        name = performerPrize.prize.name,
+                        premiationDate = performerPrize.premiationDate
+                    )
                 }
-
                 _prizes.value = prizesList
                 
                 originalAlbums = musician.albums
