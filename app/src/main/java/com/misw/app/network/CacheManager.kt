@@ -3,7 +3,6 @@ package com.misw.app.network
 import android.content.Context
 import com.misw.app.model.Album
 import com.misw.app.model.Collector
-import com.misw.app.model.Comment
 import com.misw.app.model.Musician
 
 class CacheManager private constructor() {
@@ -21,7 +20,6 @@ class CacheManager private constructor() {
     private var albums: List<Album> = listOf()
     private var musicians: List<Musician> = listOf()
     private var collectors: List<Collector> = listOf()
-    private var comments: HashMap<Int, List<Comment>> = hashMapOf()
 
     fun addAlbums(newAlbums: List<Album>) {
         if (albums.isEmpty()) {
