@@ -1,6 +1,7 @@
 package com.misw.app.viewmodel
 
-import androidx.lifecycle.ViewModel
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
@@ -9,7 +10,6 @@ import android.util.Log
 import com.misw.app.model.Album
 import com.misw.app.model.Musician
 import com.misw.app.model.MusicianPrizeItem
-import com.misw.app.network.musician.MusicianRemoteDataSource
 import com.misw.app.network.prize.PrizeRemoteDataSource
 import com.misw.app.repository.musician.MusicianRepository
 import com.misw.app.repository.musician.MusicianRepositoryImpl
@@ -18,9 +18,9 @@ import com.misw.app.repository.prize.PrizeRepositoryImpl
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 
-class MusicianDetailViewModel : ViewModel() {
+class MusicianDetailViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val musicianRepository : MusicianRepository = MusicianRepositoryImpl(MusicianRemoteDataSource())
+    private val musicianRepository : MusicianRepository = MusicianRepositoryImpl(application)
     private val prizeRepository : PrizeRepository = PrizeRepositoryImpl(PrizeRemoteDataSource())
 
     private val _musician = MutableLiveData<Musician>()
@@ -33,14 +33,15 @@ class MusicianDetailViewModel : ViewModel() {
     val albums: LiveData<List<Album>> get() = _albums
 
     private val _query = MutableLiveData<String>("")
+    @Suppress("unused")
     val query: LiveData<String> get() = _query
 
     private var originalAlbums: List<Album> = emptyList()
     private var currentSortCriterion = SortCriterion.NAME
     private var currentSortOrder = SortOrder.ASCENDING
 
-    private val _error = MutableLiveData<String>()
-    val error: LiveData<String> get() = _error
+    private val _error = MutableLiveData<String?>()
+    val error: LiveData<String?> get() = _error
 
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> get() = _isLoading

@@ -7,13 +7,12 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.misw.app.R
 import com.misw.app.model.Musician
-import com.misw.app.network.musician.MusicianRemoteDataSource
 import com.misw.app.repository.musician.MusicianRepository
 import com.misw.app.repository.musician.MusicianRepositoryImpl
 import kotlinx.coroutines.launch
 
 class MusicianViewModel(application: Application) : AndroidViewModel(application) {
-    private val repository: MusicianRepository = MusicianRepositoryImpl(MusicianRemoteDataSource())
+    private val repository: MusicianRepository = MusicianRepositoryImpl(application)
 
     private val _musicians = MutableLiveData<List<Musician>>()
     val musicians: LiveData<List<Musician>> get() = _musicians
