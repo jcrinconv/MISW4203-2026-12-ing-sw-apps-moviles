@@ -10,7 +10,9 @@ import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
+import androidx.test.platform.app.InstrumentationRegistry
 import com.github.javafaker.Faker
+import com.misw.app.network.CacheManager
 import com.misw.app.network.EspressoIdlingResource
 import com.misw.app.network.RetrofitClient
 import com.misw.app.ui.MainActivity
@@ -41,6 +43,8 @@ class AlbumsListTest {
         mockWebServer.start(0)
         RetrofitClient.setBaseUrl(mockWebServer.url("/").toString())
         IdlingRegistry.getInstance().register(EspressoIdlingResource.countingIdlingResource)
+        
+        CacheManager.getInstance(InstrumentationRegistry.getInstrumentation().targetContext).clearCache()
 
         val initialAlbumsJson = """
             [
@@ -100,6 +104,8 @@ class AlbumsListTest {
     @Test
     fun testEmptyListFromServer() {
         androidx.test.espresso.Espresso.pressBack()
+        // Limpiamos cache para que no use los datos del setup y realmente vea la lista vacía
+        CacheManager.getInstance(InstrumentationRegistry.getInstrumentation().targetContext).clearCache()
         navigateToAlbums(200, "[]")
 
         onView(withId(R.id.llEmptyState)).check(matches(isDisplayed()))
@@ -110,6 +116,8 @@ class AlbumsListTest {
     @Test
     fun testServerError() {
         androidx.test.espresso.Espresso.pressBack()
+        // Limpiamos cache para que el repositorio falle al intentar fetch
+        CacheManager.getInstance(InstrumentationRegistry.getInstrumentation().targetContext).clearCache()
         navigateToAlbums(500, "Internal Server Error")
         
         onView(withId(R.id.llEmptyState)).check(matches(isDisplayed()))

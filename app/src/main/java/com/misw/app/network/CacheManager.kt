@@ -79,4 +79,13 @@ class CacheManager private constructor() {
     fun getPerformerPrizes(musicianId: Int): List<PerformerPrize>? {
         return performerPrizes[musicianId]
     }
+
+    fun clearCache() {
+        albums = listOf()
+        musicians = listOf()
+        collectors = listOf()
+        albumDetails.clear()
+        musicianDetails.clear()
+        performerPrizes.clear()
+    }
 }
