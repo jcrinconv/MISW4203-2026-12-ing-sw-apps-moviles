@@ -19,13 +19,12 @@ import okhttp3.mockwebserver.Dispatcher
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import okhttp3.mockwebserver.RecordedRequest
-import org.hamcrest.CoreMatchers.allOf
-import org.hamcrest.CoreMatchers.containsString
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.hamcrest.Matchers.not
 
 @LargeTest
 @RunWith(AndroidJUnit4::class)
@@ -48,7 +47,8 @@ class MusicianDetailFragmentTest {
                             [
                                 {"id":1, "name":"Axl Rose", "image":"https://picsum.photos/200", "description":"Description 1", "birthDate":"1962-02-06T00:00:00.000Z"},
                                 {"id":2, "name":"Empty Albums Artist", "image":"https://picsum.photos/200", "description":"Description 2", "birthDate":"1962-02-06T00:00:00.000Z"},
-                                {"id":3, "name":"Error Artist", "image":"https://picsum.photos/200", "description":"Description 3", "birthDate":"1962-02-06T00:00:00.000Z"}
+                                {"id":3, "name":"Error Artist", "image":"https://picsum.photos/200", "description":"Description 3", "birthDate":"1962-02-06T00:00:00.000Z"},
+                                {"id":4, "name":"Ruben Blades", "image":"https://picsum.photos/200", "description":"Description 4", "birthDate":"1948-07-16T00:00:00.000Z"}
                             ]
                         """.trimIndent()
                         MockResponse().setResponseCode(200).setBody(musiciansJson)
@@ -81,6 +81,42 @@ class MusicianDetailFragmentTest {
                     path == "/musicians/3" -> {
                         MockResponse().setResponseCode(500)
                     }
+                    path == "/musicians/4" -> {
+                        val detailJson = """
+                            {
+                                "id":4, "name":"Ruben Blades", "image":"https://picsum.photos/200",
+                                "description":"Description 4", "birthDate":"1948-07-16T00:00:00.000Z",
+                                "albums":[],
+                                "performerPrizes":[{"id":1,"premiationDate":"1978-12-10T00:00:00.000Z"}]
+                            }
+                        """.trimIndent()
+                        MockResponse().setResponseCode(200).setBody(detailJson)
+                    }
+                    path == "/musicians/1/performerPrizes" -> {
+                        MockResponse().setResponseCode(200).setBody("[]")
+                    }
+                    path == "/musicians/2/performerPrizes" -> {
+                        MockResponse().setResponseCode(200).setBody("[]")
+                    }
+                    path == "/musicians/4/performerPrizes" -> {
+                        val prizesJson = """
+                            [
+                                {
+                                    "id":1,
+                                    "premiationDate":"1978-12-10T00:00:00.000Z",
+                                    "prize":
+                                        {
+                                            "id":1,
+                                            "organization":"National Academy of Recording Arts & Sciences",
+                                            "name":"Grammy Award",
+                                            "description":"Grammy description"
+                                        }
+                                
+                                }
+                            ]
+                        """.trimIndent()
+                        MockResponse().setResponseCode(200).setBody(prizesJson)
+                    }
                     else -> MockResponse().setResponseCode(404)
                 }
             }
@@ -109,6 +145,66 @@ class MusicianDetailFragmentTest {
                 return itemMatcher.matches(viewHolder.itemView)
             }
         }
+    }
+
+    @Test
+    fun testMusicianNameVisualization() {
+        onView(withId(R.id.include_artists)).perform(click())
+
+        onView(withId(R.id.rvMusicians)).perform(
+            RecyclerViewActions.actionOnItem<RecyclerView.ViewHolder>(hasDescendant(withText("Axl Rose")), click())
+        )
+
+        onView(withId(R.id.tvMusicianName)).check(matches(isDisplayed()))
+        onView(withId(R.id.tvMusicianName)).check(matches(withText("Axl Rose")))
+    }
+
+    @Test
+    fun testMusicianDescriptionVisualization() {
+        onView(withId(R.id.include_artists)).perform(click())
+
+        onView(withId(R.id.rvMusicians)).perform(
+            RecyclerViewActions.actionOnItem<RecyclerView.ViewHolder>(hasDescendant(withText("Axl Rose")), click())
+        )
+
+        onView(withId(R.id.tvDescription)).check(matches(isDisplayed()))
+        onView(withId(R.id.tvDescription)).check(matches(not(withText(""))))
+    }
+
+    @Test
+    fun testMusicianBirthdateVisualization() {
+        onView(withId(R.id.include_artists)).perform(click())
+
+        onView(withId(R.id.rvMusicians)).perform(
+            RecyclerViewActions.actionOnItem<RecyclerView.ViewHolder>(hasDescendant(withText("Axl Rose")), click())
+        )
+
+        onView(withId(R.id.tvMusicianBirthDate)).check(matches(isDisplayed()))
+        onView(withId(R.id.tvMusicianBirthDate)).check(matches(not(withText(""))))
+    }
+
+    @Test
+    fun testMusicianNoPrizesVisualization() {
+        onView(withId(R.id.include_artists)).perform(click())
+
+        onView(withId(R.id.rvMusicians)).perform(
+            RecyclerViewActions.actionOnItem<RecyclerView.ViewHolder>(hasDescendant(withText("Axl Rose")), click())
+        )
+
+        onView(withId(R.id.flexPrizes)).check(matches(isDisplayed()))
+        onView(withText("Sin premios")).check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun testMusicianPrizesVisualization() {
+        onView(withId(R.id.include_artists)).perform(click())
+
+        onView(withId(R.id.rvMusicians)).perform(
+            RecyclerViewActions.actionOnItem<RecyclerView.ViewHolder>(hasDescendant(withText("Ruben Blades")), click())
+        )
+
+        onView(withId(R.id.flexPrizes)).check(matches(isDisplayed()))
+        onView(withText("Grammy Award")).check(matches(isDisplayed()))
     }
 
     @Test
