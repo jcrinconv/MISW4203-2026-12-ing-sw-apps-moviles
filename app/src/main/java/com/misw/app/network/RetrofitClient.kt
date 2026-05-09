@@ -2,7 +2,6 @@ package com.misw.app.network
 
 import com.misw.app.BuildConfig
 import com.misw.app.network.musician.MusicianApiService
-import com.misw.app.network.prize.PrizeApiService
 import com.misw.app.network.collector.CollectorApiService
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
@@ -42,8 +41,6 @@ object RetrofitClient {
     val albumApiService: AlbumApiService get() = retrofit.create(AlbumApiService::class.java)
 
     val musicianApiService: MusicianApiService get() = retrofit.create(MusicianApiService::class.java)
-
-    val prizeApiService: PrizeApiService get() = retrofit.create(PrizeApiService::class.java)
 
     val collectorApiService: CollectorApiService get() = retrofit.create(CollectorApiService::class.java)
 }
