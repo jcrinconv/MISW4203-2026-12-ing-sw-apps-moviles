@@ -1,6 +1,7 @@
 package com.misw.app.network.musician
 
 import com.misw.app.model.Musician
+import com.misw.app.model.PerformerPrize
 import com.misw.app.network.RetrofitClient
 
 class MusicianRemoteDataSource {
@@ -14,5 +15,9 @@ class MusicianRemoteDataSource {
 
     suspend fun fetchMusicianById(id: Int): Musician {
         return musicianApiService.getMusicianById(id)
+    }
+
+    suspend fun fetchPerformerPrizesByMusicianId(id: Int): List<PerformerPrize> {
+        return musicianApiService.getPerformerPrizesByMusicianId(id)
     }
 }

@@ -19,7 +19,9 @@ import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.test.filters.LargeTest
+import androidx.test.platform.app.InstrumentationRegistry
 import com.github.javafaker.Faker
+import com.misw.app.network.CacheManager
 import com.misw.app.network.EspressoIdlingResource
 import com.misw.app.network.RetrofitClient
 import com.misw.app.ui.MainActivity
@@ -56,6 +58,9 @@ class AlbumDetailFragmentTest {
         // Descripción muy larga para forzar el "Ver más"
         fakerGeneratedAlbumDescription = faker.lorem().fixedString(800)
         fakerGeneratedTrackName = faker.music().instrument()
+
+        // Limpiar cache antes de cada test para asegurar independencia
+        CacheManager.getInstance(InstrumentationRegistry.getInstrumentation().targetContext).clearCache()
 
         val dispatcher = object : Dispatcher() {
             override fun dispatch(request: RecordedRequest): MockResponse {

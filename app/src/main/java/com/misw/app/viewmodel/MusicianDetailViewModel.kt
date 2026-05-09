@@ -1,6 +1,7 @@
 package com.misw.app.viewmodel
 
-import androidx.lifecycle.ViewModel
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
@@ -9,20 +10,12 @@ import android.util.Log
 import com.misw.app.model.Album
 import com.misw.app.model.Musician
 import com.misw.app.model.MusicianPrizeItem
-import com.misw.app.network.musician.MusicianRemoteDataSource
-import com.misw.app.network.prize.PrizeRemoteDataSource
 import com.misw.app.repository.musician.MusicianRepository
 import com.misw.app.repository.musician.MusicianRepositoryImpl
-import com.misw.app.repository.prize.PrizeRepository
-import com.misw.app.repository.prize.PrizeRepositoryImpl
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
 
-class MusicianDetailViewModel : ViewModel() {
+class MusicianDetailViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val musicianRepository: MusicianRepository =
-        MusicianRepositoryImpl(MusicianRemoteDataSource())
-    private val prizeRepository: PrizeRepository = PrizeRepositoryImpl(PrizeRemoteDataSource())
+    private val musicianRepository : MusicianRepository = MusicianRepositoryImpl(application)
 
     private val _musician = MutableLiveData<Musician>()
     val musician: LiveData<Musician> get() = _musician
@@ -34,7 +27,6 @@ class MusicianDetailViewModel : ViewModel() {
     val albums: LiveData<List<Album>> get() = _albums
 
     private val _query = MutableLiveData<String>("")
-    val query: LiveData<String> get() = _query
 
     private var originalAlbums: List<Album> = emptyList()
     private var currentSortCriterion = SortCriterion.NAME
@@ -54,21 +46,14 @@ class MusicianDetailViewModel : ViewModel() {
                 val musician = musicianRepository.getMusicianById(id)
                 _musician.value = musician
 
-                val prizesList = if (musician.performerPrizes.isEmpty()) {
-                    emptyList()
-                } else {
-                    musician.performerPrizes.map { performerPrize ->
-                        async {
-                            val prize = prizeRepository.getPrizeById(performerPrize.id)
-                            MusicianPrizeItem(
-                                name = prize.name, premiationDate = performerPrize.premiationDate
-                            )
-                        }
-                    }.awaitAll()
+                val prizesList = musicianRepository.getPerformerPrizesByMusicianId(id).map { performerPrize ->
+                    MusicianPrizeItem(
+                        name = performerPrize.prize.name,
+                        premiationDate = performerPrize.premiationDate
+                    )
                 }
-
                 _prizes.value = prizesList
-
+                
                 originalAlbums = musician.albums
                 updateAlbumList()
 
@@ -114,7 +99,6 @@ class MusicianDetailViewModel : ViewModel() {
                 if (currentSortOrder == SortOrder.ASCENDING) filtered.sortedBy { it.name }
                 else filtered.sortedByDescending { it.name }
             }
-
             SortCriterion.RELEASE_DATE -> {
                 if (currentSortOrder == SortOrder.ASCENDING) filtered.sortedBy { it.releaseDate }
                 else filtered.sortedByDescending { it.releaseDate }

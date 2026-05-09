@@ -166,11 +166,11 @@ class AlbumDetailFragment : Fragment() {
     private fun formatDate(dateString: String): String {
         return try {
             val inputFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault())
-            val outputFormat = SimpleDateFormat("MMM d, yyyy", Locale("es"))
+            val outputFormat = SimpleDateFormat("MMM d, yyyy", Locale.forLanguageTag("es"))
             val date = inputFormat.parse((dateString))
             val formatted = outputFormat.format(date!!)
             "Lanzado en ${formatted.replaceFirstChar { it.uppercase() }}"
-        } catch (ignored: Exception) {
+        } catch (_: Exception) {
             dateString
         }
     }

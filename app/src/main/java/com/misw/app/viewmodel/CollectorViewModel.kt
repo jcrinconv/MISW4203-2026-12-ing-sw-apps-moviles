@@ -13,7 +13,7 @@ import kotlinx.coroutines.launch
 
 class CollectorViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val repository: CollectorRepository = CollectorRepositoryImpl()
+    private val repository: CollectorRepository = CollectorRepositoryImpl(application)
 
     private val _collectors = MutableLiveData<List<Collector>>()
     val collectors: LiveData<List<Collector>> get() = _collectors
