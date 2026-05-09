@@ -21,6 +21,9 @@ class CacheManager private constructor() {
     private var musicians: List<Musician> = listOf()
     private var collectors: List<Collector> = listOf()
 
+    private val albumDetails = mutableMapOf<Int, Album>()
+    private val musicianDetails = mutableMapOf<Int, Musician>()
+
     fun addAlbums(newAlbums: List<Album>) {
         if (albums.isEmpty()) {
             albums = newAlbums
@@ -49,5 +52,21 @@ class CacheManager private constructor() {
 
     fun getCollectors(): List<Collector> {
         return collectors
+    }
+
+    fun addAlbumDetail(id: Int, album: Album) {
+        albumDetails[id] = album
+    }
+
+    fun getAlbumDetail(id: Int): Album? {
+        return albumDetails[id]
+    }
+
+    fun addMusicianDetail(id: Int, musician: Musician) {
+        musicianDetails[id] = musician
+    }
+
+    fun getMusicianDetail(id: Int): Musician? {
+        return musicianDetails[id]
     }
 }

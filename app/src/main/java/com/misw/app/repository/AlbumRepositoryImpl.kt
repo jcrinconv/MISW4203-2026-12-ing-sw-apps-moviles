@@ -25,7 +25,15 @@ class AlbumRepositoryImpl(
     }
 
     override suspend fun getAlbumById(id: Int): Album {
-        // For now, we fetch from network as CacheManager only stores the list
-        return remoteDataSource.fetchAlbumById(id)
+        val potentialResp = CacheManager.getInstance(context).getAlbumDetail(id)
+        return if (potentialResp == null) {
+            Log.d("Cache decision", "get album detail from network")
+            val album = remoteDataSource.fetchAlbumById(id)
+            CacheManager.getInstance(context).addAlbumDetail(id, album)
+            album
+        } else {
+            Log.d("Cache decision", "return album detail from cache")
+            potentialResp
+        }
     }
 }

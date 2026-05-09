@@ -25,6 +25,15 @@ class MusicianRepositoryImpl(
     }
 
     override suspend fun getMusicianById(id: Int): Musician {
-        return remoteDataSource.fetchMusicianById(id)
+        val potentialResp = CacheManager.getInstance(context).getMusicianDetail(id)
+        return if (potentialResp == null) {
+            Log.d("Cache decision", "get musician detail from network")
+            val musician = remoteDataSource.fetchMusicianById(id)
+            CacheManager.getInstance(context).addMusicianDetail(id, musician)
+            musician
+        } else {
+            Log.d("Cache decision", "return musician detail from cache")
+            potentialResp
+        }
     }
 }
