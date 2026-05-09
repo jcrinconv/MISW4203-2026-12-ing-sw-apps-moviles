@@ -125,7 +125,7 @@ class MusicianDetailFragment : Fragment() {
                 )
                 pillView.setBackgroundResource(R.drawable.pill_prize_gray)
                 pillView.findViewById<ImageView>(R.id.ivTrophy).setImageResource(R.drawable.ic_sad_face)
-                pillView.findViewById<TextView>(R.id.tvPrize).text = "Sin premios"
+                pillView.findViewById<TextView>(R.id.tvPrize).text = getString(R.string.no_prizes)
                 pillView.findViewById<TextView>(R.id.tvPrize).setTextColor(
                     ContextCompat.getColor(pillView.context, R.color.silver_chalice)
                 )
@@ -180,16 +180,15 @@ class MusicianDetailFragment : Fragment() {
 
     private fun updateSortButtonsUI(isNameSelected: Boolean) {
         val pink = ContextCompat.getColor(requireContext(), R.color.wild_strawberry)
-        val transparent = Color.TRANSPARENT
         val white = Color.WHITE
         val gray = Color.GRAY
 
         binding.btnSortName.backgroundTintList =
-            ColorStateList.valueOf(if (isNameSelected) pink else transparent)
+            ColorStateList.valueOf(if (isNameSelected) pink else Color.TRANSPARENT)
         binding.btnSortName.setTextColor(if (isNameSelected) white else gray)
 
         binding.btnSortDate.backgroundTintList =
-            ColorStateList.valueOf(if (isNameSelected) transparent else pink)
+            ColorStateList.valueOf(if (isNameSelected) Color.TRANSPARENT else pink)
         binding.btnSortDate.setTextColor(if (isNameSelected) gray else white)
     }
 
@@ -222,7 +221,7 @@ class MusicianDetailFragment : Fragment() {
             val date = inputFormat.parse((dateString))
             val formatted = outputFormat.format(date!!)
             formatted.replaceFirstChar { it.uppercase() }
-        } catch (e: Exception) {
+        } catch (ignored: Exception) {
             dateString
         }
     }

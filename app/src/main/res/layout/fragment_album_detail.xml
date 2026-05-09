@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background"
     tools:context=".ui.albums.AlbumDetailFragment">
 
     <ProgressBar
@@ -35,6 +34,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="300dp"
                     android:scaleType="centerCrop"
+                    android:contentDescription="@string/album_cover_description"
                     tools:src="@tools:sample/backgrounds/scenic" />
 
             </com.facebook.shimmer.ShimmerFrameLayout>
@@ -125,7 +125,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
-                    android:text="Ver más"
+                    android:text="@string/see_more_label"
                     android:textColor="@color/wild_strawberry"
                     android:textSize="16sp"
                     android:textStyle="bold"

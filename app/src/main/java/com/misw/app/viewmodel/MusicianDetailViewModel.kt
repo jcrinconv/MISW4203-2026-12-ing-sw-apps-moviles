@@ -20,8 +20,9 @@ import kotlinx.coroutines.awaitAll
 
 class MusicianDetailViewModel : ViewModel() {
 
-    private val musicianRepository : MusicianRepository = MusicianRepositoryImpl(MusicianRemoteDataSource())
-    private val prizeRepository : PrizeRepository = PrizeRepositoryImpl(PrizeRemoteDataSource())
+    private val musicianRepository: MusicianRepository =
+        MusicianRepositoryImpl(MusicianRemoteDataSource())
+    private val prizeRepository: PrizeRepository = PrizeRepositoryImpl(PrizeRemoteDataSource())
 
     private val _musician = MutableLiveData<Musician>()
     val musician: LiveData<Musician> get() = _musician
@@ -39,8 +40,8 @@ class MusicianDetailViewModel : ViewModel() {
     private var currentSortCriterion = SortCriterion.NAME
     private var currentSortOrder = SortOrder.ASCENDING
 
-    private val _error = MutableLiveData<String>()
-    val error: LiveData<String> get() = _error
+    private val _error = MutableLiveData<String?>()
+    val error: LiveData<String?> get() = _error
 
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> get() = _isLoading
@@ -60,15 +61,14 @@ class MusicianDetailViewModel : ViewModel() {
                         async {
                             val prize = prizeRepository.getPrizeById(performerPrize.id)
                             MusicianPrizeItem(
-                                name = prize.name,
-                                premiationDate = performerPrize.premiationDate
+                                name = prize.name, premiationDate = performerPrize.premiationDate
                             )
                         }
                     }.awaitAll()
                 }
 
                 _prizes.value = prizesList
-                
+
                 originalAlbums = musician.albums
                 updateAlbumList()
 
@@ -114,6 +114,7 @@ class MusicianDetailViewModel : ViewModel() {
                 if (currentSortOrder == SortOrder.ASCENDING) filtered.sortedBy { it.name }
                 else filtered.sortedByDescending { it.name }
             }
+
             SortCriterion.RELEASE_DATE -> {
                 if (currentSortOrder == SortOrder.ASCENDING) filtered.sortedBy { it.releaseDate }
                 else filtered.sortedByDescending { it.releaseDate }

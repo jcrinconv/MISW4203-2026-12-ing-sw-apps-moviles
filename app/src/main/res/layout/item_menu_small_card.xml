@@ -29,6 +29,7 @@
                 android:id="@+id/iv_menu_icon"
                 android:layout_width="28dp"
                 android:layout_height="28dp"
+                android:contentDescription="@string/chevron_icon_desc"
                 android:layout_gravity="center"
                 android:src="@drawable/ic_artists" />
         </FrameLayout>
@@ -38,7 +39,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16.dp"
-            android:text="Titulo"
+            android:text="@string/title_label"
             android:textColor="@color/white"
             android:textSize="18sp"
             android:textStyle="bold"

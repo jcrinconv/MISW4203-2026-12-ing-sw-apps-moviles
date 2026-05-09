@@ -1,7 +1,6 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
-    id 'org.jetbrains.kotlin.kapt'
     id 'kotlin-kapt'
     id 'jacoco'
 }
@@ -32,10 +31,17 @@ android {
             buildConfigField "String", "BASE_URL", '"https://vinilos-backend-6ydt.onrender.com/"'
             signingConfig signingConfigs.debug
         }
+        profiling {
+            initWith release
+            matchingFallbacks = ['release']
+            buildConfigField "String", "BASE_URL", '"https://vinilos-backend-6ydt.onrender.com/"'
+            debuggable false
+            signingConfig signingConfigs.debug
+        }
         debug {
             enableAndroidTestCoverage true
             enableUnitTestCoverage true
-            buildConfigField "String", "BASE_URL", '"http://10.0.2.2:3000/"'
+            buildConfigField "String", "BASE_URL", '"https://vinilos-backend-6ydt.onrender.com/"'
         }
     }
     compileOptions {
@@ -44,6 +50,11 @@ android {
     }
     kotlinOptions {
         jvmTarget = '1.8'
+    }
+    lintOptions {
+        abortOnError false // No detiene la compilación si hay errores
+        checkAllWarnings true
+        warningsAsErrors true
     }
 }
 
