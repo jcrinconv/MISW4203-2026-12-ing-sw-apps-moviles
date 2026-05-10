@@ -26,7 +26,7 @@ Para ejecutar la aplicación localmente, siga las siguientes instrucciones:
 
 1. Encienda el backend. Si no lo tiene instalado, vaya a [Vinilos-Backend](https://github.com/Laurarestrepo03/Vinilos-Backend), descargue el proyecto y construya la imagen con Docker. Una vez construida, el back debería correr en el puerto 3000.
 
-    > ⚠️ ADVERTENCIA: Este backend NO es el mismo que [BackVinyls](https://github.com/TheSoftwareDesignLab/BackVynils), pues contiene un endpoint nuevo para los premios de un artista. Si desea consultar más detalles de los cambios implementados, vaya a los Pull Requests del repositorio de Vinilos-Backend.
+    > ⚠️ ADVERTENCIA: Este backend NO es el mismo que [BackVinyls](https://github.com/TheSoftwareDesignLab/BackVynils), pues contiene un endpoint nuevo para los premios de un artista. Si desea consultar más detalles sobre los cambios implementados, vaya a los Pull Requests de Vinilos-Backend.
 
 2. Abra el proyecto en Android Studio y asegúrese de tener un dispositivo de emulación corriendo. Para ello, diríjase a Device Manager.
 
