@@ -7,7 +7,7 @@ plugins {
 
 android {
     namespace 'com.misw.app'
-    compileSdk 37
+    compileSdk 36
 
     defaultConfig {
         applicationId "com.misw.app"
