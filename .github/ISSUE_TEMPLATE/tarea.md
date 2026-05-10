@@ -6,6 +6,4 @@ labels: 'tarea'
 assignees: ''
 ---
 
-| Descripción | Tiempo estimado | Tiempo real |
-|------------ |-----------------|-------------|
-|  |  |  | 
+[Descripción]
