@@ -24,7 +24,9 @@ Para ejecutar la aplicación tiene dos opciones: localmente con un emulador, o m
 
 Para ejecutar la aplicación localmente, siga las siguientes instrucciones:
 
-1. Encienda el backend. Si no lo tiene instalado, vaya a [BackVinyls](https://github.com/TheSoftwareDesignLab/BackVynils), descargue el proyecto y construya la imagen con Docker. Una vez construida, el back debería correr en el puerto 3000.
+1. Encienda el backend. Si no lo tiene instalado, vaya a [Vinilos-Backend](https://github.com/Laurarestrepo03/Vinilos-Backend), descargue el proyecto y construya la imagen con Docker. Una vez construida, el back debería correr en el puerto 3000.
+
+> ⚠️ ADVERTENCIA: Este backend NO es el mismo que [BackVinyls](https://github.com/TheSoftwareDesignLab/BackVynils), pues contiene un ednpoint nuevo usado por la aplicación Android. El que debe usar es Vinilos-Backend. Si desea consultar más detalles de los cambios, vaya a los Pull Requests del repositorio.
 
 2. Abra el proyecto en Android Studio y asegúrese de tener un dispositivo de emulación corriendo. Para ello, diríjase a Device Manager.
 
@@ -34,6 +36,8 @@ Para ejecutar la aplicación localmente, siga las siguientes instrucciones:
 
 4. Listo! La aplicación ya debería estar corriendo en su emulador.
 
+    <!--TODO: cambiar imagen-->
+    
     <img height="400" alt="image" src="https://github.com/user-attachments/assets/088f60c3-1cde-42f3-a08c-166897fc4ee4" /> <p></p>
 
 ### Ejecución con apk
@@ -42,30 +46,30 @@ Para ejecutar la aplicación localmente, siga las siguientes instrucciones:
 
     <img width="515" height="120" alt="image" src="https://github.com/user-attachments/assets/d6115466-51a1-4b0a-9c3d-f96b76454930" /> <p></p>
 
-2. Con el back corriendo en Render, descargue la apk. Para ello, diríjase al release más reciente y descargue el archivo .apk.
+2. Con el back corriendo en Render, descargue la apk. Para ello, diríjase al release más reciente y descargue el archivo .apk. Si descargó la apk en su computador, envíela a su dispositivo Android (puede usar Drive para esto).
 
-3. Si descargó la apk en su computador, envíela a su dispositivo Android (puede usar Drive para esto).
+3. Una vez tenga el apk en su dispositivo Android, vaya a Descargas (o la ubicación en la que se encuentre el archivo) e instale la aplicación.
 
-4. Si descargó la apk en su dispositivo Android, o si la descargó mediante Drive al habérsela enviado, vaya a Descargas e instale la aplicación.
+4. Si es necesario, otorgue los permisos para instalar aplicaciones de orígenes desconocidos. No se preocupe, nuestra aplicación no tiene contenido malicioso.
 
-5. Si es necesario, otorgue los permisos para instalar aplicaciones de orígenes desconocidos. No se preocupe, nuestra aplicación no tiene contenido malicioso.
-
-6. Abra la aplicación tocando el ícono.
+5. Abra la aplicación tocando el ícono.
 
     <img height="200" alt="image" src="https://github.com/user-attachments/assets/24624d11-3518-485b-b748-656a61a2ce8a" /> <p></p>
 
-7. Listo! Puede disfrutar de la aplicación en su propio dispositivo.
+6. Listo! Puede disfrutar de la aplicación en su propio dispositivo.
 
 ## Ejecución de pruebas
 
+Antes de ejecutar las pruebas e2e, es importante mencionar que ellas están desacopladas del backend, es decir, no debe tenerlo corriendo. Esto es porque usamos [Mockito](https://site.mockito.org/) para simular la recuperación de datos y códigos de respuesta.
+
 1. Abra el proyecto en Android Studio.
 
-2. Encienda el backend. Si no lo tiene instalado, vaya a [BackVinyls](https://github.com/TheSoftwareDesignLab/BackVynils), descargue el proyecto y construya la imagen con Docker. Una vez construida, el back debería correr en el puerto 3000.
+2. Diríjase a kotlin+java > com.misw.app (androidTest).
 
-3. Diríjase a kotlin+java > com.misw.app (androidTest).
-
-4. Dé click derecho en com.misw.app (androidTest) y seleccione la opción Run 'Tests' in 'com.misw.a...'
+3. Dé click derecho en com.misw.app (androidTest) y seleccione la opción Run 'Tests' in 'com.misw.a...'
     
-5. Listo, puede ver el resultado de las pruebas en la parte del IDE:
+4. Listo, puede ver el resultado de las pruebas en la parte de abajo del IDE:
 
+    <!--TODO: cambiar imagen-->
+    
     <img height="200" alt="image" src="https://github.com/user-attachments/assets/ca050b1d-2581-42ed-95d6-25c4902ad7ad" />
