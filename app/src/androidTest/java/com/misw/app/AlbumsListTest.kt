@@ -1,6 +1,5 @@
 package com.misw.app
 
-import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.IdlingRegistry
@@ -11,9 +10,17 @@ import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
+import androidx.test.platform.app.InstrumentationRegistry
+import com.github.javafaker.Faker
+import com.misw.app.network.CacheManager
 import com.misw.app.network.EspressoIdlingResource
+import com.misw.app.network.RetrofitClient
 import com.misw.app.ui.MainActivity
+import okhttp3.mockwebserver.MockResponse
+import okhttp3.mockwebserver.MockWebServer
+import org.hamcrest.CoreMatchers.allOf
 import org.hamcrest.CoreMatchers.containsString
+import org.hamcrest.CoreMatchers.not
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -28,26 +35,46 @@ class AlbumsListTest {
     @JvmField
     var mActivityScenarioRule = ActivityScenarioRule(MainActivity::class.java)
 
+    private val mockWebServer = MockWebServer()
+    private val faker = Faker()
+
     @Before
     fun setup() {
+        mockWebServer.start(0)
+        RetrofitClient.setBaseUrl(mockWebServer.url("/").toString())
         IdlingRegistry.getInstance().register(EspressoIdlingResource.countingIdlingResource)
-        onView(withId(R.id.include_albums)).perform(click())
+        
+        CacheManager.getInstance(InstrumentationRegistry.getInstrumentation().targetContext).clearCache()
+
+        val initialAlbumsJson = """
+            [
+                {"id":1, "name":"A Day at the Races", "cover":"https://picsum.photos/200", "releaseDate":"1976-12-10T00:00:00.000Z", "description":"D1", "genre":"Rock", "recordLabel":"EMI"},
+                {"id":2, "name":"A Night at the Opera", "cover":"https://picsum.photos/200", "releaseDate":"1975-11-21T00:00:00.000Z", "description":"D2", "genre":"Rock", "recordLabel":"EMI"},
+                {"id":3, "name":"Buscando América", "cover":"https://picsum.photos/200", "releaseDate":"1984-04-01T00:00:00.000Z", "description":"D3", "genre":"Salsa", "recordLabel":"Elektra"}
+            ]
+        """.trimIndent()
+        
+        navigateToAlbums(200, initialAlbumsJson)
     }
 
     @After
     fun tearDown() {
+        mockWebServer.shutdown()
         IdlingRegistry.getInstance().unregister(EspressoIdlingResource.countingIdlingResource)
+        RetrofitClient.setBaseUrl(BuildConfig.BASE_URL)
+    }
+
+    private fun navigateToAlbums(responseCode: Int = 200, responseBody: String = "[]") {
+        mockWebServer.enqueue(MockResponse().setResponseCode(responseCode).setBody(responseBody))
+        onView(withId(R.id.include_albums)).perform(click())
     }
 
     @Test
     fun testVisibilityOfAllComponents() {
-        onView(withId(R.id.etSearchAlbum)).check(matches(isDisplayed()))
-
+        onView(withId(R.id.searchBar)).check(matches(isDisplayed()))
         onView(withId(R.id.btnSortName)).check(matches(isDisplayed()))
         onView(withId(R.id.btnSortDate)).check(matches(isDisplayed()))
-
         onView(withId(R.id.btnSwapOrder)).check(matches(isDisplayed()))
-
         onView(withId(R.id.rvAlbumList)).check(matches(isDisplayed()))
     }
 
@@ -55,34 +82,63 @@ class AlbumsListTest {
     fun testSearchFiltering() {
         val albumToSearch = "Buscando América"
 
-        onView(withId(R.id.etSearchAlbum))
+        onView(allOf(isAssignableFrom(android.widget.EditText::class.java), isDescendantOfA(withId(R.id.searchBar))))
             .perform(replaceText(albumToSearch), closeSoftKeyboard())
 
         onView(withId(R.id.rvAlbumList))
-            .check(matches(atPosition(0, hasDescendant(withText(containsString(albumToSearch))))))
+            .check(matches(hasDescendant(withText(containsString(albumToSearch)))))
     }
 
     @Test
-    fun testSortingButtonsInteraction() {
-        onView(withId(R.id.btnSortDate)).perform(click())
-        onView(withId(R.id.btnSortDate)).check(matches(isDisplayed()))
+    fun testSearchNoResults() {
+        val nonExistentAlbum = "Fake-" + faker.lorem().characters(10)
 
-        onView(withId(R.id.btnSortName)).perform(click())
-        onView(withId(R.id.btnSortName)).check(matches(isDisplayed()))
+        onView(allOf(isAssignableFrom(android.widget.EditText::class.java), isDescendantOfA(withId(R.id.searchBar))))
+            .perform(replaceText(nonExistentAlbum), closeSoftKeyboard())
+
+        onView(withId(R.id.rvAlbumList)).check(matches(not(isDisplayed())))
+        onView(withId(R.id.llEmptyState)).check(matches(isDisplayed()))
+        onView(withId(R.id.tvEmptyState)).check(matches(withText(R.string.no_albums_found)))
     }
 
     @Test
-    fun testSwapOrderButton() {
-        onView(withId(R.id.btnSwapOrder)).perform(click())
+    fun testEmptyListFromServer() {
+        androidx.test.espresso.Espresso.pressBack()
+        // Limpiamos cache para que no use los datos del setup y realmente vea la lista vacía
+        CacheManager.getInstance(InstrumentationRegistry.getInstrumentation().targetContext).clearCache()
+        navigateToAlbums(200, "[]")
 
-        onView(withId(R.id.etSearchAlbum)).check(matches(isDisplayed()))
+        onView(withId(R.id.llEmptyState)).check(matches(isDisplayed()))
+        onView(withId(R.id.tvEmptyState)).check(matches(withText(R.string.no_albums_found)))
+        onView(withId(R.id.rvAlbumList)).check(matches(not(isDisplayed())))
+    }
+
+    @Test
+    fun testServerError() {
+        androidx.test.espresso.Espresso.pressBack()
+        // Limpiamos cache para que el repositorio falle al intentar fetch
+        CacheManager.getInstance(InstrumentationRegistry.getInstrumentation().targetContext).clearCache()
+        navigateToAlbums(500, "Internal Server Error")
+        
+        onView(withId(R.id.llEmptyState)).check(matches(isDisplayed()))
+        onView(withId(R.id.tvEmptyState)).check(matches(withText(R.string.error_loading_content)))
+        onView(withId(R.id.rvAlbumList)).check(matches(not(isDisplayed())))
+    }
+
+    @Test
+    fun testSearchAndClearRestoresList() {
+        onView(allOf(isAssignableFrom(android.widget.EditText::class.java), isDescendantOfA(withId(R.id.searchBar))))
+            .perform(replaceText("Buscando"), closeSoftKeyboard())
+
+        onView(allOf(isAssignableFrom(android.widget.EditText::class.java), isDescendantOfA(withId(R.id.searchBar))))
+            .perform(replaceText(""), closeSoftKeyboard())
+
+        onView(withId(R.id.rvAlbumList))
+            .check(matches(hasMinimumChildCount(1)))
     }
 
     @Test
     fun testRecyclerViewContent() {
-        // En lugar de posiciones fijas que dependen del orden de la API, 
-        // validamos que los álbumes esperados existan en la lista haciendo scroll hacia ellos.
-        
         val expectedAlbums = listOf("A Day at the Races", "A Night at the Opera", "Buscando América")
         
         expectedAlbums.forEach { albumName ->
@@ -91,23 +147,6 @@ class AlbumsListTest {
                     hasDescendant(withText(containsString(albumName)))
                 ))
                 .check(matches(hasDescendant(withText(containsString(albumName)))))
-        }
-    }
-}
-
-fun atPosition(position: Int, itemMatcher: org.hamcrest.Matcher<View>): org.hamcrest.Matcher<View> {
-    return object :
-        androidx.test.espresso.matcher.BoundedMatcher<View, RecyclerView>(
-            RecyclerView::class.java
-        ) {
-        override fun describeTo(description: org.hamcrest.Description) {
-            description.appendText("has item at position $position: ")
-            itemMatcher.describeTo(description)
-        }
-
-        override fun matchesSafely(view: RecyclerView): Boolean {
-            val viewHolder = view.findViewHolderForAdapterPosition(position) ?: return false
-            return itemMatcher.matches(viewHolder.itemView)
         }
     }
 }

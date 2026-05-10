@@ -94,7 +94,7 @@ class HomeFragment : Fragment() {
                 R.color.bright_ube,
             )
         ) {
-            Toast.makeText(context, "Próximamente...", Toast.LENGTH_SHORT).show()
+            findNavController().navigate(R.id.action_homeFragment_to_musicianListFragment)
         }
 
         val tracksBinding = ItemMenuSmallCardBinding.bind(binding.includeTracks.root)
@@ -121,7 +121,7 @@ class HomeFragment : Fragment() {
                 R.color.bright_ube,
             )
         ) {
-            Toast.makeText(context, "Próximamente...", Toast.LENGTH_SHORT).show()
+            findNavController().navigate(R.id.action_homeFragment_to_collectorListFragment)
         }
     }
 

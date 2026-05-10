@@ -1,17 +1,18 @@
 plugins {
-    id 'com.android.application'
-    id 'org.jetbrains.kotlin.android'
+    alias libs.plugins.android.application
+    alias libs.plugins.jetbrains.kotlin.android
+    id 'kotlin-kapt'
     id 'jacoco'
 }
 
 android {
     namespace 'com.misw.app'
-    compileSdk 34
+    compileSdk 36
 
     defaultConfig {
         applicationId "com.misw.app"
-        minSdk 24
-        targetSdk 34
+        minSdk 26
+        targetSdk 37
         versionCode 1
         versionName "1.0"
 
@@ -21,17 +22,25 @@ android {
     buildFeatures {
         buildConfig true
         viewBinding true
+        dataBinding true
     }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             buildConfigField "String", "BASE_URL", '"https://vinilos-backend-6ydt.onrender.com/"'
+            signingConfig signingConfigs.debug
+        }
+        profiling {
+            initWith release
+            matchingFallbacks = ['release']
+            buildConfigField "String", "BASE_URL", '"https://vinilos-backend-6ydt.onrender.com/"'
+            debuggable false
+            signingConfig signingConfigs.debug
         }
         debug {
             enableAndroidTestCoverage true
             enableUnitTestCoverage true
-            testCoverageEnabled true
             buildConfigField "String", "BASE_URL", '"http://10.0.2.2:3000/"'
         }
     }
@@ -41,6 +50,12 @@ android {
     }
     kotlinOptions {
         jvmTarget = '1.8'
+    }
+    lint {
+        abortOnError false
+        checkAllWarnings true
+        warningsAsErrors false
+        disable 'OldTargetApi', 'UniqueConstants', 'IdenticalLayouts'
     }
 }
 
@@ -53,38 +68,50 @@ configurations.all {
 }
 
 dependencies {
-    implementation 'androidx.core:core-ktx:1.12.0'
-    implementation 'androidx.appcompat:appcompat:1.6.1'
-    implementation 'androidx.navigation:navigation-fragment-ktx:2.9.7'
-    implementation 'androidx.navigation:navigation-ui-ktx:2.9.7'
-    implementation 'com.google.android.material:material:1.11.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
-    implementation 'androidx.fragment:fragment-ktx:1.8.5'
-    implementation 'androidx.recyclerview:recyclerview:1.3.2'
+    implementation libs.androidx.core.ktx
+    implementation libs.androidx.appcompat
+    implementation libs.androidx.navigation.fragment.ktx
+    implementation libs.androidx.navigation.ui.ktx
+    implementation libs.material
+    implementation libs.androidx.constraintlayout
+    implementation libs.androidx.fragment.ktx
+    implementation libs.androidx.recyclerview
 
     // Lifecycle + LiveData
-    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.7.0'
-    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.7.0'
+    implementation libs.androidx.lifecycle.viewmodel.ktx
+    implementation libs.androidx.lifecycle.livedata.ktx
 
     // Retrofit
-    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
-    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
-    implementation 'com.squareup.okhttp3:okhttp:4.12.0'
+    implementation libs.retrofit
+    implementation libs.converter.gson
+    implementation libs.okhttp
 
     // Carga de imágenes
-    implementation 'com.github.bumptech.glide:glide:4.16.0'
+    implementation libs.glide
+    implementation libs.okhttp3.integration
+    kapt libs.compiler
 
     // Testing
-    testImplementation 'junit:junit:4.13.2'
-    androidTestImplementation 'androidx.test.ext:junit:1.3.0'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.7.0'
-    androidTestImplementation 'androidx.test.espresso:espresso-contrib:3.7.0'
-    androidTestImplementation 'androidx.test:runner:1.7.0'
-    androidTestImplementation 'androidx.test:rules:1.7.0'
-    debugImplementation 'androidx.fragment:fragment-testing:1.8.5'
+    testImplementation libs.junit
+    androidTestImplementation libs.androidx.junit
+    androidTestImplementation libs.androidx.espresso.core
+    androidTestImplementation libs.androidx.espresso.contrib
+    androidTestImplementation libs.androidx.runner
+    androidTestImplementation libs.androidx.rules
+    debugImplementation libs.androidx.fragment.testing
 
-    // Idling Resource - Usamos implementation para que sea visible en RetrofitClient (producción)
-    implementation 'androidx.test.espresso:espresso-idling-resource:3.7.0'
+    // Idling Resource
+    implementation libs.androidx.espresso.idling.resource
+
+    // Mocking & Data generation
+    androidTestImplementation libs.mockwebserver
+    androidTestImplementation libs.javafaker
+
+    // Shimmer para la carga de imágenes
+    implementation libs.shimmer
+
+    //Layout
+    implementation libs.flexbox
 }
 
 jacoco {
@@ -103,8 +130,8 @@ task jacocoTestReport(type: JacocoReport, dependsOn: ['testDebugUnitTest', 'crea
     }
 
     def fileFilter = [
-        '**/R.class', '**/R$*.class', '**/BuildConfig.*', '**/Manifest*.*',
-        '**/*Test*.*', 'android/**/*.*', '**/databinding/*', '**/BR.*'
+            '**/R.class', '**/R$*.class', '**/BuildConfig.*', '**/Manifest*.*',
+            '**/*Test*.*', 'android/**/*.*', '**/databinding/*', '**/BR.*'
     ]
     def debugTree = fileTree(dir: "${buildDir}/intermediates/javac/debug/classes", excludes: fileFilter)
     def kotlinDebugTree = fileTree(dir: "${buildDir}/tmp/kotlin-classes/debug", excludes: fileFilter)

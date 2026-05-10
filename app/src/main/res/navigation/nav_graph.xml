@@ -13,6 +13,12 @@
         <action
             android:id="@+id/action_homeFragment_to_albumListFragment"
             app:destination="@id/albumListFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_musicianListFragment"
+            app:destination="@id/musicianListFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_collectorListFragment"
+            app:destination="@id/collectorListFragment" />
     </fragment>
 
     <fragment
@@ -27,11 +33,42 @@
 
     <fragment
         android:id="@+id/albumDetailFragment"
-        android:name="com.misw.app.ui.AlbumDetailFragment"
+        android:name="com.misw.app.ui.albums.AlbumDetailFragment"
         android:label="Detalle del álbum"
         tools:layout="@layout/fragment_album_detail">
         <argument
             android:name="album_id"
             app:argType="integer" />
     </fragment>
+
+    <fragment
+        android:id="@+id/musicianListFragment"
+        android:name="com.misw.app.ui.musicians.MusicianListFragment"
+        android:label="Artistas"
+        tools:layout="@layout/fragment_musician_list">
+        <action
+            android:id="@+id/action_musicianListFragment_to_musicianDetailFragment"
+            app:destination="@id/musicianDetailFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/musicianDetailFragment"
+        android:name="com.misw.app.ui.musicians.MusicianDetailFragment"
+        android:label="Detalle del artista"
+        tools:layout="@layout/fragment_musician_detail">
+        <argument
+            android:name="musician_id"
+            app:argType="integer" />
+        <action
+            android:id="@+id/action_musicianDetailFragment_to_albumDetailFragment"
+            app:destination="@id/albumDetailFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/collectorListFragment"
+        android:name="com.misw.app.ui.collectors.CollectorListFragment"
+        android:label="Coleccionistas"
+        tools:layout="@layout/fragment_collector_list">
+    </fragment>
+
 </navigation>

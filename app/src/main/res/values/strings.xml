@@ -1,7 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="album_cover_description">Carátula de álbum</string>
+    <string name="album_icon_desc">Ícono de álbum</string>
+    <string name="albums_label">Álbumes</string>
     <string name="app_name">Vinilos-E15</string>
-    <string name="track_count">%d canciones</string>
+    <string name="chevron_icon_desc">Flecha de navegación</string>
+    <string name="error_loading_content">Error al cargar contenido. Por favor intenta de nuevo.</string>
+    <string name="musician_image_description">Imagen del artista %s</string>
+    <string name="no_albums_found">No se encontraron álbumes</string>
+    <string name="no_artists_found">No se encontraron artistas</string>
+    <string name="no_collectors_found">No se encontraron coleccionistas</string>
+    <string name="no_prizes">Sin premios</string>
+    <string name="search_hint_album">Buscar álbum…</string>
+    <string name="search_hint_artist">Buscar artista…</string>
+    <string name="search_hint_collectors">Buscar coleccionistas…</string>
+    <string name="see_less_label">Ver menos</string>
+    <string name="see_more_label">Ver más</string>
+    <string name="sort_date">FECHA</string>
+    <string name="sort_name">NOMBRE (A-Z)</string>
+    <string name="subtitle_desc">Subtítulo descriptivo</string>
+    <string name="swap_order_button">Botón de cambio de orden ascendente o descendente</string>
+    <string name="title_label">Título</string>
+    <plurals name="track_count">
+        <item quantity="one">%d canción</item>
+        <item quantity="other">%d canciones</item>
+    </plurals>
+    <string name="track_index_format">%02d</string>
     <string name="track_number">%s</string>
     <string name="tracklist">Tracklist</string>
+    <string name="trophy_description">ícono de trofeo</string>
 </resources>

@@ -4,20 +4,16 @@ import com.misw.app.model.Album
 
 class AlbumRemoteDataSource {
 
-    private val apiService: AlbumApiService by lazy {
-        RetrofitClient.apiService
+    private val albumApiService: AlbumApiService by lazy {
+        RetrofitClient.albumApiService
     }
 
     suspend fun fetchAlbums(): List<Album> {
-        return try {
-            apiService.getAlbums()
-        } catch (e: Exception) {
-            emptyList()
-        }
+        return albumApiService.getAlbums()
     }
 
     suspend fun fetchAlbumById(id: Int): Album {
-        return apiService.getAlbumById(id)
+        return albumApiService.getAlbumById(id)
     }
 
 }

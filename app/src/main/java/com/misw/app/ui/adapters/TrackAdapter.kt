@@ -2,12 +2,14 @@ package com.misw.app.ui.adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.misw.app.R
 import com.misw.app.databinding.ItemTrackBinding
 import com.misw.app.model.Track
 
-class TrackAdapter(private var tracks: List<Track> = emptyList()) : RecyclerView.Adapter<TrackAdapter.TrackViewHolder>() {
+class TrackAdapter : ListAdapter<Track, TrackAdapter.TrackViewHolder>(TrackDiffCallback()) {
     class TrackViewHolder(private val binding: ItemTrackBinding) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(track: Track, position: Int) {
@@ -26,14 +28,20 @@ class TrackAdapter(private var tracks: List<Track> = emptyList()) : RecyclerView
     }
 
     override fun onBindViewHolder(holder: TrackViewHolder, position: Int) {
-        holder.bind(tracks[position], position)
+        holder.bind(getItem(position), position)
     }
 
-    override fun getItemCount() = tracks.size
-
-    fun submitList(newTracks: List<Track>) {
-        tracks = newTracks
-        notifyDataSetChanged()
+    fun submitTracks(newTracks: List<Track>) {
+        submitList(newTracks)
     }
 
+    class TrackDiffCallback : DiffUtil.ItemCallback<Track>() {
+        override fun areItemsTheSame(oldItem: Track, newItem: Track): Boolean {
+            return oldItem.id == newItem.id
+        }
+
+        override fun areContentsTheSame(oldItem: Track, newItem: Track): Boolean {
+            return oldItem == newItem
+        }
+    }
 }
