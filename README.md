@@ -26,7 +26,7 @@ Para ejecutar la aplicación localmente, siga las siguientes instrucciones:
 
 1. Encienda el backend. Si no lo tiene instalado, vaya a [Vinilos-Backend](https://github.com/Laurarestrepo03/Vinilos-Backend), descargue el proyecto y construya la imagen con Docker. Una vez construida, el back debería correr en el puerto 3000.
 
-> ⚠️ ADVERTENCIA: Este backend NO es el mismo que [BackVinyls](https://github.com/TheSoftwareDesignLab/BackVynils), pues contiene un ednpoint nuevo usado por la aplicación Android. El que debe usar es Vinilos-Backend. Si desea consultar más detalles de los cambios, vaya a los Pull Requests del repositorio.
+    > ⚠️ ADVERTENCIA: Este backend NO es el mismo que [BackVinyls](https://github.com/TheSoftwareDesignLab/BackVynils), pues contiene un endpoint nuevo usado por la app. El backend que debe usar es Vinilos-Backend. Si desea consultar más detalles de los cambios sobre el origianl, vaya a los Pull Requests del repositorio.
 
 2. Abra el proyecto en Android Studio y asegúrese de tener un dispositivo de emulación corriendo. Para ello, diríjase a Device Manager.
 
@@ -36,9 +36,7 @@ Para ejecutar la aplicación localmente, siga las siguientes instrucciones:
 
 4. Listo! La aplicación ya debería estar corriendo en su emulador.
 
-    <!--TODO: cambiar imagen-->
-    
-    <img height="400" alt="image" src="https://github.com/user-attachments/assets/088f60c3-1cde-42f3-a08c-166897fc4ee4" /> <p></p>
+    <img height="400" alt="image" src="https://github.com/user-attachments/assets/b2ce5d4f-b783-46e3-93ae-609764e3ac55" /> <p></p>
 
 ### Ejecución con apk
 
@@ -70,6 +68,5 @@ Antes de ejecutar las pruebas e2e, es importante mencionar que ellas están desa
     
 4. Listo, puede ver el resultado de las pruebas en la parte de abajo del IDE:
 
-    <!--TODO: cambiar imagen-->
-    
-    <img height="200" alt="image" src="https://github.com/user-attachments/assets/ca050b1d-2581-42ed-95d6-25c4902ad7ad" />
+    <img height="200" alt="image" src="https://github.com/user-attachments/assets/75e457d5-410f-4011-a23f-f5ba29167138" />
+
