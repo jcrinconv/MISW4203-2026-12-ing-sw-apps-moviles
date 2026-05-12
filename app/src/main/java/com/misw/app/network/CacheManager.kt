@@ -26,6 +26,9 @@ class CacheManager private constructor() {
     private val musicianDetails = mutableMapOf<Int, Musician>()
     private val performerPrizes = mutableMapOf<Int, List<PerformerPrize>>()
 
+    private var genres: List<String> = listOf()
+    private var recordLabels: List<String> = listOf()
+
     fun addAlbums(newAlbums: List<Album>) {
         if (albums.isEmpty()) {
             albums = newAlbums
@@ -80,6 +83,26 @@ class CacheManager private constructor() {
         return performerPrizes[musicianId]
     }
 
+    fun addGenres(newGenres: List<String>) {
+        if (genres.isEmpty()) {
+            genres = newGenres
+        }
+    }
+
+    fun getRecordLabels(): List<String> {
+        return recordLabels
+    }
+
+    fun addRecordLabels(newRecordLabels: List<String>) {
+        if (recordLabels.isEmpty()) {
+            recordLabels = newRecordLabels
+        }
+    }
+
+    fun getGenres(): List<String> {
+        return genres
+    }
+
     fun clearCache() {
         albums = listOf()
         musicians = listOf()
@@ -87,5 +110,7 @@ class CacheManager private constructor() {
         albumDetails.clear()
         musicianDetails.clear()
         performerPrizes.clear()
+        genres = listOf()
+        recordLabels = listOf()
     }
 }
