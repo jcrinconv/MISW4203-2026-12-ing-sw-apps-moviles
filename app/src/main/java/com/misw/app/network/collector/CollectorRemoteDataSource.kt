@@ -13,4 +13,7 @@ class CollectorRemoteDataSource {
         return collectorApiService.getCollectors()
     }
 
+    suspend fun fetchCollectorById(id: Int): Collector {
+        return collectorApiService.getCollectorById(id)
+    }
 }

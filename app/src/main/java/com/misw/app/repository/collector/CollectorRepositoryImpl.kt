@@ -23,4 +23,17 @@ class CollectorRepositoryImpl(
             potentialResp
         }
     }
+
+    override suspend fun getCollectorById(id: Int): Collector {
+        val potentialResp = CacheManager.getInstance(context).getCollectorDetail(id)
+        return if (potentialResp == null) {
+            Log.d("Cache decision", "get collector $id from network")
+            val collector = remoteDataSource.fetchCollectorById(id)
+            CacheManager.getInstance(context).addCollectorDetail(id, collector)
+            collector
+        } else {
+            Log.d("Cache decision", "return collector $id from cache")
+            potentialResp
+        }
+    }
 }

@@ -4,4 +4,5 @@ import com.misw.app.model.Collector
 
 interface CollectorRepository {
     suspend fun getCollectors(): List<Collector>
+    suspend fun getCollectorById(id: Int): Collector
 }

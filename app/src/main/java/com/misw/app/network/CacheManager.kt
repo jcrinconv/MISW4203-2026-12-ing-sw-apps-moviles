@@ -24,6 +24,7 @@ class CacheManager private constructor() {
 
     private val albumDetails = mutableMapOf<Int, Album>()
     private val musicianDetails = mutableMapOf<Int, Musician>()
+    private val collectorDetails = mutableMapOf<Int, Collector>()
     private val performerPrizes = mutableMapOf<Int, List<PerformerPrize>>()
 
     fun addAlbums(newAlbums: List<Album>) {
@@ -72,6 +73,14 @@ class CacheManager private constructor() {
         return musicianDetails[id]
     }
 
+    fun addCollectorDetail(id: Int, collector: Collector) {
+        collectorDetails[id] = collector
+    }
+
+    fun getCollectorDetail(id: Int): Collector? {
+        return collectorDetails[id]
+    }
+
     fun addPerformerPrizes(musicianId: Int, prizes: List<PerformerPrize>) {
         performerPrizes[musicianId] = prizes
     }
@@ -86,6 +95,7 @@ class CacheManager private constructor() {
         collectors = listOf()
         albumDetails.clear()
         musicianDetails.clear()
+        collectorDetails.clear()
         performerPrizes.clear()
     }
 }
