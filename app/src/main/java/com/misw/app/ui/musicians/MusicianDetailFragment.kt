@@ -57,7 +57,7 @@ class MusicianDetailFragment : Fragment() {
             binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
             if (isLoading) {
                 binding.nestedScrollView.visibility = View.GONE
-                binding.llEmptyState.visibility = View.GONE
+                binding.llErrorState.visibility = View.GONE
             } else if (viewModel.error.value == null) {
                 binding.nestedScrollView.visibility = View.VISIBLE
             }
@@ -65,11 +65,11 @@ class MusicianDetailFragment : Fragment() {
 
         viewModel.error.observe(viewLifecycleOwner) { error ->
             if (error != null) {
-                binding.llEmptyState.visibility = View.VISIBLE
+                binding.llErrorState.visibility = View.VISIBLE
                 binding.nestedScrollView.visibility = View.GONE
-                binding.tvEmptyState.text = getString(R.string.error_loading_content)
+                binding.tvErrorState.text = getString(R.string.error_loading_content)
             } else if (viewModel.isLoading.value == false) {
-                binding.llEmptyState.visibility = View.GONE
+                binding.llErrorState.visibility = View.GONE
                 binding.nestedScrollView.visibility = View.VISIBLE
             }
         }
@@ -155,6 +155,13 @@ class MusicianDetailFragment : Fragment() {
 
         viewModel.albums.observe(viewLifecycleOwner) { albums ->
             albumAdapter.updateAlbums(albums)
+            if (albums.isEmpty()) {
+                binding.llNoAlbumsState.visibility = View.VISIBLE
+                binding.rvAlbums.visibility = View.GONE
+            } else {
+                binding.llNoAlbumsState.visibility = View.GONE
+                binding.rvAlbums.visibility = View.VISIBLE
+            }
         }
 
         val musicianId = arguments?.getInt("musician_id") ?: 100
@@ -176,6 +183,8 @@ class MusicianDetailFragment : Fragment() {
             viewModel.toggleSortOrder()
             binding.btnSwapOrder.ibSwapOrder.animate().rotationBy(180f).setDuration(300).start()
         }
+
+        updateSortButtonsUI(isNameSelected = true)
     }
 
     private fun updateSortButtonsUI(isNameSelected: Boolean) {

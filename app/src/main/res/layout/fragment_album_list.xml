@@ -110,7 +110,7 @@
                     android:layout_height="80dp"
                     android:alpha="0.5"
                     android:contentDescription="@null"
-                    android:src="@drawable/ic_artists"
+                    android:src="@drawable/ic_album"
                     app:tint="@color/white" />
 
                 <TextView

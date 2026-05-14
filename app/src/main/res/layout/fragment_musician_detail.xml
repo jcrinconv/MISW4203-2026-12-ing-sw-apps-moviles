@@ -17,7 +17,7 @@
             android:visibility="gone" />
 
         <LinearLayout
-            android:id="@+id/llEmptyState"
+            android:id="@+id/llErrorState"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -27,7 +27,7 @@
             tools:ignore="UseCompoundDrawables">
 
             <ImageView
-                android:id="@+id/ivEmptyState"
+                android:id="@+id/ivErrorState"
                 android:layout_width="80dp"
                 android:layout_height="80dp"
                 android:alpha="0.5"
@@ -36,7 +36,7 @@
                 app:tint="@color/white" />
 
             <TextView
-                android:id="@+id/tvEmptyState"
+                android:id="@+id/tvErrorState"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
@@ -210,6 +210,28 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:nestedScrollingEnabled="false" />
+
+                <LinearLayout
+                    android:id="@+id/llNoAlbumsState"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:visibility="gone"
+                    tools:ignore="UseCompoundDrawables">
+
+                    <TextView
+                        android:id="@+id/tvNoAlbumsState"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:text="@string/artist_no_albums"
+                        android:textAlignment="center"
+                        android:textColor="@color/silver_chalice"
+                        android:textSize="16sp" />
+
+                </LinearLayout>
 
             </LinearLayout>
 
