@@ -58,8 +58,10 @@ class CollectorViewModel(application: Application) : AndroidViewModel(applicatio
             _isLoading.value = true
             _error.value = null
             try {
-                val result = repository.getCollectorById(id)
-                _collector.value = result
+                val collectorResult = repository.getCollectorById(id)
+                val albumsResult = repository.getCollectorAlbums(id)
+
+                _collector.value = collectorResult.copy(collectorAlbums = albumsResult)
             } catch (_: Exception) {
                 _error.value =
                     getApplication<Application>().getString(R.string.error_loading_content)

@@ -3,6 +3,7 @@ package com.misw.app.network
 import android.content.Context
 import com.misw.app.model.Album
 import com.misw.app.model.Collector
+import com.misw.app.model.CollectorAlbum
 import com.misw.app.model.Musician
 import com.misw.app.model.PerformerPrize
 
@@ -25,6 +26,7 @@ class CacheManager private constructor() {
     private val albumDetails = mutableMapOf<Int, Album>()
     private val musicianDetails = mutableMapOf<Int, Musician>()
     private val collectorDetails = mutableMapOf<Int, Collector>()
+    private val collectorAlbums = mutableMapOf<Int, List<CollectorAlbum>>()
     private val performerPrizes = mutableMapOf<Int, List<PerformerPrize>>()
 
     fun addAlbums(newAlbums: List<Album>) {
@@ -81,6 +83,14 @@ class CacheManager private constructor() {
         return collectorDetails[id]
     }
 
+    fun addCollectorAlbums(id: Int, albums: List<CollectorAlbum>) {
+        collectorAlbums[id] = albums
+    }
+
+    fun getCollectorAlbums(id: Int): List<CollectorAlbum>? {
+        return collectorAlbums[id]
+    }
+
     fun addPerformerPrizes(musicianId: Int, prizes: List<PerformerPrize>) {
         performerPrizes[musicianId] = prizes
     }
@@ -96,6 +106,7 @@ class CacheManager private constructor() {
         albumDetails.clear()
         musicianDetails.clear()
         collectorDetails.clear()
+        collectorAlbums.clear()
         performerPrizes.clear()
     }
 }
