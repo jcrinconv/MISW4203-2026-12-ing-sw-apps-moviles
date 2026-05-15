@@ -1,6 +1,7 @@
 package com.misw.app.viewmodel
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -42,7 +43,8 @@ class AlbumViewModel(application: Application) : AndroidViewModel(application) {
                 val result = repository.getAlbums()
                 originalList = result
                 updateAlbumList()
-            } catch (_: Exception) {
+            } catch (e: Exception) {
+                Log.e("AlbumViewModel", "Error fetching albums: ${e::class.simpleName} - ${e.message}", e)
                 _error.value = getApplication<Application>().getString(R.string.error_loading_content)
             } finally {
                 _isLoading.value = false
