@@ -7,6 +7,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.misw.app.R
 import com.misw.app.model.Collector
+import com.misw.app.network.EspressoIdlingResource
 import com.misw.app.repository.collector.CollectorRepository
 import com.misw.app.repository.collector.CollectorRepositoryImpl
 import kotlinx.coroutines.launch
@@ -32,11 +33,8 @@ class CollectorViewModel(application: Application) : AndroidViewModel(applicatio
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> get() = _isLoading
 
-    init {
-        fetchCollectors()
-    }
-
-    private fun fetchCollectors() {
+    fun fetchCollectors() {
+        EspressoIdlingResource.increment()
         viewModelScope.launch {
             _isLoading.value = true
             _error.value = null
@@ -49,11 +47,13 @@ class CollectorViewModel(application: Application) : AndroidViewModel(applicatio
                     getApplication<Application>().getString(R.string.error_loading_content)
             } finally {
                 _isLoading.value = false
+                EspressoIdlingResource.decrement()
             }
         }
     }
 
     fun fetchCollectorDetail(id: Int) {
+        EspressoIdlingResource.increment()
         viewModelScope.launch {
             _isLoading.value = true
             _error.value = null
@@ -67,6 +67,7 @@ class CollectorViewModel(application: Application) : AndroidViewModel(applicatio
                     getApplication<Application>().getString(R.string.error_loading_content)
             } finally {
                 _isLoading.value = false
+                EspressoIdlingResource.decrement()
             }
         }
     }

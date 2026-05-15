@@ -35,6 +35,7 @@ class CollectorListFragment : Fragment() {
         setupRecyclerView()
         observeViewModel()
         setupSearch()
+        viewModel.fetchCollectors()
     }
 
     private fun setupRecyclerView() {
