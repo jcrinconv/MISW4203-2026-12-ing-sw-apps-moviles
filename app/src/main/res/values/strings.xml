@@ -9,6 +9,7 @@
     <string name="musician_image_description">Imagen del artista %s</string>
     <string name="no_albums_found">No se encontraron álbumes</string>
     <string name="no_artists_found">No se encontraron artistas</string>
+    <string name="no_results_for_query">Sin resultados para "%s"</string>
     <string name="no_collectors_found">No se encontraron coleccionistas</string>
     <string name="no_prizes">Sin premios</string>
     <string name="search_hint_album">Buscar álbum…</string>

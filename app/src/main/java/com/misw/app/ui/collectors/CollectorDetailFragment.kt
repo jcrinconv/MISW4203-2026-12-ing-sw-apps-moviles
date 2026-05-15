@@ -108,8 +108,20 @@ class CollectorDetailFragment : Fragment() {
             }
         }
 
+        viewModel.error.observe(viewLifecycleOwner) { error ->
+            if (error != null) {
+                binding.rvCollectorDetail.visibility = View.GONE
+                binding.llEmptyState.visibility = View.GONE
+                binding.llErrorState.visibility = View.VISIBLE
+            }
+        }
+
         viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
             binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
+            if (isLoading) {
+                binding.llEmptyState.visibility = View.GONE
+                binding.llErrorState.visibility = View.GONE
+            }
         }
     }
 
@@ -131,6 +143,24 @@ class CollectorDetailFragment : Fragment() {
         }
 
         detailAdapter.setData(filteredItems)
+        showContentState(filteredItems.isEmpty(), filter, binding.tabLayout.selectedTabPosition)
+    }
+
+    private fun showContentState(isEmpty: Boolean, filter: String, tabPosition: Int) {
+        if (isEmpty) {
+            binding.rvCollectorDetail.visibility = View.GONE
+            binding.llErrorState.visibility = View.GONE
+            binding.llEmptyState.visibility = View.VISIBLE
+            binding.tvEmptyState.text = if (filter.isNotEmpty()) {
+                getString(R.string.no_results_for_query, filter)
+            } else {
+                getString(if (tabPosition == 0) R.string.no_albums_found else R.string.no_artists_found)
+            }
+        } else {
+            binding.llEmptyState.visibility = View.GONE
+            binding.llErrorState.visibility = View.GONE
+            binding.rvCollectorDetail.visibility = View.VISIBLE
+        }
     }
 
     private fun CollectorAlbum.toDetailItem(commentMap: Map<Int, Comment>): CollectorDetailItem {
