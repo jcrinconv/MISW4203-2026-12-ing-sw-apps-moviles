@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.os.bundleOf
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -57,12 +56,12 @@ class CollectorDetailFragment : Fragment() {
             if (type == DetailType.ALBUM) {
                 findNavController().navigate(
                     R.id.action_collectorDetailFragment_to_albumDetailFragment,
-                    bundleOf("album_id" to id)
+                    Bundle().apply { putInt("album_id", id) }
                 )
             } else if (type == DetailType.ARTIST) {
                 findNavController().navigate(
                     R.id.action_collectorDetailFragment_to_musicianDetailFragment,
-                    bundleOf("musician_id" to id)
+                    Bundle().apply { putInt("musician_id", id) }
                 )
             }
         }
