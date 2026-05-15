@@ -17,6 +17,7 @@ import com.misw.app.R
 import com.misw.app.databinding.FragmentAlbumDetailBinding
 import com.misw.app.model.Track
 import com.misw.app.viewmodel.AlbumDetailViewModel
+import androidx.navigation.fragment.findNavController
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -92,7 +93,13 @@ class AlbumDetailFragment : Fragment() {
             renderTracks(album.tracks)
         }
 
-        val albumId = arguments?.getInt("album_id") ?: 100
+        val albumId = requireArguments().getInt("album_id")
+
+        binding.btnAssociateTracks.setOnClickListener {
+            val bundle = Bundle().apply { putInt("album_id", albumId) }
+            findNavController().navigate(R.id.action_albumDetailFragment_to_trackAssociateFragment, bundle)
+        }
+
         viewModel.loadAlbum(albumId)
     }
 

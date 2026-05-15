@@ -42,6 +42,19 @@
         <argument
             android:name="album_id"
             app:argType="integer" />
+        <action
+            android:id="@+id/action_albumDetailFragment_to_trackAssociateFragment"
+            app:destination="@id/trackAssociateFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/trackAssociateFragment"
+        android:name="com.misw.app.ui.albums.TrackAssociateFragment"
+        android:label="Asociar track"
+        tools:layout="@layout/fragment_track_associate">
+        <argument
+            android:name="album_id"
+            app:argType="integer" />
     </fragment>
 
     <fragment
