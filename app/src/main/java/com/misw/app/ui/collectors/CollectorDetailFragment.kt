@@ -77,6 +77,7 @@ class CollectorDetailFragment : Fragment() {
         binding.rvCollectorDetail.apply {
             layoutManager = gridLayoutManager
             adapter = detailAdapter
+            itemAnimator = null
         }
     }
 

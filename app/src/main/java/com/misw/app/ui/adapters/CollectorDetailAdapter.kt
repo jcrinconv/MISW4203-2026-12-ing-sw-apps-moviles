@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
@@ -38,8 +39,16 @@ class CollectorDetailAdapter(private val onItemClick: (Int, DetailType) -> Unit)
     }
 
     fun setData(newItems: List<CollectorDetailItem>) {
+        val diffResult = DiffUtil.calculateDiff(object : DiffUtil.Callback() {
+            override fun getOldListSize() = items.size
+            override fun getNewListSize() = newItems.size
+            override fun areItemsTheSame(oldPos: Int, newPos: Int) =
+                items[oldPos].id == newItems[newPos].id && items[oldPos].type == newItems[newPos].type
+            override fun areContentsTheSame(oldPos: Int, newPos: Int) =
+                items[oldPos] == newItems[newPos]
+        })
         items = newItems
-        notifyDataSetChanged()
+        diffResult.dispatchUpdatesTo(this)
     }
 
     override fun getItemViewType(position: Int): Int {
@@ -112,7 +121,7 @@ class CollectorDetailAdapter(private val onItemClick: (Int, DetailType) -> Unit)
 
             Glide.with(binding.ivArtistImage.context).clear(binding.ivArtistImage)
 
-            if (!item.imageUrl.isNullOrEmpty() && item.imageUrl.startsWith("http")) {
+            if (item.imageUrl.isNotEmpty() && item.imageUrl.startsWith("http")) {
                 binding.ivArtistPlaceholder.visibility = View.GONE
                 binding.ivArtistImage.visibility = View.VISIBLE
                 
