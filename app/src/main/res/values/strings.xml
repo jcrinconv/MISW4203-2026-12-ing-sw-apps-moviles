@@ -31,4 +31,8 @@
     <string name="trophy_description">ícono de trofeo</string>
     <string name="album_create_button_text">Crear</string>
     <string name="artist_no_albums">Este artista no tiene álbumes</string>
+    <string name="back_button">Regresar</string>
+    <string name="search_album">Buscar álbum</string>
+    <string name="favorite_albums">Álbumes\nfavoritos</string>
+    <string name="favorite_artists">Artistas\nfavoritos</string>
 </resources>

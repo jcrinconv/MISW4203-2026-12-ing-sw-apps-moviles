@@ -79,6 +79,25 @@
         android:name="com.misw.app.ui.collectors.CollectorListFragment"
         android:label="Coleccionistas"
         tools:layout="@layout/fragment_collector_list">
+        <action
+            android:id="@+id/action_collectorListFragment_to_collectorDetailFragment"
+            app:destination="@id/collectorDetailFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/collectorDetailFragment"
+        android:name="com.misw.app.ui.collectors.CollectorDetailFragment"
+        android:label="Detalle del coleccionista"
+        tools:layout="@layout/fragment_collector_detail">
+        <argument
+            android:name="collector_id"
+            app:argType="integer" />
+        <action
+            android:id="@+id/action_collectorDetailFragment_to_albumDetailFragment"
+            app:destination="@id/albumDetailFragment" />
+        <action
+            android:id="@+id/action_collectorDetailFragment_to_musicianDetailFragment"
+            app:destination="@id/musicianDetailFragment" />
     </fragment>
 
 </navigation>
