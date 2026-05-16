@@ -18,6 +18,9 @@ class CollectorViewModel(application: Application) : AndroidViewModel(applicatio
     private val _collectors = MutableLiveData<List<Collector>>()
     val collectors: LiveData<List<Collector>> get() = _collectors
 
+    private val _collector = MutableLiveData<Collector?>()
+    val collector: LiveData<Collector?> get() = _collector
+
     private val _query = MutableLiveData<String>("")
     val query: LiveData<String> get() = _query
 
@@ -41,6 +44,24 @@ class CollectorViewModel(application: Application) : AndroidViewModel(applicatio
                 val result = repository.getCollectors()
                 originalList = result
                 updateCollectorsList()
+            } catch (_: Exception) {
+                _error.value =
+                    getApplication<Application>().getString(R.string.error_loading_content)
+            } finally {
+                _isLoading.value = false
+            }
+        }
+    }
+
+    fun fetchCollectorDetail(id: Int) {
+        viewModelScope.launch {
+            _isLoading.value = true
+            _error.value = null
+            try {
+                val collectorResult = repository.getCollectorById(id)
+                val albumsResult = repository.getCollectorAlbums(id)
+
+                _collector.value = collectorResult.copy(collectorAlbums = albumsResult)
             } catch (_: Exception) {
                 _error.value =
                     getApplication<Application>().getString(R.string.error_loading_content)
