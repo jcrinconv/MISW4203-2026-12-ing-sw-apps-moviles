@@ -84,9 +84,12 @@ class CollectorDetailFragment : Fragment() {
     private fun setupTabs() {
         binding.tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab?) {
-                val hintRes = if (tab?.position == 0) R.string.search_album else R.string.search_hint_artist
-                binding.etSearch.hint = getString(hintRes)
-                updateList(viewModel.collector.value, binding.etSearch.text.toString())
+                tab?.position?.let { position ->
+                    viewModel.setSelectedTab(position)
+                    val hintRes = if (position == 0) R.string.search_album else R.string.search_hint_artist
+                    binding.etSearch.hint = getString(hintRes)
+                    updateList(viewModel.collector.value, binding.etSearch.text.toString())
+                }
             }
             override fun onTabUnselected(tab: TabLayout.Tab?) {}
             override fun onTabReselected(tab: TabLayout.Tab?) {}
@@ -121,6 +124,12 @@ class CollectorDetailFragment : Fragment() {
             if (isLoading) {
                 binding.llEmptyState.visibility = View.GONE
                 binding.llErrorState.visibility = View.GONE
+            }
+        }
+
+        viewModel.selectedTab.observe(viewLifecycleOwner) { position ->
+            if (binding.tabLayout.selectedTabPosition != position) {
+                binding.tabLayout.getTabAt(position)?.select()
             }
         }
     }
