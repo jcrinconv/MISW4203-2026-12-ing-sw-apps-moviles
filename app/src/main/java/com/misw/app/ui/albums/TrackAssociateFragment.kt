@@ -2,9 +2,12 @@ package com.misw.app.ui.albums
 
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
+import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -13,6 +16,8 @@ import com.misw.app.viewmodel.TrackAssociateViewModel
 import androidx.appcompat.app.AlertDialog
 import com.misw.app.R
 import androidx.core.content.ContextCompat
+import androidx.core.widget.doOnTextChanged
+import com.google.android.material.appbar.MaterialToolbar
 
 class TrackAssociateFragment : Fragment() {
 
@@ -30,6 +35,15 @@ class TrackAssociateFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val albumId = arguments?.getInt("album_id") ?: return
+
+        setHasOptionsMenu(true)
+
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner,
+            object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    handleBack()
+                }
+            })
 
         // Cancel button
         binding.btnCancel.setOnClickListener {
@@ -99,6 +113,35 @@ class TrackAssociateFragment : Fragment() {
                 Toast.makeText(requireContext(), "Canción asociada exitosamente", Toast.LENGTH_SHORT).show()
                 findNavController().popBackStack()
             }
+        }
+    }
+
+    @Suppress("OVERRIDE_DEPRECATION")
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == android.R.id.home) {
+            handleBack()
+            return true
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+    private fun handleBack() {
+        val fieldsEmpty = binding.etTrackName.text.isBlank() && binding.etMinutos.text.isBlank() && binding.etSegundos.text.isBlank()
+        if (!fieldsEmpty) {
+            val dialog = AlertDialog.Builder(requireContext())
+                .setTitle("¿Desea volver al detalle del álbum?")
+                .setMessage("Esta eliminará su progreso")
+                .setPositiveButton("Sí") {_, _ ->
+                    findNavController().popBackStack()
+                }
+                .setNegativeButton("No", null)
+                .show()
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE)
+                .setTextColor(ContextCompat.getColor(requireContext(), R.color.prize_pink_text))
+            dialog.getButton(AlertDialog.BUTTON_NEGATIVE)
+                .setTextColor(ContextCompat.getColor(requireContext(), R.color.prize_pink_text))
+        } else {
+            findNavController().popBackStack()
         }
     }
 
