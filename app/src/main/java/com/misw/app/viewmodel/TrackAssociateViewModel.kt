@@ -25,16 +25,59 @@ class TrackAssociateViewModel(application: Application) : AndroidViewModel(appli
 
     fun associateTrack(albumId: Int, trackName: String, minutos: String, segundos: String) {
         viewModelScope.launch {
+            // Validación de campos
+            when {
+                trackName.isBlank() -> {
+                    _error.value = "El nombre del track no puede estar vacío"
+                    _associationSuccess.value = false
+                    return@launch
+                }
+                minutos.isBlank() -> {
+                    _error.value = "Los minutos no pueden estar vacíos"
+                    _associationSuccess.value = false
+                    return@launch
+                }
+                segundos.isBlank() -> {
+                    _error.value = "Los segundos no pueden estar vacíos"
+                    _associationSuccess.value = false
+                    return@launch
+                }
+            }
+
+            // Validar que sean números válidos
+            val minutosInt = minutos.toIntOrNull()
+            val segundosInt = segundos.toIntOrNull()
+
+            when {
+                minutosInt == null -> {
+                    _error.value = "Los minutos deben ser un número válido"
+                    _associationSuccess.value = false
+                    return@launch
+                }
+                segundosInt == null -> {
+                    _error.value = "Los segundos deben ser un número válido"
+                    _associationSuccess.value = false
+                    return@launch
+                }
+                segundosInt > 59 -> {
+                    _error.value = "Los segundos no pueden ser mayores a 59"
+                    _associationSuccess.value = false
+                    return@launch
+                }
+            }
+
             _isLoading.value = true
             _error.value = null
             try {
-                val duration = "$minutos:$segundos"
+                val formattedMinutos = minutos.padStart(2, '0')
+                val formattedSegundos = segundos.padStart(2, '0')
+                val duration = "$formattedMinutos:$formattedSegundos"
                 val trackRequest = TrackRequest(name = trackName, duration = duration)
                 repository.addTrack(albumId, trackRequest)
                 _associationSuccess.value = true
             } catch (e: Exception) {
                 Log.e("TrackAssociate", "Error associating track: ${e.message}", e)
-                _error.value = e.message
+                _error.value = "Error al asociar el track: ${e.message}"
                 _associationSuccess.value = false
             } finally {
                 _isLoading.value = false

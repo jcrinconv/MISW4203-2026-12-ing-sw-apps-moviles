@@ -41,6 +41,19 @@ class TrackAssociateFragment : Fragment() {
             viewModel.associateTrack(albumId, trackName, minutos, segundos)
         }
 
+        // Observe loading state
+        viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
+            binding.btnAssociate.isEnabled = !isLoading
+            binding.btnCancel.isEnabled = !isLoading
+        }
+
+        // Observe error messages
+        viewModel.error.observe(viewLifecycleOwner) { errorMessage ->
+            if (!errorMessage.isNullOrEmpty()) {
+                android.widget.Toast.makeText(requireContext(), errorMessage, android.widget.Toast.LENGTH_SHORT).show()
+            }
+        }
+
         // Observe association result
         viewModel.associationSuccess.observe(viewLifecycleOwner) { success ->
             if (success) {
