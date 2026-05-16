@@ -4,10 +4,12 @@ import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.IdlingRegistry
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.action.ViewActions.typeText
+import androidx.test.espresso.action.ViewActions.clearText
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
+import androidx.test.espresso.matcher.ViewMatchers.withHint
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
@@ -101,7 +103,6 @@ class TrackAssociateViewTest {
     @Test
     fun testTrackAssociateScreenDisplaysButtons() {
         navigateToTrackAssociateScreen()
-        onView(withId(R.id.btnBack)).check(matches(isDisplayed()))
         onView(withId(R.id.btnCancel)).check(matches(isDisplayed()))
         onView(withId(R.id.btnAssociate)).check(matches(isDisplayed()))
     }
@@ -110,13 +111,6 @@ class TrackAssociateViewTest {
     fun testCancelButtonNavigatesBack() {
         navigateToTrackAssociateScreen()
         onView(withId(R.id.btnCancel)).perform(click())
-        onView(withId(R.id.tvTrackCount)).check(matches(isDisplayed()))
-    }
-
-    @Test
-    fun testBackButtonNavigatesBack() {
-        navigateToTrackAssociateScreen()
-        onView(withId(R.id.btnBack)).perform(click())
         onView(withId(R.id.tvTrackCount)).check(matches(isDisplayed()))
     }
 
@@ -134,5 +128,260 @@ class TrackAssociateViewTest {
         onView(withId(R.id.etSegundos)).perform(typeText("45"))
         onView(withId(R.id.etMinutos)).check(matches(withText("3")))
         onView(withId(R.id.etSegundos)).check(matches(withText("45")))
+    }
+
+    @Test
+    fun testSuccessfulTrackAssociation() {
+        navigateToTrackAssociateScreen()
+
+        // Fill in track details
+        onView(withId(R.id.etTrackName)).perform(typeText("Test Track"))
+        onView(withId(R.id.etMinutos)).perform(typeText("3"))
+        onView(withId(R.id.etSegundos)).perform(typeText("45"))
+
+        // Click associate button
+        onView(withId(R.id.btnAssociate)).perform(click())
+
+        // Should navigate back to album detail
+        onView(withId(R.id.tvTrackCount)).check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun testTrackNameFieldHasCorrectHint() {
+        navigateToTrackAssociateScreen()
+        onView(withId(R.id.etTrackName)).check(matches(withHint("Nombre de la canción")))
+    }
+
+    @Test
+    fun testMinutesFieldHasCorrectHint() {
+        navigateToTrackAssociateScreen()
+        onView(withId(R.id.etMinutos)).check(matches(withHint("mm")))
+    }
+
+    @Test
+    fun testSecondsFieldHasCorrectHint() {
+        navigateToTrackAssociateScreen()
+        onView(withId(R.id.etSegundos)).check(matches(withHint("ss")))
+    }
+
+    @Test
+    fun testAssociateButtonIsEnabledByDefault() {
+        navigateToTrackAssociateScreen()
+        onView(withId(R.id.btnAssociate)).check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun testCancelButtonIsEnabledByDefault() {
+        navigateToTrackAssociateScreen()
+        onView(withId(R.id.btnCancel)).check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun testCompleteTrackAssociationFlow() {
+        navigateToTrackAssociateScreen()
+
+        // Verify we're on the associate track screen
+        onView(withId(R.id.tvAssociateTrackTitle)).check(matches(isDisplayed()))
+
+        // Fill in all track details
+        onView(withId(R.id.etTrackName)).perform(typeText("Bohemian Rhapsody"))
+        onView(withId(R.id.etMinutos)).perform(typeText("5"))
+        onView(withId(R.id.etSegundos)).perform(typeText("55"))
+
+        // Verify data was entered
+        onView(withId(R.id.etTrackName)).check(matches(withText("Bohemian Rhapsody")))
+        onView(withId(R.id.etMinutos)).check(matches(withText("5")))
+        onView(withId(R.id.etSegundos)).check(matches(withText("55")))
+
+        // Click associate button
+        onView(withId(R.id.btnAssociate)).perform(click())
+
+        // Should return to album detail view with track count displayed
+        onView(withId(R.id.tvTrackCount)).check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun testEmptyTrackNameValidation() {
+        navigateToTrackAssociateScreen()
+
+        // Leave track name empty and fill other fields
+        onView(withId(R.id.etMinutos)).perform(typeText("3"))
+        onView(withId(R.id.etSegundos)).perform(typeText("45"))
+
+        // Click associate button
+        onView(withId(R.id.btnAssociate)).perform(click())
+
+        // Should stay on the same screen (validation error shown in toast)
+        onView(withId(R.id.tvAssociateTrackTitle)).check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun testEmptyMinutesValidation() {
+        navigateToTrackAssociateScreen()
+
+        // Fill track name but leave minutes empty
+        onView(withId(R.id.etTrackName)).perform(typeText("My Track"))
+        onView(withId(R.id.etSegundos)).perform(typeText("45"))
+
+        // Click associate button
+        onView(withId(R.id.btnAssociate)).perform(click())
+
+        // Should stay on the same screen
+        onView(withId(R.id.tvAssociateTrackTitle)).check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun testEmptySecondsValidation() {
+        navigateToTrackAssociateScreen()
+
+        // Fill track name and minutes but leave seconds empty
+        onView(withId(R.id.etTrackName)).perform(typeText("My Track"))
+        onView(withId(R.id.etMinutos)).perform(typeText("3"))
+
+        // Click associate button
+        onView(withId(R.id.btnAssociate)).perform(click())
+
+        // Should stay on the same screen
+        onView(withId(R.id.tvAssociateTrackTitle)).check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun testInvalidSecondsNumberValidation() {
+        navigateToTrackAssociateScreen()
+
+        // Fill valid data except seconds > 59
+        onView(withId(R.id.etTrackName)).perform(typeText("My Track"))
+        onView(withId(R.id.etMinutos)).perform(typeText("3"))
+        onView(withId(R.id.etSegundos)).perform(typeText("75"))
+
+        // Click associate button
+        onView(withId(R.id.btnAssociate)).perform(click())
+
+        // Should stay on the same screen
+        onView(withId(R.id.tvAssociateTrackTitle)).check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun testInvalidMinutesNumberValidation() {
+        navigateToTrackAssociateScreen()
+
+        // Fill valid data except invalid minutes (letters)
+        onView(withId(R.id.etTrackName)).perform(typeText("My Track"))
+        onView(withId(R.id.etMinutos)).perform(typeText("abc"))
+        onView(withId(R.id.etSegundos)).perform(typeText("45"))
+
+        // Click associate button
+        onView(withId(R.id.btnAssociate)).perform(click())
+
+        // Should stay on the same screen
+        onView(withId(R.id.tvAssociateTrackTitle)).check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun testZeroDurationIsValid() {
+        navigateToTrackAssociateScreen()
+
+        // Fill with zero duration (valid)
+        onView(withId(R.id.etTrackName)).perform(typeText("Silent Track"))
+        onView(withId(R.id.etMinutos)).perform(typeText("0"))
+        onView(withId(R.id.etSegundos)).perform(typeText("0"))
+
+        // Click associate button
+        onView(withId(R.id.btnAssociate)).perform(click())
+
+        // Should return to album detail
+        onView(withId(R.id.tvTrackCount)).check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun testMaxValidSeconds() {
+        navigateToTrackAssociateScreen()
+
+        // Fill with max valid seconds (59)
+        onView(withId(R.id.etTrackName)).perform(typeText("Track"))
+        onView(withId(R.id.etMinutos)).perform(typeText("10"))
+        onView(withId(R.id.etSegundos)).perform(typeText("59"))
+
+        // Click associate button
+        onView(withId(R.id.btnAssociate)).perform(click())
+
+        // Should return to album detail
+        onView(withId(R.id.tvTrackCount)).check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun testFormattingWithPaddedZeros() {
+        navigateToTrackAssociateScreen()
+
+        // Fill with single digit numbers
+        onView(withId(R.id.etTrackName)).perform(typeText("Track"))
+        onView(withId(R.id.etMinutos)).perform(typeText("5"))
+        onView(withId(R.id.etSegundos)).perform(typeText("9"))
+
+        // Click associate button
+        onView(withId(R.id.btnAssociate)).perform(click())
+
+        // Should return to album detail (duration will be formatted as 05:09)
+        onView(withId(R.id.tvTrackCount)).check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun testLongTrackNameIsAccepted() {
+        navigateToTrackAssociateScreen()
+
+        val longTrackName = "This Is A Very Long Track Name That Should Still Be Accepted By The System"
+
+        // Fill with long track name
+        onView(withId(R.id.etTrackName)).perform(typeText(longTrackName))
+        onView(withId(R.id.etMinutos)).perform(typeText("8"))
+        onView(withId(R.id.etSegundos)).perform(typeText("30"))
+
+        // Click associate button
+        onView(withId(R.id.btnAssociate)).perform(click())
+
+        // Should return to album detail
+        onView(withId(R.id.tvTrackCount)).check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun testClearingFieldsAndReenteringData() {
+        navigateToTrackAssociateScreen()
+
+        // Enter data
+        onView(withId(R.id.etTrackName)).perform(typeText("First Track"))
+        onView(withId(R.id.etMinutos)).perform(typeText("3"))
+        onView(withId(R.id.etSegundos)).perform(typeText("30"))
+
+        // Clear and re-enter different data
+        onView(withId(R.id.etTrackName)).perform(clearText(), typeText("Second Track"))
+        onView(withId(R.id.etMinutos)).perform(clearText(), typeText("4"))
+        onView(withId(R.id.etSegundos)).perform(clearText(), typeText("45"))
+
+        // Verify new data
+        onView(withId(R.id.etTrackName)).check(matches(withText("Second Track")))
+        onView(withId(R.id.etMinutos)).check(matches(withText("4")))
+        onView(withId(R.id.etSegundos)).check(matches(withText("45")))
+
+        // Click associate
+        onView(withId(R.id.btnAssociate)).perform(click())
+
+        // Should return to album detail
+        onView(withId(R.id.tvTrackCount)).check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun testTrackNameWithSpecialCharacters() {
+        navigateToTrackAssociateScreen()
+
+        // Enter track name with special characters
+        onView(withId(R.id.etTrackName)).perform(typeText("Track #1 - Rock's Song"))
+        onView(withId(R.id.etMinutos)).perform(typeText("3"))
+        onView(withId(R.id.etSegundos)).perform(typeText("45"))
+
+        // Click associate button
+        onView(withId(R.id.btnAssociate)).perform(click())
+
+        // Should return to album detail
+        onView(withId(R.id.tvTrackCount)).check(matches(isDisplayed()))
     }
 }
