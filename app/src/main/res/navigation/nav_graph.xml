@@ -50,7 +50,7 @@
     <fragment
         android:id="@+id/trackAssociateFragment"
         android:name="com.misw.app.ui.albums.TrackAssociateFragment"
-        android:label="Asociar track"
+        android:label="@string/associate_track_title"
         tools:layout="@layout/fragment_track_associate">
         <argument
             android:name="album_id"

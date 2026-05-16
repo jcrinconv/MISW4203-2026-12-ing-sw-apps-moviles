@@ -32,5 +32,17 @@
     <string name="album_create_button_text">Crear</string>
     <string name="artist_no_albums">Este artista no tiene álbumes</string>
     <string name="associate_tracks_fab_desc">Asociar tracks</string>
-    <string name="associate_tracks_title">Asociar tracks al álbum</string>
+    <string name="track_name_label">NOMBRE</string>
+    <string name="track_name_placeholder">Nombre de la canción</string>
+    <string name="track_duration_label">DURACIÓN</string>
+    <string name="minutes_placeholder">mm</string>
+    <string name="seconds_placeholder">ss</string>
+    <string name="cancel_button">CANCELAR</string>
+    <string name="associate_button">ASOCIAR</string>
+    <string name="back_button">Atrás</string>
+    <string name="associate_track_title">Asociar track</string>
+    <string name="info_catalog_title">Información de catálogo</string>
+    <string name="info_catalog_desc">Esta canción será asociada directamente a la biblioteca editorial actual. Asegúrate de que los metadatos coincidan con la grabación maestra.</string>
+    <string name="min_label">MIN</string>
+    <string name="seg_label">SEG</string>
 </resources>
