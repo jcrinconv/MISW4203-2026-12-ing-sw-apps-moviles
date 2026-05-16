@@ -24,7 +24,10 @@ class AlbumDetailViewModel(application: Application) : AndroidViewModel(applicat
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> get() = _isLoading
 
+    private var currentAlbumId: Int? = null
+
     fun loadAlbum(id: Int) {
+        currentAlbumId = id
         viewModelScope.launch {
             _isLoading.value = true
             try {
@@ -36,5 +39,9 @@ class AlbumDetailViewModel(application: Application) : AndroidViewModel(applicat
                 _isLoading.value = false
             }
         }
+    }
+
+    fun refreshAlbum() {
+        currentAlbumId?.let { loadAlbum(it) }
     }
 }

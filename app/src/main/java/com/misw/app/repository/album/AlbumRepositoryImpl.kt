@@ -45,7 +45,10 @@ class AlbumRepositoryImpl(
     }
 
     override suspend fun addTrack(albumId: Int, track: TrackRequest): Track {
-        return remoteDataSource.addTrack(albumId, track)
+        val result = remoteDataSource.addTrack(albumId, track)
+        // Clear album detail cache to force refresh
+        CacheManager.getInstance(context).clearAlbumDetail(albumId)
+        return result
     }
 
     override suspend fun getGenres(): List<String> {

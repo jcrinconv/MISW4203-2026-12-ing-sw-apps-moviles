@@ -70,6 +70,10 @@ class CacheManager private constructor() {
         return albumDetails[id]
     }
 
+    fun clearAlbumDetail(id: Int) {
+        albumDetails.remove(id)
+    }
+
     fun addMusicianDetail(id: Int, musician: Musician) {
         musicianDetails[id] = musician
     }
