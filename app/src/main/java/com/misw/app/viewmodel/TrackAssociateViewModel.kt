@@ -23,6 +23,19 @@ class TrackAssociateViewModel(application: Application) : AndroidViewModel(appli
     private val _error = MutableLiveData<String?>()
     val error: LiveData<String?> get() = _error
 
+    fun areFieldsEmpty(trackName: String, minutos: String, segundos: String): Boolean {
+        return trackName.isBlank() and minutos.isBlank() and segundos.isBlank()
+    }
+
+    fun isFormValid(trackName: String, minutos: String, segundos: String): Boolean {
+        if (trackName.isBlank()) return false
+        if (minutos.isBlank()) return false
+        if (segundos.isBlank()) return false
+        val minutosInt = minutos.toIntOrNull() ?: return false
+        val segundosInt = segundos.toIntOrNull() ?: return false
+        return segundosInt <= 59
+    }
+
     fun associateTrack(albumId: Int, trackName: String, minutos: String, segundos: String) {
         viewModelScope.launch {
             // Validación de campos

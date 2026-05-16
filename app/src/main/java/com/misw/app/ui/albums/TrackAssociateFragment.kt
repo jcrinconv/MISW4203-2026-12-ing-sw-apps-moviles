@@ -9,6 +9,9 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.misw.app.databinding.FragmentTrackAssociateBinding
 import com.misw.app.viewmodel.TrackAssociateViewModel
+import androidx.appcompat.app.AlertDialog
+import com.misw.app.R
+import androidx.core.content.ContextCompat
 
 class TrackAssociateFragment : Fragment() {
 
@@ -29,7 +32,26 @@ class TrackAssociateFragment : Fragment() {
 
         // Cancel button
         binding.btnCancel.setOnClickListener {
-            findNavController().popBackStack()
+            val trackName = binding.etTrackName.text.toString()
+            val minutos = binding.etMinutos.text.toString()
+            val segundos = binding.etSegundos.text.toString()
+
+            if (viewModel.areFieldsEmpty(trackName, minutos, segundos)) {
+                findNavController().popBackStack()
+            } else {
+                val dialog = AlertDialog.Builder(requireContext())
+                    .setTitle("¿Desea cancelar la asociación de la canción?")
+                    .setMessage("Esta acción no se puede deshacer")
+                    .setPositiveButton("Sí") {_, _ ->
+                        findNavController().popBackStack()
+                    }
+                    .setNegativeButton("No", null)
+                    .show()
+                dialog.getButton(AlertDialog.BUTTON_POSITIVE)
+                    .setTextColor(ContextCompat.getColor(requireContext(), R.color.prize_pink_text))
+                dialog.getButton(AlertDialog.BUTTON_NEGATIVE)
+                    .setTextColor(ContextCompat.getColor(requireContext(), R.color.prize_pink_text))
+            }
         }
 
         // Associate button
@@ -38,7 +60,23 @@ class TrackAssociateFragment : Fragment() {
             val minutos = binding.etMinutos.text.toString()
             val segundos = binding.etSegundos.text.toString()
 
-            viewModel.associateTrack(albumId, trackName, minutos, segundos)
+            if (viewModel.isFormValid(trackName, minutos, segundos)) {
+                val dialog = AlertDialog.Builder(requireContext())
+                    .setTitle("¿Desea asociar la canción ${trackName}?")
+                    .setMessage("Esta acción no se puede deshacer")
+                    .setPositiveButton("Sí") {_, _ ->
+                        viewModel.associateTrack(albumId, trackName, minutos, segundos)
+                    }
+                    .setNegativeButton("No", null)
+                    .show()
+                dialog.getButton(AlertDialog.BUTTON_POSITIVE)
+                    .setTextColor(ContextCompat.getColor(requireContext(), R.color.prize_pink_text))
+                dialog.getButton(AlertDialog.BUTTON_NEGATIVE)
+                    .setTextColor(ContextCompat.getColor(requireContext(), R.color.prize_pink_text))
+            }
+            else {
+                viewModel.associateTrack(albumId, trackName, minutos, segundos)
+            }
         }
 
         // Observe loading state
