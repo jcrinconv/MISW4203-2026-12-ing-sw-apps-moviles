@@ -29,4 +29,8 @@
     <string name="track_number">%s</string>
     <string name="tracklist">Tracklist</string>
     <string name="trophy_description">ícono de trofeo</string>
+    <string name="album_create_button_text">Crear</string>
+    <string name="artist_no_albums">Este artista no tiene álbumes</string>
+    <string name="associate_tracks_fab_desc">Asociar tracks</string>
+    <string name="associate_tracks_title">Asociar tracks al álbum</string>
 </resources>

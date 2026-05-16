@@ -1,6 +1,7 @@
 package com.misw.app.network
 
 import com.misw.app.BuildConfig
+import com.misw.app.network.album.AlbumApiService
 import com.misw.app.network.musician.MusicianApiService
 import com.misw.app.network.collector.CollectorApiService
 import okhttp3.OkHttpClient

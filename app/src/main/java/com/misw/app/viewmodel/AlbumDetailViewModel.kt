@@ -7,8 +7,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.misw.app.model.Album
-import com.misw.app.repository.AlbumRepository
-import com.misw.app.repository.AlbumRepositoryImpl
+import com.misw.app.repository.album.AlbumRepository
+import com.misw.app.repository.album.AlbumRepositoryImpl
 import kotlinx.coroutines.launch
 
 class AlbumDetailViewModel(application: Application) : AndroidViewModel(application) {

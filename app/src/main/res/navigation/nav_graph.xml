@@ -29,6 +29,9 @@
         <action
             android:id="@+id/action_albumsListFragment_to_albumDetailFragment"
             app:destination="@id/albumDetailFragment" />
+        <action
+            android:id="@+id/action_albumsListFragment_to_albumCreateFragment"
+            app:destination="@id/albumCreateFragment" />
     </fragment>
 
     <fragment
@@ -36,6 +39,19 @@
         android:name="com.misw.app.ui.albums.AlbumDetailFragment"
         android:label="Detalle del álbum"
         tools:layout="@layout/fragment_album_detail">
+        <argument
+            android:name="album_id"
+            app:argType="integer" />
+        <action
+            android:id="@+id/action_albumDetailFragment_to_trackAssociateFragment"
+            app:destination="@id/trackAssociateFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/trackAssociateFragment"
+        android:name="com.misw.app.ui.albums.TrackAssociateFragment"
+        android:label="Asociar track"
+        tools:layout="@layout/fragment_track_associate">
         <argument
             android:name="album_id"
             app:argType="integer" />
@@ -49,6 +65,13 @@
         <action
             android:id="@+id/action_musicianListFragment_to_musicianDetailFragment"
             app:destination="@id/musicianDetailFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/albumCreateFragment"
+        android:name="com.misw.app.ui.albums.AlbumCreateFragment"
+        android:label="Crear álbum"
+        tools:layout="@layout/fragment_album_create">
     </fragment>
 
     <fragment
