@@ -4,10 +4,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.misw.app.R
 import com.misw.app.databinding.FragmentCollectorListBinding
@@ -34,6 +34,7 @@ class CollectorListFragment : Fragment() {
         setupRecyclerView()
         observeViewModel()
         setupSearch()
+        viewModel.fetchCollectors()
     }
 
     private fun setupRecyclerView() {
@@ -41,7 +42,10 @@ class CollectorListFragment : Fragment() {
             val bundle = Bundle().apply {
                 putInt("collector_id", collectorId)
             }
-            Toast.makeText(context, "Próximamente...", Toast.LENGTH_SHORT).show()
+            findNavController().navigate(
+                R.id.action_collectorListFragment_to_collectorDetailFragment,
+                bundle
+            )
         }
         binding.rvCollectorList.apply {
             layoutManager = LinearLayoutManager(context)

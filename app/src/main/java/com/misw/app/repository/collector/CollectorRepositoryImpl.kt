@@ -3,6 +3,7 @@ package com.misw.app.repository.collector
 import android.content.Context
 import android.util.Log
 import com.misw.app.model.Collector
+import com.misw.app.model.CollectorAlbum
 import com.misw.app.network.CacheManager
 import com.misw.app.network.collector.CollectorRemoteDataSource
 
@@ -20,6 +21,32 @@ class CollectorRepositoryImpl(
             collectors
         } else {
             Log.d("Cache decision", "return ${potentialResp.size} collectors from cache")
+            potentialResp
+        }
+    }
+
+    override suspend fun getCollectorById(id: Int): Collector {
+        val potentialResp = CacheManager.getInstance(context).getCollectorDetail(id)
+        return if (potentialResp == null) {
+            Log.d("Cache decision", "get collector $id from network")
+            val collector = remoteDataSource.fetchCollectorById(id)
+            CacheManager.getInstance(context).addCollectorDetail(id, collector)
+            collector
+        } else {
+            Log.d("Cache decision", "return collector $id from cache")
+            potentialResp
+        }
+    }
+
+    override suspend fun getCollectorAlbums(id: Int): List<CollectorAlbum> {
+        val potentialResp = CacheManager.getInstance(context).getCollectorAlbums(id)
+        return if (potentialResp == null) {
+            Log.d("Cache decision", "get collector albums for $id from network")
+            val albums = remoteDataSource.fetchCollectorAlbums(id)
+            CacheManager.getInstance(context).addCollectorAlbums(id, albums)
+            albums
+        } else {
+            Log.d("Cache decision", "return collector albums for $id from cache")
             potentialResp
         }
     }

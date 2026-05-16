@@ -9,6 +9,7 @@
     <string name="musician_image_description">Imagen del artista %s</string>
     <string name="no_albums_found">No se encontraron álbumes</string>
     <string name="no_artists_found">No se encontraron artistas</string>
+    <string name="no_results_for_query">Sin resultados para "%s"</string>
     <string name="no_collectors_found">No se encontraron coleccionistas</string>
     <string name="no_prizes">Sin premios</string>
     <string name="search_hint_album">Buscar álbum…</string>
@@ -32,6 +33,11 @@
     <string name="album_create_button_text">Crear</string>
     <string name="artist_no_albums">Este artista no tiene álbumes</string>
     <string name="associate_tracks_fab_desc">Asociar tracks</string>
+    <string name="associate_tracks_title">Asociar tracks al álbum</string>
+    <string name="back_button">Regresar</string>
+    <string name="search_album">Buscar álbum</string>
+    <string name="favorite_albums">Álbumes\nfavoritos</string>
+    <string name="favorite_artists">Artistas\nfavoritos</string>
     <string name="track_name_label">NOMBRE</string>
     <string name="track_name_placeholder">Nombre de la canción</string>
     <string name="track_duration_label">DURACIÓN</string>
@@ -39,7 +45,6 @@
     <string name="seconds_placeholder">ss</string>
     <string name="cancel_button">CANCELAR</string>
     <string name="associate_button">ASOCIAR</string>
-    <string name="back_button">Atrás</string>
     <string name="associate_track_title">Asociar track</string>
     <string name="info_catalog_title">Información de catálogo</string>
     <string name="info_catalog_desc">Esta canción será asociada directamente a la biblioteca editorial actual. Asegúrate de que los metadatos coincidan con la grabación maestra.</string>
