@@ -31,7 +31,7 @@ class TrackAssociateViewModel(application: Application) : AndroidViewModel(appli
         if (trackName.isBlank()) return false
         if (minutos.isBlank()) return false
         if (segundos.isBlank()) return false
-        val minutosInt = minutos.toIntOrNull() ?: return false
+        minutos.toIntOrNull() ?: return false
         val segundosInt = segundos.toIntOrNull() ?: return false
         return segundosInt <= 59
     }
