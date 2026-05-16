@@ -14,7 +14,6 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.recyclerview.widget.RecyclerView
-import com.misw.app.BuildConfig
 import com.misw.app.network.CacheManager
 import com.misw.app.network.EspressoIdlingResource
 import com.misw.app.network.RetrofitClient
@@ -31,7 +30,7 @@ import org.junit.runner.RunWith
 
 @LargeTest
 @RunWith(AndroidJUnit4::class)
-class HU08TrackAssociateTest {
+class TrackAssociateTest {
 
     @Rule
     @JvmField
