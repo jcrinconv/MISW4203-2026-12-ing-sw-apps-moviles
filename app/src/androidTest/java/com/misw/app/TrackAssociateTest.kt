@@ -88,5 +88,6 @@ class TrackAssociateTest {
     fun testAssociateTracksButtonNavigatesToAssociateScreen() {
         navigateToAlbumDetail()
         onView(withId(R.id.btnAssociateTracks)).perform(click())
+        onView(withText("Asociar canción")).check(matches(isDisplayed()))
     }
 }

@@ -277,7 +277,7 @@ class TrackAssociateViewTest {
         onView(withId(R.id.etTrackName)).perform(typeText("My Track"))
         onView(withId(R.id.etMinutos)).perform(typeText("abc"))
         onView(withId(R.id.etSegundos)).perform(typeText("45"))
-
+        onView(isRoot()).perform(closeSoftKeyboard())
 
         // Click associate button
         onView(withId(R.id.btnAssociate)).perform(click())
