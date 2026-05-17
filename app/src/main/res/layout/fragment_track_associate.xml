@@ -20,16 +20,6 @@
             android:orientation="vertical"
             android:padding="24dp">
 
-            <!-- Title -->
-            <TextView
-                android:id="@+id/tvAssociateTrackTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="32dp"
-                android:fontFamily="sans-serif-black"
-                android:text="@string/associate_track_title"
-                android:textColor="@color/white"
-                android:textSize="24sp" />
 
             <!-- NOMBRE Section -->
             <TextView
@@ -51,7 +41,7 @@
                 android:hint="@string/track_name_placeholder"
                 android:inputType="text"
                 android:paddingHorizontal="16dp"
-                android:textColor="@color/white"
+                android:textColor="@color/prize_pink_text"
                 android:textColorHint="@color/silver_chalice"
                 android:textSize="16sp" />
 
@@ -109,7 +99,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="16dp"
                     android:text=":"
-                    android:textColor="@color/wild_strawberry"
+                    android:textColor="@color/prize_pink_text"
                     android:textSize="28sp"
                     android:textStyle="bold" />
 
