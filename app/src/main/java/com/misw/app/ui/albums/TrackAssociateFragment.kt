@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
-import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -16,8 +15,6 @@ import com.misw.app.viewmodel.TrackAssociateViewModel
 import androidx.appcompat.app.AlertDialog
 import com.misw.app.R
 import androidx.core.content.ContextCompat
-import androidx.core.widget.doOnTextChanged
-import com.google.android.material.appbar.MaterialToolbar
 
 class TrackAssociateFragment : Fragment() {
 
@@ -130,7 +127,7 @@ class TrackAssociateFragment : Fragment() {
         if (!fieldsEmpty) {
             val dialog = AlertDialog.Builder(requireContext())
                 .setTitle("¿Desea volver al detalle del álbum?")
-                .setMessage("Esta eliminará su progreso")
+                .setMessage("Esto eliminará el contenido de los campos que haya llenado")
                 .setPositiveButton("Sí") {_, _ ->
                     findNavController().popBackStack()
                 }
