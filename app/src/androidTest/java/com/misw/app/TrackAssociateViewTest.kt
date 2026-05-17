@@ -10,6 +10,7 @@ import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.espresso.matcher.ViewMatchers.withHint
+import androidx.test.espresso.matcher.ViewMatchers.withContentDescription
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
@@ -27,6 +28,8 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import androidx.test.espresso.action.ViewActions.closeSoftKeyboard
+import androidx.test.espresso.matcher.ViewMatchers.isRoot
 
 @LargeTest
 @RunWith(AndroidJUnit4::class)
@@ -86,13 +89,6 @@ class TrackAssociateViewTest {
     }
 
     @Test
-    fun testTrackAssociateScreenDisplaysTitle() {
-        navigateToTrackAssociateScreen()
-        onView(withId(R.id.tvAssociateTrackTitle)).check(matches(isDisplayed()))
-        onView(withId(R.id.tvAssociateTrackTitle)).check(matches(withText("Asociar track")))
-    }
-
-    @Test
     fun testTrackAssociateScreenDisplaysInputFields() {
         navigateToTrackAssociateScreen()
         onView(withId(R.id.etTrackName)).check(matches(isDisplayed()))
@@ -138,9 +134,13 @@ class TrackAssociateViewTest {
         onView(withId(R.id.etTrackName)).perform(typeText("Test Track"))
         onView(withId(R.id.etMinutos)).perform(typeText("3"))
         onView(withId(R.id.etSegundos)).perform(typeText("45"))
+        onView(isRoot()).perform(closeSoftKeyboard())
 
         // Click associate button
         onView(withId(R.id.btnAssociate)).perform(click())
+
+        // Click 'Sí' on modal
+        onView(withText("Sí")).perform(click())
 
         // Should navigate back to album detail
         onView(withId(R.id.tvTrackCount)).check(matches(isDisplayed()))
@@ -181,12 +181,13 @@ class TrackAssociateViewTest {
         navigateToTrackAssociateScreen()
 
         // Verify we're on the associate track screen
-        onView(withId(R.id.tvAssociateTrackTitle)).check(matches(isDisplayed()))
+        onView(withText("Asociar canción")).check(matches(isDisplayed()))
 
         // Fill in all track details
         onView(withId(R.id.etTrackName)).perform(typeText("Bohemian Rhapsody"))
         onView(withId(R.id.etMinutos)).perform(typeText("5"))
         onView(withId(R.id.etSegundos)).perform(typeText("55"))
+        onView(isRoot()).perform(closeSoftKeyboard())
 
         // Verify data was entered
         onView(withId(R.id.etTrackName)).check(matches(withText("Bohemian Rhapsody")))
@@ -195,6 +196,9 @@ class TrackAssociateViewTest {
 
         // Click associate button
         onView(withId(R.id.btnAssociate)).perform(click())
+
+        // Click 'Sí' on modal
+        onView(withText("Sí")).perform(click())
 
         // Should return to album detail view with track count displayed
         onView(withId(R.id.tvTrackCount)).check(matches(isDisplayed()))
@@ -207,12 +211,13 @@ class TrackAssociateViewTest {
         // Leave track name empty and fill other fields
         onView(withId(R.id.etMinutos)).perform(typeText("3"))
         onView(withId(R.id.etSegundos)).perform(typeText("45"))
+        onView(isRoot()).perform(closeSoftKeyboard())
 
         // Click associate button
         onView(withId(R.id.btnAssociate)).perform(click())
 
         // Should stay on the same screen (validation error shown in toast)
-        onView(withId(R.id.tvAssociateTrackTitle)).check(matches(isDisplayed()))
+        onView(withText("Asociar canción")).check(matches(isDisplayed()))
     }
 
     @Test
@@ -222,12 +227,13 @@ class TrackAssociateViewTest {
         // Fill track name but leave minutes empty
         onView(withId(R.id.etTrackName)).perform(typeText("My Track"))
         onView(withId(R.id.etSegundos)).perform(typeText("45"))
+        onView(isRoot()).perform(closeSoftKeyboard())
 
         // Click associate button
         onView(withId(R.id.btnAssociate)).perform(click())
 
         // Should stay on the same screen
-        onView(withId(R.id.tvAssociateTrackTitle)).check(matches(isDisplayed()))
+        onView(withText("Asociar canción")).check(matches(isDisplayed()))
     }
 
     @Test
@@ -237,12 +243,13 @@ class TrackAssociateViewTest {
         // Fill track name and minutes but leave seconds empty
         onView(withId(R.id.etTrackName)).perform(typeText("My Track"))
         onView(withId(R.id.etMinutos)).perform(typeText("3"))
+        onView(isRoot()).perform(closeSoftKeyboard())
 
         // Click associate button
         onView(withId(R.id.btnAssociate)).perform(click())
 
         // Should stay on the same screen
-        onView(withId(R.id.tvAssociateTrackTitle)).check(matches(isDisplayed()))
+        onView(withText("Asociar canción")).check(matches(isDisplayed()))
     }
 
     @Test
@@ -253,12 +260,13 @@ class TrackAssociateViewTest {
         onView(withId(R.id.etTrackName)).perform(typeText("My Track"))
         onView(withId(R.id.etMinutos)).perform(typeText("3"))
         onView(withId(R.id.etSegundos)).perform(typeText("75"))
+        onView(isRoot()).perform(closeSoftKeyboard())
 
         // Click associate button
         onView(withId(R.id.btnAssociate)).perform(click())
 
         // Should stay on the same screen
-        onView(withId(R.id.tvAssociateTrackTitle)).check(matches(isDisplayed()))
+        onView(withText("Asociar canción")).check(matches(isDisplayed()))
     }
 
     @Test
@@ -269,12 +277,13 @@ class TrackAssociateViewTest {
         onView(withId(R.id.etTrackName)).perform(typeText("My Track"))
         onView(withId(R.id.etMinutos)).perform(typeText("abc"))
         onView(withId(R.id.etSegundos)).perform(typeText("45"))
+        onView(isRoot()).perform(closeSoftKeyboard())
 
         // Click associate button
         onView(withId(R.id.btnAssociate)).perform(click())
 
         // Should stay on the same screen
-        onView(withId(R.id.tvAssociateTrackTitle)).check(matches(isDisplayed()))
+        onView(withText("Asociar canción")).check(matches(isDisplayed()))
     }
 
     @Test
@@ -285,9 +294,13 @@ class TrackAssociateViewTest {
         onView(withId(R.id.etTrackName)).perform(typeText("Silent Track"))
         onView(withId(R.id.etMinutos)).perform(typeText("0"))
         onView(withId(R.id.etSegundos)).perform(typeText("0"))
+        onView(isRoot()).perform(closeSoftKeyboard())
 
         // Click associate button
         onView(withId(R.id.btnAssociate)).perform(click())
+
+        // Click 'Sí' on modal
+        onView(withText("Sí")).perform(click())
 
         // Should return to album detail
         onView(withId(R.id.tvTrackCount)).check(matches(isDisplayed()))
@@ -301,9 +314,13 @@ class TrackAssociateViewTest {
         onView(withId(R.id.etTrackName)).perform(typeText("Track"))
         onView(withId(R.id.etMinutos)).perform(typeText("10"))
         onView(withId(R.id.etSegundos)).perform(typeText("59"))
+        onView(isRoot()).perform(closeSoftKeyboard())
 
         // Click associate button
         onView(withId(R.id.btnAssociate)).perform(click())
+
+        // Click 'Sí' on modal
+        onView(withText("Sí")).perform(click())
 
         // Should return to album detail
         onView(withId(R.id.tvTrackCount)).check(matches(isDisplayed()))
@@ -317,9 +334,13 @@ class TrackAssociateViewTest {
         onView(withId(R.id.etTrackName)).perform(typeText("Track"))
         onView(withId(R.id.etMinutos)).perform(typeText("5"))
         onView(withId(R.id.etSegundos)).perform(typeText("9"))
+        onView(isRoot()).perform(closeSoftKeyboard())
 
         // Click associate button
         onView(withId(R.id.btnAssociate)).perform(click())
+
+        // Click 'Sí' on modal
+        onView(withText("Sí")).perform(click())
 
         // Should return to album detail (duration will be formatted as 05:09)
         onView(withId(R.id.tvTrackCount)).check(matches(isDisplayed()))
@@ -335,9 +356,13 @@ class TrackAssociateViewTest {
         onView(withId(R.id.etTrackName)).perform(typeText(longTrackName))
         onView(withId(R.id.etMinutos)).perform(typeText("8"))
         onView(withId(R.id.etSegundos)).perform(typeText("30"))
+        onView(isRoot()).perform(closeSoftKeyboard())
 
         // Click associate button
         onView(withId(R.id.btnAssociate)).perform(click())
+
+        // Click 'Sí' on modal
+        onView(withText("Sí")).perform(click())
 
         // Should return to album detail
         onView(withId(R.id.tvTrackCount)).check(matches(isDisplayed()))
@@ -351,11 +376,13 @@ class TrackAssociateViewTest {
         onView(withId(R.id.etTrackName)).perform(typeText("First Track"))
         onView(withId(R.id.etMinutos)).perform(typeText("3"))
         onView(withId(R.id.etSegundos)).perform(typeText("30"))
+        onView(isRoot()).perform(closeSoftKeyboard())
 
         // Clear and re-enter different data
         onView(withId(R.id.etTrackName)).perform(clearText(), typeText("Second Track"))
         onView(withId(R.id.etMinutos)).perform(clearText(), typeText("4"))
         onView(withId(R.id.etSegundos)).perform(clearText(), typeText("45"))
+        onView(isRoot()).perform(closeSoftKeyboard())
 
         // Verify new data
         onView(withId(R.id.etTrackName)).check(matches(withText("Second Track")))
@@ -364,6 +391,9 @@ class TrackAssociateViewTest {
 
         // Click associate
         onView(withId(R.id.btnAssociate)).perform(click())
+
+        // Click 'Sí' on modal
+        onView(withText("Sí")).perform(click())
 
         // Should return to album detail
         onView(withId(R.id.tvTrackCount)).check(matches(isDisplayed()))
@@ -377,9 +407,193 @@ class TrackAssociateViewTest {
         onView(withId(R.id.etTrackName)).perform(typeText("Track #1 - Rock's Song"))
         onView(withId(R.id.etMinutos)).perform(typeText("3"))
         onView(withId(R.id.etSegundos)).perform(typeText("45"))
+        onView(isRoot()).perform(closeSoftKeyboard())
 
         // Click associate button
         onView(withId(R.id.btnAssociate)).perform(click())
+
+        // Click 'Sí' on modal
+        onView(withText("Sí")).perform(click())
+
+        // Should return to album detail
+        onView(withId(R.id.tvTrackCount)).check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun testCancelModalIfNameNotEmpty() {
+        navigateToTrackAssociateScreen()
+
+        // Enter track name
+        onView(withId(R.id.etTrackName)).perform(typeText("Song"))
+        onView(isRoot()).perform(closeSoftKeyboard())
+
+        // Click cancel button
+        onView(withId(R.id.btnCancel)).perform(click())
+
+        // Should show cancel modal
+        onView(withText("¿Desea cancelar la asociación de la canción?")).check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun testCancelModalIfMinutesNotEmpty() {
+        navigateToTrackAssociateScreen()
+
+        // Enter track name
+        onView(withId(R.id.etMinutos)).perform(typeText("3"))
+        onView(isRoot()).perform(closeSoftKeyboard())
+
+        // Click cancel button
+        onView(withId(R.id.btnCancel)).perform(click())
+
+        // Should show cancel modal
+        onView(withText("¿Desea cancelar la asociación de la canción?")).check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun testCancelModalIfSecondsNotEmpty() {
+        navigateToTrackAssociateScreen()
+
+        // Enter track name
+        onView(withId(R.id.etSegundos)).perform(typeText("45"))
+        onView(isRoot()).perform(closeSoftKeyboard())
+
+        // Click cancel button
+        onView(withId(R.id.btnCancel)).perform(click())
+
+        // Should show cancel modal
+        onView(withText("¿Desea cancelar la asociación de la canción?")).check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun testCancelModalNoSelected() {
+        navigateToTrackAssociateScreen()
+
+        // Enter track name with special characters
+        onView(withId(R.id.etTrackName)).perform(typeText("Song"))
+        onView(withId(R.id.etMinutos)).perform(typeText("3"))
+        onView(withId(R.id.etSegundos)).perform(typeText("45"))
+        onView(isRoot()).perform(closeSoftKeyboard())
+
+        // Click cancel button
+        onView(withId(R.id.btnCancel)).perform(click())
+
+        // Click 'No' on modal
+        onView(withText("No")).perform(click())
+
+        // Should stay on the same screen
+        onView(withText("Asociar canción")).check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun testCancelModalYesSelected() {
+        navigateToTrackAssociateScreen()
+
+        // Enter track name with special characters
+        onView(withId(R.id.etTrackName)).perform(typeText("Song"))
+        onView(withId(R.id.etMinutos)).perform(typeText("3"))
+        onView(withId(R.id.etSegundos)).perform(typeText("45"))
+        onView(isRoot()).perform(closeSoftKeyboard())
+
+        // Click cancel button
+        onView(withId(R.id.btnCancel)).perform(click())
+
+        // Click 'No' on modal
+        onView(withText("Sí")).perform(click())
+
+        // Should return to album detail
+        onView(withId(R.id.tvTrackCount)).check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun testAlbumDetailModalIfNameNotEmpty() {
+        navigateToTrackAssociateScreen()
+
+        // Enter track name
+        onView(withId(R.id.etTrackName)).perform(typeText("Song"))
+        onView(isRoot()).perform(closeSoftKeyboard())
+
+        // Go back
+        onView(withContentDescription(
+            androidx.appcompat.R.string.abc_action_bar_up_description
+        )).perform(click())
+
+        // Should show album detail modal
+        onView(withText("¿Desea volver al detalle del álbum?")).check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun testAlbumDetailModalIfMinutesNotEmpty() {
+        navigateToTrackAssociateScreen()
+
+        // Enter track name
+        onView(withId(R.id.etMinutos)).perform(typeText("3"))
+        onView(isRoot()).perform(closeSoftKeyboard())
+
+        // Go back
+        onView(withContentDescription(
+            androidx.appcompat.R.string.abc_action_bar_up_description
+        )).perform(click())
+
+        // Should show album detail modal
+        onView(withText("¿Desea volver al detalle del álbum?")).check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun testAlbumDetailModalIfSecondsNotEmpty() {
+        navigateToTrackAssociateScreen()
+
+        // Enter track name
+        onView(withId(R.id.etSegundos)).perform(typeText("45"))
+        onView(isRoot()).perform(closeSoftKeyboard())
+
+        // Go back
+        onView(withContentDescription(
+            androidx.appcompat.R.string.abc_action_bar_up_description
+        )).perform(click())
+
+        // Should show album detail modal
+        onView(withText("¿Desea volver al detalle del álbum?")).check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun testAlbumDetailModalNoSelected() {
+        navigateToTrackAssociateScreen()
+
+        // Enter track name with special characters
+        onView(withId(R.id.etTrackName)).perform(typeText("Song"))
+        onView(withId(R.id.etMinutos)).perform(typeText("3"))
+        onView(withId(R.id.etSegundos)).perform(typeText("45"))
+        onView(isRoot()).perform(closeSoftKeyboard())
+
+        // Go back
+        onView(withContentDescription(
+            androidx.appcompat.R.string.abc_action_bar_up_description
+        )).perform(click())
+
+        // Click 'No' on modal
+        onView(withText("No")).perform(click())
+
+        // Should stay on the same screen
+        onView(withText("Asociar canción")).check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun testAlbumDetailModalYesSelected() {
+        navigateToTrackAssociateScreen()
+
+        // Enter track name with special characters
+        onView(withId(R.id.etTrackName)).perform(typeText("Song"))
+        onView(withId(R.id.etMinutos)).perform(typeText("3"))
+        onView(withId(R.id.etSegundos)).perform(typeText("45"))
+        onView(isRoot()).perform(closeSoftKeyboard())
+
+        // Go back
+        onView(withContentDescription(
+            androidx.appcompat.R.string.abc_action_bar_up_description
+        )).perform(click())
+
+        // Click 'No' on modal
+        onView(withText("Sí")).perform(click())
 
         // Should return to album detail
         onView(withId(R.id.tvTrackCount)).check(matches(isDisplayed()))

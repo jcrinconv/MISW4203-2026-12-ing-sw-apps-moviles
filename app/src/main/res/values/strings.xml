@@ -45,7 +45,7 @@
     <string name="seconds_placeholder">ss</string>
     <string name="cancel_button">CANCELAR</string>
     <string name="associate_button">ASOCIAR</string>
-    <string name="associate_track_title">Asociar track</string>
+    <string name="associate_track_title">Asociar canción</string>
     <string name="info_catalog_title">Información de catálogo</string>
     <string name="info_catalog_desc">Esta canción será asociada directamente a la biblioteca editorial actual. Asegúrate de que los metadatos coincidan con la grabación maestra.</string>
     <string name="min_label">MIN</string>
