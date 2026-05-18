@@ -15,7 +15,7 @@ import com.misw.app.repository.musician.MusicianRepositoryImpl
 
 class MusicianDetailViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val musicianRepository : MusicianRepository = MusicianRepositoryImpl(application)
+    private val musicianRepository : MusicianRepository = MusicianRepositoryImpl()
 
     private val _musician = MutableLiveData<Musician>()
     val musician: LiveData<Musician> get() = _musician

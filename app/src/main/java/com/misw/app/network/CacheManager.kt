@@ -1,6 +1,5 @@
 package com.misw.app.network
 
-import android.content.Context
 import com.misw.app.model.Album
 import com.misw.app.model.Collector
 import com.misw.app.model.CollectorAlbum
@@ -11,7 +10,7 @@ class CacheManager private constructor() {
     companion object {
         @Volatile
         private var instance: CacheManager? = null
-        fun getInstance(context: Context) =
+        fun getInstance() =
             instance ?: synchronized(this) {
                 instance ?: CacheManager().also {
                     instance = it

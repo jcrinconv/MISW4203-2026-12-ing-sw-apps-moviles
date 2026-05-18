@@ -12,7 +12,7 @@ import kotlinx.coroutines.launch
 
 class TrackAssociateViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val repository = AlbumRepositoryImpl(application)
+    private val repository = AlbumRepositoryImpl()
 
     private val _associationSuccess = MutableLiveData<Boolean>()
     val associationSuccess: LiveData<Boolean> get() = _associationSuccess

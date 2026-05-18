@@ -100,7 +100,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="16dp"
-                    android:text=":"
+                    android:text="@string/duration_separator"
                     android:textColor="@color/prize_pink_text"
                     android:textSize="28sp"
                     android:textStyle="bold" />

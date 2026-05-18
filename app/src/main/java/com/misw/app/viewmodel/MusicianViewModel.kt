@@ -12,7 +12,7 @@ import com.misw.app.repository.musician.MusicianRepositoryImpl
 import kotlinx.coroutines.launch
 
 class MusicianViewModel(application: Application) : AndroidViewModel(application) {
-    private val repository: MusicianRepository = MusicianRepositoryImpl(application)
+    private val repository: MusicianRepository = MusicianRepositoryImpl()
 
     private val _musicians = MutableLiveData<List<Musician>>()
     val musicians: LiveData<List<Musician>> get() = _musicians

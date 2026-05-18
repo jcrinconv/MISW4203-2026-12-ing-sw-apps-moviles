@@ -12,7 +12,7 @@ import kotlinx.coroutines.launch
 
 class AlbumCreateViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val repository : AlbumRepository = AlbumRepositoryImpl(application)
+    private val repository : AlbumRepository = AlbumRepositoryImpl()
 
     private val _genres = MutableLiveData<List<String>>()
     val genres: LiveData<List<String>> get() = _genres

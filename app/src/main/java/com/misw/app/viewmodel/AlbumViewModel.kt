@@ -13,7 +13,7 @@ import com.misw.app.repository.album.AlbumRepositoryImpl
 import kotlinx.coroutines.launch
 
 class AlbumViewModel(application: Application) : AndroidViewModel(application) {
-    private val repository: AlbumRepository = AlbumRepositoryImpl(application)
+    private val repository: AlbumRepository = AlbumRepositoryImpl()
 
     private val _albums = MutableLiveData<List<Album>>()
     val albums: LiveData<List<Album>> get() = _albums

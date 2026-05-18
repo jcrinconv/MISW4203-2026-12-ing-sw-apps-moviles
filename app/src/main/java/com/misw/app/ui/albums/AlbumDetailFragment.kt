@@ -28,8 +28,8 @@ import java.util.Locale
 class AlbumDetailFragment : Fragment() {
 
     companion object {
-        private val DATE_INPUT_FORMAT = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault())
-        private val DATE_OUTPUT_FORMAT = SimpleDateFormat("MMM d, yyyy", Locale.forLanguageTag("es"))
+        private const val DATE_INPUT_PATTERN = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
+        private const val DATE_OUTPUT_PATTERN = "MMM d, yyyy"
     }
 
     private val viewModel: AlbumDetailViewModel by viewModels()
@@ -188,8 +188,10 @@ class AlbumDetailFragment : Fragment() {
 
     private fun formatDate(dateString: String): String {
         return try {
-            val date = DATE_INPUT_FORMAT.parse(dateString)
-            val formatted = DATE_OUTPUT_FORMAT.format(date!!)
+            val inputFormat = SimpleDateFormat(DATE_INPUT_PATTERN, Locale.getDefault())
+            val outputFormat = SimpleDateFormat(DATE_OUTPUT_PATTERN, Locale.forLanguageTag("es"))
+            val date = inputFormat.parse(dateString)
+            val formatted = outputFormat.format(date!!)
             "Lanzado en ${formatted.replaceFirstChar { it.uppercase() }}"
         } catch (_: Exception) {
             dateString

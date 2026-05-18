@@ -50,4 +50,5 @@
     <string name="info_catalog_desc">Esta canción será asociada directamente a la biblioteca editorial actual. Asegúrate de que los metadatos coincidan con la grabación maestra.</string>
     <string name="min_label">MIN</string>
     <string name="seg_label">SEG</string>
+    <string name="duration_separator">:</string>
 </resources>
