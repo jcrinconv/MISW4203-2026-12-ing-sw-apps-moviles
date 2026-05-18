@@ -26,7 +26,6 @@
         <item quantity="one">%d canción</item>
         <item quantity="other">%d canciones</item>
     </plurals>
-    <string name="track_index_format">%02d</string>
     <string name="track_number">%s</string>
     <string name="tracklist">Tracklist</string>
     <string name="trophy_description">ícono de trofeo</string>
