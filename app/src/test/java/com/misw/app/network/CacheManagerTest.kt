@@ -3,17 +3,12 @@ package com.misw.app.network
 import com.misw.app.model.Album
 import org.junit.Before
 import org.junit.Test
-import org.mockito.MockitoAnnotations
 
 class CacheManagerTest {
 
     @Before
     fun setUp() {
-        MockitoAnnotations.openMocks(this)
-        // Clear singleton instance before each test
-        val field = CacheManager::class.java.getDeclaredField("instance")
-        field.isAccessible = true
-        field.set(null, null)
+        CacheManager.getInstance().clearCache()
     }
 
     @Test
