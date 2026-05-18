@@ -15,7 +15,6 @@
     <color name="wild_strawberry">#FF4081</color>
     <color name="teal_200">#FF03DAC5</color>
     <color name="teal_700">#FF018786</color>
-    <color name="refresh_black">#121212</color>
 
     <!-- Restored colors to fix build errors -->
     <color name="pink_soft">#22FF4081</color>
