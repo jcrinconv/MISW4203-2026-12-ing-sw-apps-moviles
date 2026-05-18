@@ -30,6 +30,8 @@ class AlbumDetailFragment : Fragment() {
     companion object {
         private const val DATE_INPUT_PATTERN = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
         private const val DATE_OUTPUT_PATTERN = "MMM d, yyyy"
+        private val inputFormat = SimpleDateFormat(DATE_INPUT_PATTERN, Locale.ROOT)
+        private val outputFormat = SimpleDateFormat(DATE_OUTPUT_PATTERN, Locale.forLanguageTag("es"))
     }
 
     private val viewModel: AlbumDetailViewModel by viewModels()
@@ -182,8 +184,6 @@ class AlbumDetailFragment : Fragment() {
 
     private fun formatDate(dateString: String): String {
         return try {
-            val inputFormat = SimpleDateFormat(DATE_INPUT_PATTERN, Locale.getDefault())
-            val outputFormat = SimpleDateFormat(DATE_OUTPUT_PATTERN, Locale.forLanguageTag("es"))
             val date = inputFormat.parse(dateString)
             val formatted = outputFormat.format(date!!)
             "Lanzado en ${formatted.replaceFirstChar { it.uppercase() }}"
