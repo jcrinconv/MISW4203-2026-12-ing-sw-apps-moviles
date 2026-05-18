@@ -49,4 +49,11 @@
     <string name="min_label">MIN</string>
     <string name="seg_label">SEG</string>
     <string name="duration_separator">:</string>
+    <string name="title_albums">Álbumes</string>
+    <string name="subtitle_albums">Explora colecciones</string>
+    <string name="title_artists">Artistas</string>
+    <string name="title_tracks">Tracks</string>
+    <string name="title_collectors">Coleccionistas</string>
+    <string name="subtitle_collectors">Comunidad de élite</string>
+    <string name="coming_soon">Próximamente</string>
 </resources>

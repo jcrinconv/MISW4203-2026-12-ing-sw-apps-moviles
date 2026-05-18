@@ -113,13 +113,15 @@ class MusicianListTest {
         """.trimIndent()
         navigateToMusicians(200, json)
 
-        // Inicial: Axl Rose primero
+        // Inicial: Axl Rose primero, Freddie Mercury segundo
         onView(withId(R.id.rvMusicians)).check(matches(atPosition(0, hasDescendant(withText("Axl Rose")))))
+        onView(withId(R.id.rvMusicians)).check(matches(atPosition(1, hasDescendant(withText("Freddie Mercury")))))
 
         onView(withId(R.id.btnSwapOrder)).perform(click())
 
-        // Después de toggle: Freddie Mercury primero
+        // Después de toggle: Freddie Mercury primero, Axl Rose segundo
         onView(withId(R.id.rvMusicians)).check(matches(atPosition(0, hasDescendant(withText("Freddie Mercury")))))
+        onView(withId(R.id.rvMusicians)).check(matches(atPosition(1, hasDescendant(withText("Axl Rose")))))
     }
 
     private fun atPosition(position: Int, itemMatcher: org.hamcrest.Matcher<View>): org.hamcrest.Matcher<View> {

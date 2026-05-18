@@ -1,5 +1,6 @@
 package com.misw.app.ui.home
 
+import android.content.res.ColorStateList
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -7,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.findNavController
 import com.misw.app.R
 import com.misw.app.databinding.FragmentHomeBinding
@@ -27,7 +29,7 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        (activity as AppCompatActivity).supportActionBar?.title = "Vynils App"
+        (activity as? AppCompatActivity)?.supportActionBar?.title = getString(R.string.app_name)
 
         setupHomeButtons()
     }
@@ -44,8 +46,7 @@ class HomeFragment : Fragment() {
             tvMenuTitle.text = title
             tvMenuSubtitle.text = subtitle
             ivMenuIcon.setImageResource(iconRes)
-            iconWrapper.backgroundTintList =
-                android.content.res.ColorStateList.valueOf(iconBackgroundColor)
+            iconWrapper.backgroundTintList = ColorStateList.valueOf(iconBackgroundColor)
             menuCardContainer.setOnClickListener {
                 onAction()
             }
@@ -62,8 +63,7 @@ class HomeFragment : Fragment() {
         binding.apply {
             tvMenuTitle.text = title
             ivMenuIcon.setImageResource(iconRes)
-            iconWrapper.backgroundTintList =
-                android.content.res.ColorStateList.valueOf(iconBackgroundColor)
+            iconWrapper.backgroundTintList = ColorStateList.valueOf(iconBackgroundColor)
             menuCardContainer.setOnClickListener {
                 onAction()
             }
@@ -71,55 +71,42 @@ class HomeFragment : Fragment() {
     }
 
     private fun setupHomeButtons() {
-        val albumBinding = ItemMenuCardBinding.bind(binding.includeAlbums.root)
+        val context = requireContext()
+
         setupMenuButton(
-            binding = albumBinding,
-            title = "Álbumes",
-            subtitle = "Explora colecciones",
+            binding = ItemMenuCardBinding.bind(binding.includeAlbums.root),
+            title = getString(R.string.title_albums),
+            subtitle = getString(R.string.subtitle_albums),
             iconRes = R.drawable.ic_album,
-            iconBackgroundColor = androidx.core.content.ContextCompat.getColor(
-                requireContext(), R.color.wild_strawberry
-            )
+            iconBackgroundColor = ContextCompat.getColor(context, R.color.wild_strawberry)
         ) {
             findNavController().navigate(R.id.action_homeFragment_to_albumListFragment)
         }
 
-        val artistsBinding = ItemMenuSmallCardBinding.bind(binding.includeArtists.root)
         setupMenuSmallButton(
-            binding = artistsBinding,
-            title = "Artistas",
+            binding = ItemMenuSmallCardBinding.bind(binding.includeArtists.root),
+            title = getString(R.string.title_artists),
             iconRes = R.drawable.ic_artists,
-            iconBackgroundColor = androidx.core.content.ContextCompat.getColor(
-                requireContext(),
-                R.color.bright_ube,
-            )
+            iconBackgroundColor = ContextCompat.getColor(context, R.color.bright_ube)
         ) {
             findNavController().navigate(R.id.action_homeFragment_to_musicianListFragment)
         }
 
-        val tracksBinding = ItemMenuSmallCardBinding.bind(binding.includeTracks.root)
         setupMenuSmallButton(
-            binding = tracksBinding,
-            title = "Tracks",
+            binding = ItemMenuSmallCardBinding.bind(binding.includeTracks.root),
+            title = getString(R.string.title_tracks),
             iconRes = R.drawable.ic_tracks,
-            iconBackgroundColor = androidx.core.content.ContextCompat.getColor(
-                requireContext(),
-                R.color.malibu,
-            )
+            iconBackgroundColor = ContextCompat.getColor(context, R.color.malibu)
         ) {
-            Toast.makeText(context, "Próximamente...", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, R.string.coming_soon, Toast.LENGTH_SHORT).show()
         }
 
-        val collectorsBinding = ItemMenuCardBinding.bind(binding.includeCollectors.root)
         setupMenuButton(
-            binding = collectorsBinding,
-            title = "Coleccionistas",
-            subtitle = "Comunidad de élite",
+            binding = ItemMenuCardBinding.bind(binding.includeCollectors.root),
+            title = getString(R.string.title_collectors),
+            subtitle = getString(R.string.subtitle_collectors),
             iconRes = R.drawable.ic_people,
-            iconBackgroundColor = androidx.core.content.ContextCompat.getColor(
-                requireContext(),
-                R.color.bright_ube,
-            )
+            iconBackgroundColor = ContextCompat.getColor(context, R.color.bright_ube)
         ) {
             findNavController().navigate(R.id.action_homeFragment_to_collectorListFragment)
         }
