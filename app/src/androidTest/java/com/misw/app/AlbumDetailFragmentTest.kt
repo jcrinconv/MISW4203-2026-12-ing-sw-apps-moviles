@@ -209,7 +209,7 @@ class AlbumDetailFragmentTest {
         )
 
         onView(withId(R.id.tvDescription)).check(matches(withText("")))
-        onView(withId(R.id.llTracksContainer)).check(matches(hasChildCount(0)))
+        onView(withId(R.id.rvTracksContainer)).check(matches(hasChildCount(0)))
     }
 
     @Test
