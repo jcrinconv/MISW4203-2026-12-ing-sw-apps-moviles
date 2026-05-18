@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
@@ -29,30 +30,15 @@ data class CollectorDetailItem(
 enum class DetailType { ALBUM, ARTIST }
 
 class CollectorDetailAdapter(private val onItemClick: (Int, DetailType) -> Unit) :
-    RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-
-    private var items: List<CollectorDetailItem> = emptyList()
+    ListAdapter<CollectorDetailItem, RecyclerView.ViewHolder>(CollectorDetailDiffCallback()) {
 
     companion object {
         const val VIEW_TYPE_ALBUM = 0
         const val VIEW_TYPE_ARTIST = 1
     }
 
-    fun setData(newItems: List<CollectorDetailItem>) {
-        val diffResult = DiffUtil.calculateDiff(object : DiffUtil.Callback() {
-            override fun getOldListSize() = items.size
-            override fun getNewListSize() = newItems.size
-            override fun areItemsTheSame(oldPos: Int, newPos: Int) =
-                items[oldPos].id == newItems[newPos].id && items[oldPos].type == newItems[newPos].type
-            override fun areContentsTheSame(oldPos: Int, newPos: Int) =
-                items[oldPos] == newItems[newPos]
-        })
-        items = newItems
-        diffResult.dispatchUpdatesTo(this)
-    }
-
     override fun getItemViewType(position: Int): Int {
-        return if (items[position].type == DetailType.ALBUM) VIEW_TYPE_ALBUM else VIEW_TYPE_ARTIST
+        return if (getItem(position).type == DetailType.ALBUM) VIEW_TYPE_ALBUM else VIEW_TYPE_ARTIST
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -70,15 +56,12 @@ class CollectorDetailAdapter(private val onItemClick: (Int, DetailType) -> Unit)
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        val item = items[position]
-        if (holder is AlbumViewHolder) {
-            holder.bind(item)
-        } else if (holder is ArtistViewHolder) {
-            holder.bind(item)
+        val item = getItem(position)
+        when (holder) {
+            is AlbumViewHolder -> holder.bind(item)
+            is ArtistViewHolder -> holder.bind(item)
         }
     }
-
-    override fun getItemCount(): Int = items.size
 
     inner class AlbumViewHolder(private val binding: ItemCollectorDetailCardBinding) :
         RecyclerView.ViewHolder(binding.root) {
@@ -124,7 +107,7 @@ class CollectorDetailAdapter(private val onItemClick: (Int, DetailType) -> Unit)
             if (item.imageUrl.isNotEmpty() && item.imageUrl.startsWith("http")) {
                 binding.ivArtistPlaceholder.visibility = View.GONE
                 binding.ivArtistImage.visibility = View.VISIBLE
-                
+
                 Glide.with(binding.ivArtistImage.context)
                     .load(item.imageUrl)
                     .listener(object : RequestListener<Drawable> {
@@ -161,6 +144,16 @@ class CollectorDetailAdapter(private val onItemClick: (Int, DetailType) -> Unit)
             binding.root.setOnClickListener {
                 onItemClick(item.id, item.type)
             }
+        }
+    }
+
+    class CollectorDetailDiffCallback : DiffUtil.ItemCallback<CollectorDetailItem>() {
+        override fun areItemsTheSame(oldItem: CollectorDetailItem, newItem: CollectorDetailItem): Boolean {
+            return oldItem.id == newItem.id && oldItem.type == newItem.type
+        }
+
+        override fun areContentsTheSame(oldItem: CollectorDetailItem, newItem: CollectorDetailItem): Boolean {
+            return oldItem == newItem
         }
     }
 }

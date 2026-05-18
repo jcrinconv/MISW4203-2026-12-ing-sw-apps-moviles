@@ -11,7 +11,7 @@ class CacheManager private constructor() {
     companion object {
         @Volatile
         private var instance: CacheManager? = null
-        fun getInstance(@Suppress("UNUSED_PARAMETER") context: Context) =
+        fun getInstance(context: Context) =
             instance ?: synchronized(this) {
                 instance ?: CacheManager().also {
                     instance = it
