@@ -24,7 +24,7 @@ class TrackAssociateViewModel(application: Application) : AndroidViewModel(appli
     val error: LiveData<String?> get() = _error
 
     fun areFieldsEmpty(trackName: String, minutos: String, segundos: String): Boolean {
-        return trackName.isBlank() and minutos.isBlank() and segundos.isBlank()
+        return trackName.isBlank() && minutos.isBlank() && segundos.isBlank()
     }
 
     fun isFormValid(trackName: String, minutos: String, segundos: String): Boolean {

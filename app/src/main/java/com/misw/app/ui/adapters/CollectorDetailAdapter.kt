@@ -88,10 +88,11 @@ class CollectorDetailAdapter(private val onItemClick: (Int, DetailType) -> Unit)
             val stars = listOf(
                 binding.star1, binding.star2, binding.star3, binding.star4, binding.star5
             )
+            val activeColor = ContextCompat.getColor(binding.root.context, R.color.wild_strawberry)
+            val inactiveColor = ContextCompat.getColor(binding.root.context, R.color.silver_chalice)
 
             stars.forEachIndexed { index, imageView ->
-                val colorId = if (index < rating) R.color.wild_strawberry else R.color.silver_chalice
-                imageView.setColorFilter(ContextCompat.getColor(binding.root.context, colorId))
+                imageView.setColorFilter(if (index < rating) activeColor else inactiveColor)
             }
         }
     }
