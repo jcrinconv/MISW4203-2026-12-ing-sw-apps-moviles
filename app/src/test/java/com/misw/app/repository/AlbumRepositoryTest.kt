@@ -1,10 +1,12 @@
-package com.misw.app.repository.album
+package com.misw.app.repository
 
 import com.misw.app.model.Album
 import com.misw.app.model.Track
 import com.misw.app.model.TrackRequest
 import com.misw.app.network.CacheManager
 import com.misw.app.network.album.AlbumRemoteDataSource
+import com.misw.app.repository.album.AlbumRepository
+import com.misw.app.repository.album.AlbumRepositoryImpl
 import kotlinx.coroutines.runBlocking
 import org.junit.Before
 import org.junit.Test

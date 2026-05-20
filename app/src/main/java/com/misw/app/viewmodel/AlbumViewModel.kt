@@ -18,7 +18,7 @@ class AlbumViewModel(application: Application) : AndroidViewModel(application) {
     private val _albums = MutableLiveData<List<Album>>()
     val albums: LiveData<List<Album>> get() = _albums
 
-    private val _query = MutableLiveData<String>("")
+    private val _query = MutableLiveData("")
     val query: LiveData<String> get() = _query
 
     private val _error = MutableLiveData<String?>()
