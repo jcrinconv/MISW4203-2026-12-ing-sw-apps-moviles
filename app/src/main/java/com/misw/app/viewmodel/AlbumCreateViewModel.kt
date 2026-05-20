@@ -53,6 +53,13 @@ class AlbumCreateViewModel(application: Application) : AndroidViewModel(applicat
     private val _recordLabelError = MutableLiveData<String?>()
     val recordLabelError: LiveData<String?> get() = _recordLabelError
 
+    fun areFieldsEmpty(
+        name: String, cover: String, description:String, day: String, monthIndex: Int, year: String, genreIndex: Int, recordLabelIndex: Int
+    ): Boolean {
+        return name.isBlank() and cover.isBlank() and description.isBlank() and
+                day.isBlank() and (monthIndex == 0) and year.isBlank() and (genreIndex == 0) and (recordLabelIndex == 0)
+    }
+
     fun createAlbum(
         name: String,
         cover: String,
@@ -63,9 +70,6 @@ class AlbumCreateViewModel(application: Application) : AndroidViewModel(applicat
         genre: String,
         recordLabel: String
     ) {
-        if (!validateFields(name, cover, description, day, monthIndex, year, genre, recordLabel)) {
-            return
-        }
 
         viewModelScope.launch {
             _isLoading.value = true
@@ -95,7 +99,7 @@ class AlbumCreateViewModel(application: Application) : AndroidViewModel(applicat
         }
     }
 
-    private fun validateFields(
+    fun validateFields(
         name: String,
         cover: String,
         description: String,

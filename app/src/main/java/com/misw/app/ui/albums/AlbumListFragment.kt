@@ -146,6 +146,8 @@ class AlbumListFragment : Fragment() {
     }
 
     private fun updateUIState(albums: List<*>, error: String?) {
+        if (viewModel.isLoading.value == true) return
+
         when {
             error != null -> {
                 binding.llEmptyState.visibility = View.VISIBLE
