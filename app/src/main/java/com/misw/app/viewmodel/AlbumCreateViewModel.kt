@@ -92,7 +92,7 @@ class AlbumCreateViewModel(application: Application) : AndroidViewModel(applicat
                 _isSuccess.value = true
             } catch (e: Exception) {
                 Log.e("AlbumCreateViewModel", "Error al crear el álbum", e.cause)
-                _error.value = "Error al crear el álbum"
+                _error.value = "Error al crear el álbum: ${e.message}"
             } finally {
                 _isLoading.value = false
             }
