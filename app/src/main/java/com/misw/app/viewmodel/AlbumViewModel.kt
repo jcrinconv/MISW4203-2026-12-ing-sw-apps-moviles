@@ -35,7 +35,7 @@ class AlbumViewModel(application: Application) : AndroidViewModel(application) {
         fetchAlbums()
     }
 
-    private fun fetchAlbums() {
+    fun fetchAlbums() {
         viewModelScope.launch {
             _isLoading.value = true
             _error.value = null

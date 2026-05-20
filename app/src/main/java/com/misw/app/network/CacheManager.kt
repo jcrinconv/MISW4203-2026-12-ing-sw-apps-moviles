@@ -42,6 +42,10 @@ class CacheManager private constructor() {
         return albums
     }
 
+    fun clearAlbums() {
+        albums = listOf()
+    }
+
     fun addMusicians(newMusicians: List<Musician>) {
         if (musicians.isEmpty()) {
             musicians = newMusicians

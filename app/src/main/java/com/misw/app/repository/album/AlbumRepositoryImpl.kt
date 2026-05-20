@@ -41,7 +41,10 @@ class AlbumRepositoryImpl(
     }
 
     override suspend fun createAlbum(album: AlbumRequest): Album {
-        return remoteDataSource.createAlbum(album)
+        val result = remoteDataSource.createAlbum(album)
+        // Clear albums cache to force refresh
+        CacheManager.getInstance(context).clearAlbums()
+        return result
     }
 
     override suspend fun addTrack(albumId: Int, track: TrackRequest): Track {
