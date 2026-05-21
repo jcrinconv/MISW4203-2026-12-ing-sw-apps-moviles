@@ -76,8 +76,13 @@ class MusicianDetailFragment : Fragment() {
 
         viewModel.musician.observe(viewLifecycleOwner) { musician ->
             binding.tvMusicianName.text = musician.name
-            binding.tvMusicianBirthDate.text = formatDate(musician.birthDate)
+            val formattedDate = formatDate(musician.birthDate)
+            binding.tvMusicianBirthDate.text = formattedDate
             binding.tvDescription.text = musician.description
+
+            val prizesText = viewModel.prizes.value?.joinToString(", ") { it.name } ?: ""
+            binding.llContent.getChildAt(0).contentDescription = 
+                "Artista: ${musician.name}. Fecha de nacimiento: $formattedDate. Premios: ${if(prizesText.isEmpty()) "Ninguno" else prizesText}"
 
             binding.shimmerLayout.startShimmer()
 
@@ -116,6 +121,15 @@ class MusicianDetailFragment : Fragment() {
         viewModel.prizes.observe(viewLifecycleOwner) { prizes ->
             val container = binding.flexPrizes
             container.removeAllViews()
+
+            val musician = viewModel.musician.value
+            val formattedDate = musician?.birthDate?.let { formatDate(it) } ?: ""
+            val prizesText = if (prizes.isEmpty()) "Ninguno" else prizes.joinToString(", ") { it.name }
+            
+            if (musician != null) {
+                binding.llContent.getChildAt(0).contentDescription = 
+                    "Artista: ${musician.name}. Fecha de nacimiento: $formattedDate. Premios: $prizesText"
+            }
 
             if (prizes.isEmpty()) {
                 val pillView = layoutInflater.inflate(
