@@ -32,8 +32,6 @@
     <string name="associate_button">ASOCIAR</string>
     <string name="associate_track_title">Asociar canción</string>
     <string name="associate_tracks_fab_desc">Asociar tracks</string>
-    <string name="associate_tracks_title">Asociar tracks al álbum</string>
-    <string name="back_button">Regresar</string>
     <string name="btn_create">CREAR</string>
     <string name="cancel_button">CANCELAR</string>
     <string name="favorite_albums">Álbumes\nfavoritos</string>
@@ -42,9 +40,6 @@
     <string name="hint_cover_url">https://ejemplo.com/imagen.jpg</string>
     <string name="hint_day">Día</string>
     <string name="hint_description">Cuéntanos más sobre este álbum…</string>
-    <string name="hint_genre">Género del álbum</string>
-    <string name="hint_month">Mes</string>
-    <string name="hint_record_label">Sello discográfico</string>
     <string name="hint_year">Año</string>
     <string name="info_catalog_desc">Esta canción será asociada directamente a la biblioteca editorial actual. Asegúrate de que los metadatos coincidan con la grabación maestra.</string>
     <string name="info_catalog_title">Información de catálogo</string>
@@ -56,12 +51,10 @@
     <string name="label_release_date">FECHA DE LANZAMIENTO</string>
     <string name="min_label">MIN</string>
     <string name="minutes_placeholder">mm</string>
-    <string name="new_album_title">Nuevo Álbum</string>
     <string name="search_album">Buscar álbum</string>
     <string name="seconds_placeholder">ss</string>
     <string name="seg_label">SEG</string>
     <string name="track_duration_label">DURACIÓN</string>
-    <string name="track_index_format">%02d</string>
     <string name="track_name_label">NOMBRE</string>
     <string name="track_name_placeholder">Nombre de la canción</string>
     <string name="track_number">%s</string>
