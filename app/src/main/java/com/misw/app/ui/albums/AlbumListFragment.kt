@@ -65,6 +65,11 @@ class AlbumListFragment : Fragment() {
         updateSortButtonsUI(true)
     }
 
+    override fun onResume() {
+        super.onResume()
+        viewModel.fetchAlbums()
+    }
+
     private fun setupControls() {
         binding.btnSortName.setOnClickListener {
             viewModel.setSortCriterion(SortCriterion.NAME)
