@@ -11,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import androidx.core.content.ContextCompat
+import androidx.core.graphics.toColorInt
 import androidx.core.view.MenuProvider
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
@@ -86,17 +87,17 @@ class AlbumListFragment : Fragment() {
     }
 
     private fun updateSortButtonsUI(isNameSelected: Boolean) {
-        val pink = ContextCompat.getColor(requireContext(), R.color.wild_strawberry)
+        val pink = ContextCompat.getColor(requireContext(), R.color.wild_strawberry_dark)
         val white = Color.WHITE
-        val gray = Color.GRAY
+        val lightGray = "#BBBBBB".toColorInt()
 
         binding.btnSortName.backgroundTintList =
             ColorStateList.valueOf(if (isNameSelected) pink else Color.TRANSPARENT)
-        binding.btnSortName.setTextColor(if (isNameSelected) white else gray)
+        binding.btnSortName.setTextColor(if (isNameSelected) white else lightGray)
 
         binding.btnSortDate.backgroundTintList =
             ColorStateList.valueOf(if (isNameSelected) Color.TRANSPARENT else pink)
-        binding.btnSortDate.setTextColor(if (isNameSelected) gray else white)
+        binding.btnSortDate.setTextColor(if (isNameSelected) lightGray else white)
     }
 
     private fun setupSearch() {

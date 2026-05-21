@@ -34,14 +34,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:textColor="@color/silver_chalice"
+                android:textColor="@color/white"
                 android:textSize="16sp"
                 tools:text="camilo.coleccionista@neon-nocturne.com" />
 
             <EditText
                 android:id="@+id/etSearch"
                 android:layout_width="match_parent"
-                android:layout_height="52dp"
+                android:layout_height="wrap_content"
+                android:minHeight="52dp"
+                android:paddingVertical="12dp"
                 android:layout_marginTop="50dp"
                 android:background="@drawable/search_background"
                 android:drawableStart="@drawable/ic_search"
@@ -60,10 +62,10 @@
                 android:layout_marginTop="24dp"
                 android:layout_marginBottom="12dp"
                 android:background="@color/background"
-                app:tabIndicatorColor="@color/wild_strawberry"
+                app:tabIndicatorColor="@color/white"
                 app:tabIndicatorHeight="3dp"
                 app:tabSelectedTextColor="@color/white"
-                app:tabTextColor="@color/silver_chalice">
+                app:tabTextColor="@color/white">
 
                 <com.google.android.material.tabs.TabItem
                     android:layout_width="wrap_content"
@@ -116,7 +118,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:textAlignment="center"
-                android:textColor="@color/silver_chalice"
+                android:textColor="@color/white"
                 android:textSize="16sp"
                 tools:text="No se encontraron álbumes" />
         </LinearLayout>

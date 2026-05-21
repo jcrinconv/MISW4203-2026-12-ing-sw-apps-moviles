@@ -3,9 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="12.dp"
-    app:cardBackgroundColor="#1E1E1E"
-    app:cardCornerRadius="12.dp"
+    android:layout_marginBottom="12dp"
+    app:cardBackgroundColor="#2A2A2A"
+    app:cardCornerRadius="12dp"
     app:cardElevation="0dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -36,7 +36,7 @@
             android:id="@+id/tvAlbumName"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16.dp"
+            android:layout_marginStart="16dp"
             android:textColor="@color/white"
             android:textSize="18sp"
             android:textStyle="bold"
@@ -46,21 +46,21 @@
 
         <ImageView
             android:id="@+id/icGenre"
-            android:layout_width="14dp"
-            android:layout_height="14dp"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
             android:layout_marginTop="4dp"
             android:src="@drawable/ic_category"
             android:importantForAccessibility="no"
             app:layout_constraintStart_toStartOf="@id/tvAlbumName"
             app:layout_constraintTop_toBottomOf="@id/tvAlbumName"
-            app:tint="@color/silver_chalice" />
+            app:tint="@color/white" />
 
         <TextView
             android:id="@+id/tvAlbumGenre"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="6.dp"
-            android:textColor="@color/silver_chalice"
+            android:layout_marginStart="6dp"
+            android:textColor="@color/white"
             android:textSize="14sp"
             app:layout_constraintBottom_toBottomOf="@id/icGenre"
             app:layout_constraintEnd_toEndOf="@id/tvAlbumName"
@@ -69,21 +69,21 @@
 
         <ImageView
             android:id="@+id/icDate"
-            android:layout_width="14dp"
-            android:layout_height="14dp"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
             android:layout_marginTop="4dp"
             android:src="@drawable/ic_calendar"
             android:importantForAccessibility="no"
             app:layout_constraintStart_toStartOf="@id/tvAlbumName"
             app:layout_constraintTop_toBottomOf="@id/icGenre"
-            app:tint="@color/silver_chalice" />
+            app:tint="@color/white" />
 
         <TextView
             android:id="@+id/tvAlbumDate"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="6.dp"
-            android:textColor="@color/silver_chalice"
+            android:layout_marginStart="6dp"
+            android:textColor="@color/white"
             android:textSize="14sp"
             app:layout_constraintBottom_toBottomOf="@id/icDate"
             app:layout_constraintEnd_toEndOf="@id/tvAlbumName"
@@ -99,6 +99,6 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:tint="@color/silver_chalice" />
+            app:tint="@color/white" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>
