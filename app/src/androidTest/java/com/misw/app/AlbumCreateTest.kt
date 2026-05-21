@@ -113,6 +113,8 @@ class AlbumCreateTest {
 
         onView(withId(R.id.btn_create)).perform(click())
 
+        onView(withText("Sí")).perform(click())
+
         // Check for searchBar to confirm we are back on the list screen
         onView(withId(R.id.searchBar)).check(matches(isDisplayed()))
     }
@@ -122,5 +124,101 @@ class AlbumCreateTest {
         onView(withId(R.id.btn_cancel)).perform(click())
         // Check for searchBar to confirm we are back on the list screen
         onView(withId(R.id.searchBar)).check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun testCancelModalIfFieldsNotEmpty() {
+        val albumName = faker.commerce().productName()
+
+        onView(withId(R.id.et_album_name)).perform(replaceText(albumName), closeSoftKeyboard())
+        onView(withId(R.id.et_cover_url)).perform(replaceText("https://picsum.photos/200"), closeSoftKeyboard())
+        onView(withId(R.id.et_day)).perform(replaceText("15"), closeSoftKeyboard())
+
+        onView(withId(R.id.spinner_month)).perform(click())
+        onData(allOf(`is`(instanceOf(String::class.java)), `is`("Mayo"))).perform(click())
+
+        onView(withId(R.id.et_year)).perform(replaceText("2023"), closeSoftKeyboard())
+        onView(withId(R.id.et_description)).perform(scrollTo(), replaceText(faker.lorem().paragraph()), closeSoftKeyboard())
+
+        onView(withId(R.id.btn_cancel)).perform(click())
+
+        onView(withText("¿Desea cancelar la creación del álbum?")).check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun testCancelModalNoSelected() {
+        val albumName = faker.commerce().productName()
+
+        onView(withId(R.id.et_album_name)).perform(replaceText(albumName), closeSoftKeyboard())
+
+        onView(withId(R.id.btn_cancel)).perform(click())
+
+        onView(withText("No")).perform(click())
+
+        onView(withText("Crear álbum")).check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun testCancelModalYesSelected() {
+        val albumName = faker.commerce().productName()
+
+        onView(withId(R.id.et_album_name)).perform(replaceText(albumName), closeSoftKeyboard())
+
+        onView(withId(R.id.btn_cancel)).perform(click())
+
+        onView(withText("Sí")).perform(click())
+
+        onView(withText("Álbumes")).check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun testAlbumListModalIfFieldsNotEmpty() {
+        val albumName = faker.commerce().productName()
+
+        onView(withId(R.id.et_album_name)).perform(replaceText(albumName), closeSoftKeyboard())
+        onView(withId(R.id.et_cover_url)).perform(replaceText("https://picsum.photos/200"), closeSoftKeyboard())
+        onView(withId(R.id.et_day)).perform(replaceText("15"), closeSoftKeyboard())
+
+        onView(withId(R.id.spinner_month)).perform(click())
+        onData(allOf(`is`(instanceOf(String::class.java)), `is`("Mayo"))).perform(click())
+
+        onView(withId(R.id.et_year)).perform(replaceText("2023"), closeSoftKeyboard())
+        onView(withId(R.id.et_description)).perform(scrollTo(), replaceText(faker.lorem().paragraph()), closeSoftKeyboard())
+
+        onView(withContentDescription(
+            androidx.appcompat.R.string.abc_action_bar_up_description
+        )).perform(click())
+
+        onView(withText("¿Desea volver al listado de álbumes?")).check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun testAlbumListModalNoSelected() {
+        val albumName = faker.commerce().productName()
+
+        onView(withId(R.id.et_album_name)).perform(replaceText(albumName), closeSoftKeyboard())
+
+        onView(withContentDescription(
+            androidx.appcompat.R.string.abc_action_bar_up_description
+        )).perform(click())
+
+        onView(withText("No")).perform(click())
+
+        onView(withText("Crear álbum")).check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun testAlbumListModalYesSelected() {
+        val albumName = faker.commerce().productName()
+
+        onView(withId(R.id.et_album_name)).perform(replaceText(albumName), closeSoftKeyboard())
+
+        onView(withContentDescription(
+            androidx.appcompat.R.string.abc_action_bar_up_description
+        )).perform(click())
+
+        onView(withText("Sí")).perform(click())
+
+        onView(withText("Álbumes")).check(matches(isDisplayed()))
     }
 }

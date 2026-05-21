@@ -31,10 +31,6 @@ class AlbumViewModel(application: Application) : AndroidViewModel(application) {
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> get() = _isLoading
 
-    init {
-        fetchAlbums()
-    }
-
     fun fetchAlbums() {
         viewModelScope.launch {
             _isLoading.value = true
