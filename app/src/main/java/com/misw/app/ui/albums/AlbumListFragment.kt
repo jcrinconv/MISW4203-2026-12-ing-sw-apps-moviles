@@ -139,8 +139,12 @@ class AlbumListFragment : Fragment() {
 
         viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
             binding.pbAlbumList.visibility = if (isLoading) View.VISIBLE else View.GONE
-            if (isLoading) {
-                binding.llEmptyState.visibility = View.GONE
+
+            if (!isLoading) {
+                updateUIState(
+                    viewModel.albums.value ?: emptyList<Any>(),
+                    viewModel.error.value
+                )
             }
         }
     }
