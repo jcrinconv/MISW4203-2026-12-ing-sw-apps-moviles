@@ -3,7 +3,6 @@ package com.misw.app.viewmodel
 import android.app.Application
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
-import com.misw.app.model.AlbumRequest
 import com.misw.app.repository.album.AlbumRepository
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
