@@ -61,7 +61,9 @@
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:importantForAccessibility="yes"
+                    android:focusable="true">
 
                     <TextView
                         android:id="@+id/tvMusicianName"
@@ -75,6 +77,7 @@
                         android:fontFamily="sans-serif-black"
                         android:gravity="center_vertical"
                         android:textColor="@color/white"
+                        android:importantForAccessibility="no"
                         app:layout_constraintBottom_toBottomOf="@id/shimmerLayout"
                         app:layout_constraintEnd_toStartOf="@id/shimmerLayout"
                         app:layout_constraintStart_toStartOf="parent"
@@ -87,7 +90,8 @@
                         android:layout_height="120dp"
                         android:background="@drawable/circle_shimmer"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent">
+                        app:layout_constraintTop_toTopOf="parent"
+                        android:importantForAccessibility="no">
 
                         <com.google.android.material.imageview.ShapeableImageView
                             android:id="@+id/ivMusicianImage"
@@ -95,6 +99,7 @@
                             android:layout_height="120dp"
                             android:scaleType="centerCrop"
                             app:shapeAppearanceOverlay="@style/CircleImageView"
+                            android:importantForAccessibility="no"
                             tools:src="@drawable/ic_artists" />
 
                     </com.facebook.shimmer.ShimmerFrameLayout>
@@ -105,6 +110,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
                         android:textSize="16sp"
+                        android:importantForAccessibility="no"
                         app:layout_constraintEnd_toEndOf="@id/shimmerLayout"
                         app:layout_constraintStart_toStartOf="@id/shimmerLayout"
                         app:layout_constraintTop_toBottomOf="@id/shimmerLayout"
@@ -154,7 +160,7 @@
                         android:id="@+id/cvSortContainer"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        app:cardBackgroundColor="#1A1919"
+                        app:cardBackgroundColor="#2A2A2A"
                         app:cardCornerRadius="24dp"
                         app:cardElevation="0dp"
                         app:layout_constraintBottom_toBottomOf="parent"
@@ -173,6 +179,7 @@
                                 style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
+                                android:minHeight="48dp"
                                 android:layout_weight="1"
                                 android:insetTop="0dp"
                                 android:insetBottom="0dp"
@@ -185,6 +192,7 @@
                                 style="@style/Widget.MaterialComponents.Button.TextButton"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
+                                android:minHeight="48dp"
                                 android:layout_weight="1"
                                 android:insetTop="0dp"
                                 android:insetBottom="0dp"

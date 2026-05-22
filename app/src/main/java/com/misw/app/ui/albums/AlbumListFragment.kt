@@ -11,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import androidx.core.content.ContextCompat
+import androidx.core.graphics.toColorInt
 import androidx.core.view.MenuProvider
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
@@ -28,7 +29,6 @@ class AlbumListFragment : Fragment() {
     private var _binding: FragmentAlbumListBinding? = null
     private val binding get() = _binding!!
     private lateinit var albumAdapter: AlbumAdapter
-    private var colorPink = 0
 
 
     override fun onCreateView(
@@ -54,8 +54,6 @@ class AlbumListFragment : Fragment() {
                 return false
             }
         }, viewLifecycleOwner)
-
-        colorPink = ContextCompat.getColor(requireContext(), R.color.wild_strawberry)
 
         setupRecyclerView()
         setupControls()
@@ -89,13 +87,17 @@ class AlbumListFragment : Fragment() {
     }
 
     private fun updateSortButtonsUI(isNameSelected: Boolean) {
+        val pink = ContextCompat.getColor(requireContext(), R.color.wild_strawberry_dark)
+        val white = Color.WHITE
+        val lightGray = "#BBBBBB".toColorInt()
+
         binding.btnSortName.backgroundTintList =
-            ColorStateList.valueOf(if (isNameSelected) colorPink else Color.TRANSPARENT)
-        binding.btnSortName.setTextColor(if (isNameSelected) Color.WHITE else Color.GRAY)
+            ColorStateList.valueOf(if (isNameSelected) pink else Color.TRANSPARENT)
+        binding.btnSortName.setTextColor(if (isNameSelected) white else lightGray)
 
         binding.btnSortDate.backgroundTintList =
-            ColorStateList.valueOf(if (isNameSelected) Color.TRANSPARENT else colorPink)
-        binding.btnSortDate.setTextColor(if (isNameSelected) Color.GRAY else Color.WHITE)
+            ColorStateList.valueOf(if (isNameSelected) Color.TRANSPARENT else pink)
+        binding.btnSortDate.setTextColor(if (isNameSelected) lightGray else white)
     }
 
     private fun setupSearch() {

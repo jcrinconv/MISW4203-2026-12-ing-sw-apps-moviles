@@ -71,10 +71,14 @@ class CollectorDetailAdapter(private val onItemClick: (Int, DetailType) -> Unit)
             binding.tvItemSubtitle.text = item.subtitle
             binding.tvItemDescription.text = item.description
 
+            binding.root.contentDescription = "${item.title}, ${item.subtitle}, ${item.description}, calificación ${item.rating} de 5 estrellas"
+
             Glide.with(binding.ivItemImage.context)
                 .load(item.imageUrl)
                 .placeholder(R.drawable.ic_album)
                 .into(binding.ivItemImage)
+
+            binding.ivItemImage.contentDescription = "Portada de ${item.title}"
 
             setupRating(item.rating)
 

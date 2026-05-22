@@ -18,6 +18,8 @@ class CollectorAdapter(private val onCollectorClick: (Int) -> Unit) :
             binding.tvCollectorName.text = collector.name
             binding.tvCollectorEmail.text = collector.email
 
+            binding.root.contentDescription = "Coleccionista: ${collector.name}, Correo: ${collector.email}"
+
             binding.root.setOnClickListener {
                 onCollectorClick(collector.id)
             }

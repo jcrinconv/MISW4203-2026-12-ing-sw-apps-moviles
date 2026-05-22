@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="8dp"
-    app:cardBackgroundColor="#1E1E1E"
+    app:cardBackgroundColor="#2A2A2A"
     app:cardCornerRadius="16dp"
     app:cardElevation="0dp">
 
@@ -30,7 +30,7 @@
             android:id="@+id/tvCollectorEmail"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:textColor="@color/silver_chalice"
+            android:textColor="@color/white"
             android:textSize="16sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@id/ivChevron"
@@ -46,7 +46,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:tint="#A0A0A0" />
+            app:tint="@color/white" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
