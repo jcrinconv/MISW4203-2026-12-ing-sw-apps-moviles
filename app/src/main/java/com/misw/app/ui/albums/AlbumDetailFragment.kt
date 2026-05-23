@@ -5,12 +5,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
@@ -18,7 +18,7 @@ import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.misw.app.R
 import com.misw.app.databinding.FragmentAlbumDetailBinding
-import com.misw.app.model.Track
+import com.misw.app.ui.adapters.TrackAdapter
 import com.misw.app.viewmodel.AlbumDetailViewModel
 import androidx.navigation.fragment.findNavController
 import kotlinx.coroutines.launch
@@ -27,9 +27,17 @@ import java.util.Locale
 
 class AlbumDetailFragment : Fragment() {
 
+    companion object {
+        private const val DATE_INPUT_PATTERN = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
+        private const val DATE_OUTPUT_PATTERN = "MMM d, yyyy"
+        private val inputFormat = SimpleDateFormat(DATE_INPUT_PATTERN, Locale.ROOT)
+        private val outputFormat = SimpleDateFormat(DATE_OUTPUT_PATTERN, Locale.forLanguageTag("es"))
+    }
+
     private val viewModel: AlbumDetailViewModel by viewModels()
     private var _binding: FragmentAlbumDetailBinding? = null
     private val binding get() = _binding!!
+    private lateinit var trackAdapter: TrackAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -40,6 +48,13 @@ class AlbumDetailFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        trackAdapter = TrackAdapter()
+        binding.rvTracksContainer.apply {
+            layoutManager = LinearLayoutManager(requireContext())
+            adapter = trackAdapter
+            setHasFixedSize(false)
+        }
 
         // Refresh album when returning from adding tracks
         lifecycleScope.launch {
@@ -100,8 +115,7 @@ class AlbumDetailFragment : Fragment() {
                 })
                 .into(binding.ivAlbumCover)
 
-            // Renderizado dinámico de tracks (estilo lista del diseño)
-            renderTracks(album.tracks)
+            trackAdapter.submitTracks(album.tracks)
         }
 
         val albumId = requireArguments().getInt("album_id")
@@ -168,24 +182,9 @@ class AlbumDetailFragment : Fragment() {
         }
     }
 
-    private fun renderTracks(tracks: List<Track>) {
-        binding.llTracksContainer.removeAllViews()
-        if (tracks.isNotEmpty()) {
-            tracks.forEachIndexed { index, track ->
-                val trackView = layoutInflater.inflate(R.layout.item_track, binding.llTracksContainer, false)
-                trackView.findViewById<TextView>(R.id.tvTrackNumber).text = getString(R.string.track_index_format, index + 1)
-                trackView.findViewById<TextView>(R.id.tvTrackName).text = track.name
-                trackView.findViewById<TextView>(R.id.tvTrackDuration).text = track.duration
-                binding.llTracksContainer.addView(trackView)
-            }
-        }
-    }
-
     private fun formatDate(dateString: String): String {
         return try {
-            val inputFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault())
-            val outputFormat = SimpleDateFormat("MMM d, yyyy", Locale.forLanguageTag("es"))
-            val date = inputFormat.parse((dateString))
+            val date = inputFormat.parse(dateString)
             val formatted = outputFormat.format(date!!)
             "Lanzado en ${formatted.replaceFirstChar { it.uppercase() }}"
         } catch (_: Exception) {

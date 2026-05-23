@@ -1,29 +1,19 @@
 package com.misw.app.network
 
-import android.content.Context
 import com.misw.app.model.Album
 import org.junit.Before
 import org.junit.Test
-import org.mockito.Mock
-import org.mockito.MockitoAnnotations
 
 class CacheManagerTest {
 
-    @Mock
-    private lateinit var mockContext: Context
-
     @Before
     fun setUp() {
-        MockitoAnnotations.openMocks(this)
-        // Clear singleton instance before each test
-        val field = CacheManager::class.java.getDeclaredField("instance")
-        field.isAccessible = true
-        field.set(null, null)
+        CacheManager.getInstance().clearCache()
     }
 
     @Test
     fun testAlbumDetailCaching() {
-        val cacheManager = CacheManager.getInstance(mockContext)
+        val cacheManager = CacheManager.getInstance()
 
         val testAlbum = Album(
             id = 1,
@@ -48,7 +38,7 @@ class CacheManagerTest {
 
     @Test
     fun testClearAlbumDetail() {
-        val cacheManager = CacheManager.getInstance(mockContext)
+        val cacheManager = CacheManager.getInstance()
 
         val testAlbum = Album(
             id = 1,
@@ -74,7 +64,7 @@ class CacheManagerTest {
 
     @Test
     fun testMultipleAlbumDetailsCached() {
-        val cacheManager = CacheManager.getInstance(mockContext)
+        val cacheManager = CacheManager.getInstance()
 
         val album1 = Album(
             id = 1,
@@ -116,7 +106,7 @@ class CacheManagerTest {
 
     @Test
     fun testClearNonExistentAlbumDetail() {
-        val cacheManager = CacheManager.getInstance(mockContext)
+        val cacheManager = CacheManager.getInstance()
 
         // Clear a detail that was never added
         cacheManager.clearAlbumDetail(999)
@@ -127,7 +117,7 @@ class CacheManagerTest {
 
     @Test
     fun testClearCacheClears() {
-        val cacheManager = CacheManager.getInstance(mockContext)
+        val cacheManager = CacheManager.getInstance()
 
         val testAlbum = Album(
             id = 1,
@@ -153,7 +143,7 @@ class CacheManagerTest {
 
     @Test
     fun testAlbumDetailPersistedAcrossMultipleCalls() {
-        val cacheManager = CacheManager.getInstance(mockContext)
+        val cacheManager = CacheManager.getInstance()
 
         val testAlbum = Album(
             id = 1,

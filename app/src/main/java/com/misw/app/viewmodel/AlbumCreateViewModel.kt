@@ -14,7 +14,7 @@ import java.util.Locale
 
 class AlbumCreateViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val repository: AlbumRepository = AlbumRepositoryImpl(application)
+    private val repository: AlbumRepository = AlbumRepositoryImpl()
 
     private val _genres = MutableLiveData<List<String>>().apply {
         value = com.misw.app.model.Genre.entries.map { it.displayName }

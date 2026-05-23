@@ -151,7 +151,7 @@ class CollectorDetailFragment : Fragment() {
             items.filter { it.title.contains(filter, ignoreCase = true) }
         }
 
-        detailAdapter.setData(filteredItems)
+        detailAdapter.submitList(filteredItems)
         showContentState(filteredItems.isEmpty(), filter, binding.tabLayout.selectedTabPosition)
     }
 

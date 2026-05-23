@@ -31,6 +31,11 @@ import java.util.Locale
 
 class MusicianDetailFragment : Fragment() {
 
+    companion object {
+        private val inputFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.ROOT)
+        private val outputFormat = SimpleDateFormat("MMM d, yyyy", Locale.forLanguageTag("es"))
+    }
+
     private val viewModel : MusicianDetailViewModel by viewModels()
     private lateinit var albumAdapter: AlbumAdapter
 
@@ -239,9 +244,7 @@ class MusicianDetailFragment : Fragment() {
 
     private fun formatDate(dateString: String): String {
         return try {
-            val inputFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault())
-            val outputFormat = SimpleDateFormat("MMM d, yyyy", Locale.forLanguageTag("es"))
-            val date = inputFormat.parse((dateString))
+            val date = inputFormat.parse(dateString)
             val formatted = outputFormat.format(date!!)
             formatted.replaceFirstChar { it.uppercase() }
         } catch (_: Exception) {

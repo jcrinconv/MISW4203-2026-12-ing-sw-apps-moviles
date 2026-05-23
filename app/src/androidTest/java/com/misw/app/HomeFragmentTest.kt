@@ -10,7 +10,6 @@ import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
-import androidx.test.platform.app.InstrumentationRegistry
 import com.github.javafaker.Faker
 import com.misw.app.network.CacheManager
 import com.misw.app.network.EspressoIdlingResource
@@ -44,7 +43,7 @@ class HomeFragmentTest {
     @Before
     fun setup() {
         // Limpiar caché para asegurar que se obtengan datos frescos del MockWebServer
-        CacheManager.getInstance(InstrumentationRegistry.getInstrumentation().targetContext).clearCache()
+        CacheManager.getInstance().clearCache()
 
         // Generar un nombre aleatorio razonable con Faker para evitar truncamiento en UI
         fakerGeneratedAlbumName = faker.lorem().characters(20)

@@ -11,9 +11,10 @@ import com.misw.app.repository.album.AlbumRepository
 import com.misw.app.repository.album.AlbumRepositoryImpl
 import kotlinx.coroutines.launch
 
-class AlbumDetailViewModel(application: Application) : AndroidViewModel(application) {
-
-    private val repository : AlbumRepository = AlbumRepositoryImpl(application)
+class AlbumDetailViewModel @JvmOverloads constructor(
+    application: Application,
+    private val repository: AlbumRepository = AlbumRepositoryImpl()
+) : AndroidViewModel(application) {
 
     private val _album = MutableLiveData<Album>()
     val album: LiveData<Album> get() = _album

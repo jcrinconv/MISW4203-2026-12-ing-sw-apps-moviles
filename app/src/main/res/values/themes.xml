@@ -30,16 +30,6 @@
         <item name="cornerSize">50%</item>
     </style>
 
-    <style name="SearchEditTextStyle">
-        <item name="android:background">@drawable/search_background</item>
-        <item name="android:paddingStart">16dp</item>
-        <item name="android:paddingEnd">16dp</item>
-        <item name="android:drawablePadding">12dp</item>
-        <item name="android:textColor">@color/white</item>
-        <item name="android:textColorHint">@color/silver_chalice</item>
-        <item name="android:textSize">16sp</item>
-    </style>
-
     <style name="LabelStyle">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>

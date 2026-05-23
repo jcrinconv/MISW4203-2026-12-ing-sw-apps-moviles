@@ -14,7 +14,7 @@ import kotlinx.coroutines.launch
 
 class CollectorViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val repository: CollectorRepository = CollectorRepositoryImpl(application)
+    private val repository: CollectorRepository = CollectorRepositoryImpl()
 
     private val _collectors = MutableLiveData<List<Collector>>()
     val collectors: LiveData<List<Collector>> get() = _collectors
@@ -22,7 +22,7 @@ class CollectorViewModel(application: Application) : AndroidViewModel(applicatio
     private val _collector = MutableLiveData<Collector?>()
     val collector: LiveData<Collector?> get() = _collector
 
-    private val _query = MutableLiveData<String>("")
+    private val _query = MutableLiveData("")
     val query: LiveData<String> get() = _query
 
     private val _error = MutableLiveData<String?>()
@@ -33,7 +33,7 @@ class CollectorViewModel(application: Application) : AndroidViewModel(applicatio
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> get() = _isLoading
 
-    private val _selectedTab = MutableLiveData<Int>(0)
+    private val _selectedTab = MutableLiveData(0)
     val selectedTab: LiveData<Int> get() = _selectedTab
 
     fun fetchCollectors() {

@@ -12,7 +12,7 @@ import kotlinx.coroutines.launch
 
 class TrackAssociateViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val repository = AlbumRepositoryImpl(application)
+    private val repository = AlbumRepositoryImpl()
 
     private val _associationSuccess = MutableLiveData<Boolean>()
     val associationSuccess: LiveData<Boolean> get() = _associationSuccess
@@ -24,7 +24,7 @@ class TrackAssociateViewModel(application: Application) : AndroidViewModel(appli
     val error: LiveData<String?> get() = _error
 
     fun areFieldsEmpty(trackName: String, minutos: String, segundos: String): Boolean {
-        return trackName.isBlank() and minutos.isBlank() and segundos.isBlank()
+        return trackName.isBlank() && minutos.isBlank() && segundos.isBlank()
     }
 
     fun isFormValid(trackName: String, minutos: String, segundos: String): Boolean {

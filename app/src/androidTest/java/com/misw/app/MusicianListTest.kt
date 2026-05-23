@@ -10,7 +10,6 @@ import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
-import androidx.test.platform.app.InstrumentationRegistry
 import com.misw.app.network.CacheManager
 import com.misw.app.network.EspressoIdlingResource
 import com.misw.app.network.RetrofitClient
@@ -42,7 +41,7 @@ class MusicianListTest {
         IdlingRegistry.getInstance().register(EspressoIdlingResource.countingIdlingResource)
         
         // Limpiar cache antes de cada test
-        CacheManager.getInstance(InstrumentationRegistry.getInstrumentation().targetContext).clearCache()
+        CacheManager.getInstance().clearCache()
     }
 
     @After
@@ -114,13 +113,15 @@ class MusicianListTest {
         """.trimIndent()
         navigateToMusicians(200, json)
 
-        // Inicial: Axl Rose primero
+        // Inicial: Axl Rose primero, Freddie Mercury segundo
         onView(withId(R.id.rvMusicians)).check(matches(atPosition(0, hasDescendant(withText("Axl Rose")))))
+        onView(withId(R.id.rvMusicians)).check(matches(atPosition(1, hasDescendant(withText("Freddie Mercury")))))
 
         onView(withId(R.id.btnSwapOrder)).perform(click())
 
-        // Después de toggle: Freddie Mercury primero
+        // Después de toggle: Freddie Mercury primero, Axl Rose segundo
         onView(withId(R.id.rvMusicians)).check(matches(atPosition(0, hasDescendant(withText("Freddie Mercury")))))
+        onView(withId(R.id.rvMusicians)).check(matches(atPosition(1, hasDescendant(withText("Axl Rose")))))
     }
 
     private fun atPosition(position: Int, itemMatcher: org.hamcrest.Matcher<View>): org.hamcrest.Matcher<View> {

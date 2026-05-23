@@ -12,7 +12,6 @@ import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
-import androidx.test.platform.app.InstrumentationRegistry
 import androidx.recyclerview.widget.RecyclerView
 import com.misw.app.network.CacheManager
 import com.misw.app.network.EspressoIdlingResource
@@ -40,7 +39,7 @@ class TrackAssociateTest {
 
     @Before
     fun setup() {
-        CacheManager.getInstance(InstrumentationRegistry.getInstrumentation().targetContext).clearCache()
+        CacheManager.getInstance().clearCache()
 
         val dispatcher = object : Dispatcher() {
             override fun dispatch(request: RecordedRequest): MockResponse {

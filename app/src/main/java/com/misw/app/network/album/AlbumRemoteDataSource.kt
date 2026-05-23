@@ -6,33 +6,33 @@ import com.misw.app.model.Track
 import com.misw.app.model.TrackRequest
 import com.misw.app.network.RetrofitClient
 
-class AlbumRemoteDataSource {
+open class AlbumRemoteDataSource {
 
     private val albumApiService: AlbumApiService by lazy {
         RetrofitClient.albumApiService
     }
 
-    suspend fun fetchAlbums(): List<Album> {
+    open suspend fun fetchAlbums(): List<Album> {
         return albumApiService.getAlbums()
     }
 
-    suspend fun fetchAlbumById(id: Int): Album {
+    open suspend fun fetchAlbumById(id: Int): Album {
         return albumApiService.getAlbumById(id)
     }
 
-    suspend fun createAlbum(album: AlbumRequest): Album {
+    open suspend fun createAlbum(album: AlbumRequest): Album {
         return albumApiService.createAlbum((album))
     }
 
-    suspend fun addTrack(albumId: Int, track: TrackRequest): Track {
+    open suspend fun addTrack(albumId: Int, track: TrackRequest): Track {
         return  albumApiService.addTrack(albumId, track)
     }
 
-    suspend fun fetchGenres(): List<String> {
+    open suspend fun fetchGenres(): List<String> {
         return albumApiService.getGenres()
     }
 
-    suspend fun fetchRecordLabels(): List<String> {
+    open suspend fun fetchRecordLabels(): List<String> {
         return albumApiService.getRecordLabels()
     }
 }

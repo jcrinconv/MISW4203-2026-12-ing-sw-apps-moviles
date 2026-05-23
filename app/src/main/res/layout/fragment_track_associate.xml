@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background"
     tools:context=".ui.albums.TrackAssociateFragment">
 
     <!-- Main Content -->
@@ -105,7 +104,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="16dp"
-                    android:text=":"
+                    android:text="@string/duration_separator"
                     android:textColor="@color/prize_pink_text"
                     android:textSize="28sp"
                     android:textStyle="bold" />
