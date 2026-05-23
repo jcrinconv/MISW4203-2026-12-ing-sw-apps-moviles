@@ -62,7 +62,7 @@ Antes de ejecutar las pruebas e2e, es importante mencionar que ellas están desa
 
 1. Abra el proyecto en Android Studio.
 
-2. Encienda el emulador.
+2. Encienda el emulador, preferiblemente con Cold Boot.
 
 3. Si es la primera vez que enciende el emulador, o no ha usado el teclado en él antes, ejecute la aplicación con el triángulo verde, vaya a un campo de texto (puede ser alguna barra de búsqueda, o un campo de los formularios), e intente escribir. Si le sale el aviso del stylus, dé click en la opción 'Cancel'. Esto lo debe hacer para que el aviso no interfiera con las pruebas.
 
