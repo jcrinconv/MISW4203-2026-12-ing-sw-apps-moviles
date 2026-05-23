@@ -28,7 +28,7 @@
                 android:fontFamily="sans-serif-medium"
                 android:letterSpacing="0.05"
                 android:text="@string/track_name_label"
-                android:textColor="@color/prize_pink_text"
+                android:textColor="@color/silver_chalice"
                 android:textSize="12sp" />
 
             <EditText
@@ -54,7 +54,7 @@
                 android:fontFamily="sans-serif-medium"
                 android:letterSpacing="0.05"
                 android:text="@string/track_duration_label"
-                android:textColor="@color/prize_pink_text"
+                android:textColor="@color/silver_chalice"
                 android:textSize="12sp" />
 
             <LinearLayout
