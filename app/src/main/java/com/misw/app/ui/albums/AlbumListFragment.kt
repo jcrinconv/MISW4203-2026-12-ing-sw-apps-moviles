@@ -4,9 +4,15 @@ import android.content.res.ColorStateList
 import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import androidx.core.content.ContextCompat
+import androidx.core.graphics.toColorInt
+import androidx.core.view.MenuProvider
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -35,12 +41,31 @@ class AlbumListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        requireActivity().addMenuProvider(object : MenuProvider {
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                menuInflater.inflate(R.menu.menu_album_list, menu)
+                val item = menu.findItem(R.id.action_create)
+                item.actionView?.findViewById<Button>(R.id.buttonCreate)?.setOnClickListener {
+                    findNavController().navigate(R.id.action_albumsListFragment_to_albumCreateFragment)
+                }
+            }
+
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                return false
+            }
+        }, viewLifecycleOwner)
+
         setupRecyclerView()
         setupControls()
         setupSearch()
         observeViewModel()
 
         updateSortButtonsUI(true)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.fetchAlbums()
     }
 
     private fun setupControls() {
@@ -62,17 +87,17 @@ class AlbumListFragment : Fragment() {
     }
 
     private fun updateSortButtonsUI(isNameSelected: Boolean) {
-        val pink = ContextCompat.getColor(requireContext(), R.color.wild_strawberry)
+        val pink = ContextCompat.getColor(requireContext(), R.color.wild_strawberry_dark)
         val white = Color.WHITE
-        val gray = Color.GRAY
+        val lightGray = "#BBBBBB".toColorInt()
 
         binding.btnSortName.backgroundTintList =
             ColorStateList.valueOf(if (isNameSelected) pink else Color.TRANSPARENT)
-        binding.btnSortName.setTextColor(if (isNameSelected) white else gray)
+        binding.btnSortName.setTextColor(if (isNameSelected) white else lightGray)
 
         binding.btnSortDate.backgroundTintList =
             ColorStateList.valueOf(if (isNameSelected) Color.TRANSPARENT else pink)
-        binding.btnSortDate.setTextColor(if (isNameSelected) gray else white)
+        binding.btnSortDate.setTextColor(if (isNameSelected) lightGray else white)
     }
 
     private fun setupSearch() {
@@ -115,13 +140,19 @@ class AlbumListFragment : Fragment() {
 
         viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
             binding.pbAlbumList.visibility = if (isLoading) View.VISIBLE else View.GONE
-            if (isLoading) {
-                binding.llEmptyState.visibility = View.GONE
+
+            if (!isLoading) {
+                updateUIState(
+                    viewModel.albums.value ?: emptyList<Any>(),
+                    viewModel.error.value
+                )
             }
         }
     }
 
     private fun updateUIState(albums: List<*>, error: String?) {
+        if (viewModel.isLoading.value == true) return
+
         when {
             error != null -> {
                 binding.llEmptyState.visibility = View.VISIBLE

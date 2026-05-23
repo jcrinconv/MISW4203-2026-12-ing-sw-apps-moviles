@@ -1,6 +1,7 @@
 package com.misw.app.network
 
 import com.misw.app.BuildConfig
+import com.misw.app.network.album.AlbumApiService
 import com.misw.app.network.musician.MusicianApiService
 import com.misw.app.network.collector.CollectorApiService
 import okhttp3.OkHttpClient
@@ -13,6 +14,9 @@ object RetrofitClient {
     fun setBaseUrl(url: String) {
         baseUrl = url
         _retrofit = null
+        _albumApiService = null
+        _musicianApiService = null
+        _collectorApiService = null
     }
 
     val okHttpClient: OkHttpClient by lazy {
@@ -38,9 +42,15 @@ object RetrofitClient {
                 .build().also { _retrofit = it }
         }
 
-    val albumApiService: AlbumApiService get() = retrofit.create(AlbumApiService::class.java)
+    private var _albumApiService: AlbumApiService? = null
+    val albumApiService: AlbumApiService
+        get() = _albumApiService ?: retrofit.create(AlbumApiService::class.java).also { _albumApiService = it }
 
-    val musicianApiService: MusicianApiService get() = retrofit.create(MusicianApiService::class.java)
+    private var _musicianApiService: MusicianApiService? = null
+    val musicianApiService: MusicianApiService
+        get() = _musicianApiService ?: retrofit.create(MusicianApiService::class.java).also { _musicianApiService = it }
 
-    val collectorApiService: CollectorApiService get() = retrofit.create(CollectorApiService::class.java)
+    private var _collectorApiService: CollectorApiService? = null
+    val collectorApiService: CollectorApiService
+        get() = _collectorApiService ?: retrofit.create(CollectorApiService::class.java).also { _collectorApiService = it }
 }

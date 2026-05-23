@@ -1,8 +1,8 @@
 package com.misw.app.network
 
-import android.content.Context
 import com.misw.app.model.Album
 import com.misw.app.model.Collector
+import com.misw.app.model.CollectorAlbum
 import com.misw.app.model.Musician
 import com.misw.app.model.PerformerPrize
 
@@ -10,7 +10,7 @@ class CacheManager private constructor() {
     companion object {
         @Volatile
         private var instance: CacheManager? = null
-        fun getInstance(@Suppress("UNUSED_PARAMETER") context: Context) =
+        fun getInstance() =
             instance ?: synchronized(this) {
                 instance ?: CacheManager().also {
                     instance = it
@@ -24,7 +24,12 @@ class CacheManager private constructor() {
 
     private val albumDetails = mutableMapOf<Int, Album>()
     private val musicianDetails = mutableMapOf<Int, Musician>()
+    private val collectorDetails = mutableMapOf<Int, Collector>()
+    private val collectorAlbums = mutableMapOf<Int, List<CollectorAlbum>>()
     private val performerPrizes = mutableMapOf<Int, List<PerformerPrize>>()
+
+    private var genres: List<String> = listOf()
+    private var recordLabels: List<String> = listOf()
 
     fun addAlbums(newAlbums: List<Album>) {
         if (albums.isEmpty()) {
@@ -34,6 +39,10 @@ class CacheManager private constructor() {
 
     fun getAlbums(): List<Album> {
         return albums
+    }
+
+    fun clearAlbums() {
+        albums = listOf()
     }
 
     fun addMusicians(newMusicians: List<Musician>) {
@@ -64,12 +73,32 @@ class CacheManager private constructor() {
         return albumDetails[id]
     }
 
+    fun clearAlbumDetail(id: Int) {
+        albumDetails.remove(id)
+    }
+
     fun addMusicianDetail(id: Int, musician: Musician) {
         musicianDetails[id] = musician
     }
 
     fun getMusicianDetail(id: Int): Musician? {
         return musicianDetails[id]
+    }
+
+    fun addCollectorDetail(id: Int, collector: Collector) {
+        collectorDetails[id] = collector
+    }
+
+    fun getCollectorDetail(id: Int): Collector? {
+        return collectorDetails[id]
+    }
+
+    fun addCollectorAlbums(id: Int, albums: List<CollectorAlbum>) {
+        collectorAlbums[id] = albums
+    }
+
+    fun getCollectorAlbums(id: Int): List<CollectorAlbum>? {
+        return collectorAlbums[id]
     }
 
     fun addPerformerPrizes(musicianId: Int, prizes: List<PerformerPrize>) {
@@ -80,12 +109,36 @@ class CacheManager private constructor() {
         return performerPrizes[musicianId]
     }
 
+    fun addGenres(newGenres: List<String>) {
+        if (genres.isEmpty()) {
+            genres = newGenres
+        }
+    }
+
+    fun getRecordLabels(): List<String> {
+        return recordLabels
+    }
+
+    fun addRecordLabels(newRecordLabels: List<String>) {
+        if (recordLabels.isEmpty()) {
+            recordLabels = newRecordLabels
+        }
+    }
+
+    fun getGenres(): List<String> {
+        return genres
+    }
+
     fun clearCache() {
         albums = listOf()
         musicians = listOf()
         collectors = listOf()
         albumDetails.clear()
         musicianDetails.clear()
+        collectorDetails.clear()
+        collectorAlbums.clear()
         performerPrizes.clear()
+        genres = listOf()
+        recordLabels = listOf()
     }
 }

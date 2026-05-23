@@ -7,13 +7,14 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.misw.app.model.Album
-import com.misw.app.repository.AlbumRepository
-import com.misw.app.repository.AlbumRepositoryImpl
+import com.misw.app.repository.album.AlbumRepository
+import com.misw.app.repository.album.AlbumRepositoryImpl
 import kotlinx.coroutines.launch
 
-class AlbumDetailViewModel(application: Application) : AndroidViewModel(application) {
-
-    private val repository : AlbumRepository = AlbumRepositoryImpl(application)
+class AlbumDetailViewModel @JvmOverloads constructor(
+    application: Application,
+    private val repository: AlbumRepository = AlbumRepositoryImpl()
+) : AndroidViewModel(application) {
 
     private val _album = MutableLiveData<Album>()
     val album: LiveData<Album> get() = _album
@@ -24,7 +25,10 @@ class AlbumDetailViewModel(application: Application) : AndroidViewModel(applicat
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> get() = _isLoading
 
+    private var currentAlbumId: Int? = null
+
     fun loadAlbum(id: Int) {
+        currentAlbumId = id
         viewModelScope.launch {
             _isLoading.value = true
             try {
@@ -36,5 +40,9 @@ class AlbumDetailViewModel(application: Application) : AndroidViewModel(applicat
                 _isLoading.value = false
             }
         }
+    }
+
+    fun refreshAlbum() {
+        currentAlbumId?.let { loadAlbum(it) }
     }
 }

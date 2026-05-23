@@ -10,7 +10,6 @@ import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
-import androidx.test.platform.app.InstrumentationRegistry
 import com.github.javafaker.Faker
 import com.misw.app.network.CacheManager
 import com.misw.app.network.EspressoIdlingResource
@@ -45,7 +44,7 @@ class CollectorListTest {
         IdlingRegistry.getInstance().register(EspressoIdlingResource.countingIdlingResource)
 
         // Limpiar cache para asegurar independencia de tests
-        CacheManager.getInstance(InstrumentationRegistry.getInstrumentation().targetContext).clearCache()
+        CacheManager.getInstance().clearCache()
 
         val initialCollectorsJson = """
             [
@@ -103,7 +102,7 @@ class CollectorListTest {
     fun testEmptyListFromServer() {
         androidx.test.espresso.Espresso.pressBack()
         // Limpiar cache para que el repositorio haga la peticion de red
-        CacheManager.getInstance(InstrumentationRegistry.getInstrumentation().targetContext).clearCache()
+        CacheManager.getInstance().clearCache()
         navigateToCollectors(200, "[]")
 
         onView(withId(R.id.llEmptyState)).check(matches(isDisplayed()))
@@ -115,7 +114,7 @@ class CollectorListTest {
     fun testServerError() {
         androidx.test.espresso.Espresso.pressBack()
         // Limpiar cache para que el repositorio haga la peticion de red
-        CacheManager.getInstance(InstrumentationRegistry.getInstrumentation().targetContext).clearCache()
+        CacheManager.getInstance().clearCache()
         navigateToCollectors(500, "Internal Server Error")
         
         onView(withId(R.id.llEmptyState)).check(matches(isDisplayed()))

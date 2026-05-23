@@ -241,9 +241,9 @@ class MusicianDetailFragmentTest {
 
         onView(isAssignableFrom(CoordinatorLayout::class.java)).perform(swipeUp())
 
-        // The recycler view will be visible but empty (height=0 with wrap_content and no items)
-        onView(withId(R.id.rvAlbums)).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
-        onView(withId(R.id.rvAlbums)).check(matches(hasChildCount(0)))
+        // The recycler view will not be visible but no albums layout will
+        onView(withId(R.id.llNoAlbumsState)).check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
+        onView(withId(R.id.rvAlbums)).check(matches(withEffectiveVisibility(Visibility.GONE)))
     }
 
     @Test
@@ -254,8 +254,8 @@ class MusicianDetailFragmentTest {
             RecyclerViewActions.actionOnItem<RecyclerView.ViewHolder>(hasDescendant(withText("Error Artist")), click())
         )
 
-        onView(withId(R.id.llEmptyState)).check(matches(isDisplayed()))
-        onView(withId(R.id.tvEmptyState)).check(matches(withText(R.string.error_loading_content)))
+        onView(withId(R.id.llErrorState)).check(matches(isDisplayed()))
+        onView(withId(R.id.tvErrorState)).check(matches(withText(R.string.error_loading_content)))
         onView(withId(R.id.nestedScrollView)).check(matches(withEffectiveVisibility(Visibility.GONE)))
     }
 }

@@ -26,7 +26,7 @@ Para ejecutar la aplicación localmente, siga las siguientes instrucciones:
 
 1. Encienda el backend. Si no lo tiene instalado, vaya a [Vinilos-Backend](https://github.com/Laurarestrepo03/Vinilos-Backend), descargue el proyecto y construya la imagen con Docker. Una vez construida, el back debería correr en el puerto 3000.
 
-    > ⚠️ ADVERTENCIA: Este backend NO es el mismo que [BackVinyls](https://github.com/TheSoftwareDesignLab/BackVynils), pues contiene un endpoint nuevo para los premios de un artista. Si desea consultar más detalles sobre los cambios implementados, vaya a los Pull Requests de Vinilos-Backend.
+    > ⚠️ ADVERTENCIA: Este backend NO es el mismo que [BackVinyls](https://github.com/TheSoftwareDesignLab/BackVynils), pues contiene endpoints nuevos. Si desea consultar más detalles sobre los cambios implementados, vaya a los Pull Requests de Vinilos-Backend.
 
 2. Abra el proyecto en Android Studio y asegúrese de tener un dispositivo de emulación corriendo. Para ello, diríjase a Device Manager.
 
@@ -36,7 +36,7 @@ Para ejecutar la aplicación localmente, siga las siguientes instrucciones:
 
 4. Listo! La aplicación ya debería estar corriendo en su emulador.
 
-    <img height="400" alt="image" src="https://github.com/user-attachments/assets/b2ce5d4f-b783-46e3-93ae-609764e3ac55" /> <p></p>
+    <img height="400" alt="image" src="https://github.com/user-attachments/assets/d3e6bf4b-2282-4378-9bde-af67ae57173e" /> <p></p>
 
 ### Ejecución con apk
 
@@ -62,11 +62,18 @@ Antes de ejecutar las pruebas e2e, es importante mencionar que ellas están desa
 
 1. Abra el proyecto en Android Studio.
 
-2. Diríjase a kotlin+java > com.misw.app (androidTest).
+2. Encienda el emulador, preferiblemente con Cold Boot.
 
-3. Dé click derecho en com.misw.app (androidTest) y seleccione la opción Run 'Tests' in 'com.misw.a...'
+3. Si es la primera vez que enciende el emulador, o no ha usado el teclado en él antes, ejecute la aplicación con el triángulo verde, vaya a un campo de texto (puede ser alguna barra de búsqueda, o un campo de los formularios), e intente escribir. Si le sale el aviso del stylus, dé click en la opción 'Cancel'. Esto lo debe hacer para que el aviso no interfiera con las pruebas.
+
+    <img height="300" alt="image" src="https://github.com/user-attachments/assets/95b2565d-3435-414e-b006-bd0a8ce2f4f6" />
+
+3. Diríjase a kotlin+java > com.misw.app (androidTest).
+
+4. Dé click derecho en com.misw.app (androidTest) y seleccione la opción Run 'Tests' in 'com.misw.a...'
     
-4. Listo, puede ver el resultado de las pruebas en la parte de abajo del IDE:
+5. Listo, puede ver el resultado de las pruebas en la parte de abajo del IDE:
 
-    <img height="200" alt="image" src="https://github.com/user-attachments/assets/75e457d5-410f-4011-a23f-f5ba29167138" />
+    <img height="300" alt="image" src="https://github.com/user-attachments/assets/3d3f4f02-1021-4f5d-befc-0932f146a289" />
+
 

@@ -15,7 +15,7 @@ import com.misw.app.repository.musician.MusicianRepositoryImpl
 
 class MusicianDetailViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val musicianRepository : MusicianRepository = MusicianRepositoryImpl(application)
+    private val musicianRepository : MusicianRepository = MusicianRepositoryImpl()
 
     private val _musician = MutableLiveData<Musician>()
     val musician: LiveData<Musician> get() = _musician
@@ -26,7 +26,7 @@ class MusicianDetailViewModel(application: Application) : AndroidViewModel(appli
     private val _albums = MutableLiveData<List<Album>>()
     val albums: LiveData<List<Album>> get() = _albums
 
-    private val _query = MutableLiveData<String>("")
+    private val _query = MutableLiveData("")
 
     private var originalAlbums: List<Album> = emptyList()
     private var currentSortCriterion = SortCriterion.NAME

@@ -7,18 +7,22 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.misw.app.R
 import com.misw.app.model.Collector
+import com.misw.app.network.EspressoIdlingResource
 import com.misw.app.repository.collector.CollectorRepository
 import com.misw.app.repository.collector.CollectorRepositoryImpl
 import kotlinx.coroutines.launch
 
 class CollectorViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val repository: CollectorRepository = CollectorRepositoryImpl(application)
+    private val repository: CollectorRepository = CollectorRepositoryImpl()
 
     private val _collectors = MutableLiveData<List<Collector>>()
     val collectors: LiveData<List<Collector>> get() = _collectors
 
-    private val _query = MutableLiveData<String>("")
+    private val _collector = MutableLiveData<Collector?>()
+    val collector: LiveData<Collector?> get() = _collector
+
+    private val _query = MutableLiveData("")
     val query: LiveData<String> get() = _query
 
     private val _error = MutableLiveData<String?>()
@@ -29,11 +33,11 @@ class CollectorViewModel(application: Application) : AndroidViewModel(applicatio
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> get() = _isLoading
 
-    init {
-        fetchCollectors()
-    }
+    private val _selectedTab = MutableLiveData(0)
+    val selectedTab: LiveData<Int> get() = _selectedTab
 
-    private fun fetchCollectors() {
+    fun fetchCollectors() {
+        EspressoIdlingResource.increment()
         viewModelScope.launch {
             _isLoading.value = true
             _error.value = null
@@ -46,6 +50,27 @@ class CollectorViewModel(application: Application) : AndroidViewModel(applicatio
                     getApplication<Application>().getString(R.string.error_loading_content)
             } finally {
                 _isLoading.value = false
+                EspressoIdlingResource.decrement()
+            }
+        }
+    }
+
+    fun fetchCollectorDetail(id: Int) {
+        EspressoIdlingResource.increment()
+        viewModelScope.launch {
+            _isLoading.value = true
+            _error.value = null
+            try {
+                val collectorResult = repository.getCollectorById(id)
+                val albumsResult = repository.getCollectorAlbums(id)
+
+                _collector.value = collectorResult.copy(collectorAlbums = albumsResult)
+            } catch (_: Exception) {
+                _error.value =
+                    getApplication<Application>().getString(R.string.error_loading_content)
+            } finally {
+                _isLoading.value = false
+                EspressoIdlingResource.decrement()
             }
         }
     }
@@ -53,6 +78,12 @@ class CollectorViewModel(application: Application) : AndroidViewModel(applicatio
     fun filterCollectors(text: String) {
         _query.value = text
         updateCollectorsList()
+    }
+
+    fun setSelectedTab(position: Int) {
+        if (_selectedTab.value != position) {
+            _selectedTab.value = position
+        }
     }
 
     private fun updateCollectorsList() {

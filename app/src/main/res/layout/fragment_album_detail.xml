@@ -91,7 +91,7 @@
                         android:id="@+id/tvRecordLabel"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/wild_strawberry"
+                        android:textColor="@color/wild_strawberry_dark"
                         android:textSize="16sp"
                         android:textStyle="bold"
                         tools:text="Midnight Records" />
@@ -126,7 +126,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
                     android:text="@string/see_more_label"
-                    android:textColor="@color/wild_strawberry"
+                    android:textColor="@color/wild_strawberry_dark"
                     android:textSize="16sp"
                     android:textStyle="bold"
                     android:visibility="gone"
@@ -144,7 +144,8 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal">
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
 
                         <TextView
                             android:layout_width="0dp"
@@ -161,16 +162,27 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
                             android:textColor="@android:color/darker_gray"
-                            android:textSize="17sp" />
+                            android:textSize="17sp"
+                            android:layout_marginEnd="12dp" />
+
+                        <ImageButton
+                            android:id="@+id/btnAssociateTracks"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:background="@drawable/bg_associate_button"
+                            android:contentDescription="@string/associate_tracks_fab_desc"
+                            android:scaleType="centerInside"
+                            android:src="@android:drawable/ic_input_add"
+                            app:tint="@color/prize_pink_text" />
 
                     </LinearLayout>
 
-                    <LinearLayout
-                        android:id="@+id/llTracksContainer"
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rvTracksContainer"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
-                        android:orientation="vertical" />
+                        android:nestedScrollingEnabled="false" />
 
                 </LinearLayout>
             </LinearLayout>

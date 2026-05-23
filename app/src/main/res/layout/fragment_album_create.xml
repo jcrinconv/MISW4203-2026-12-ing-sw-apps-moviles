@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.misw.app.viewmodel.AlbumCreateViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/background">
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:scrollbars="vertical"
+            android:scrollbarStyle="insideOverlay"
+            android:fadeScrollbars="false"
+            app:layout_constraintBottom_toTopOf="@id/ll_buttons"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="20dp">
+
+                <!-- Nombre -->
+                <TextView
+                    style="@style/LabelStyle"
+                    android:text="@string/label_name" />
+
+                <EditText
+                    android:id="@+id/et_album_name"
+                    style="@style/InputFieldStyle"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/hint_album_name"
+                    android:importantForAutofill="no"
+                    android:inputType="textCapWords" />
+
+                <TextView
+                    android:id="@+id/tv_error_name"
+                    style="@style/ErrorTextStyle"
+                    android:text="@{viewModel.nameError}"
+                    android:visibility="@{viewModel.nameError != null ? android.view.View.VISIBLE : android.view.View.GONE}" />
+
+                <!-- Portada URL -->
+                <TextView
+                    style="@style/LabelStyle"
+                    android:layout_marginTop="24dp"
+                    android:text="@string/label_cover" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_input_field"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp">
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:contentDescription="@null"
+                        android:src="@android:drawable/ic_menu_gallery"
+                        app:tint="@color/silver_chalice" />
+
+                    <EditText
+                        android:id="@+id/et_cover_url"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingVertical="16dp"
+                        android:background="@android:color/transparent"
+                        android:hint="@string/hint_cover_url"
+                        android:importantForAutofill="no"
+                        android:inputType="textUri"
+                        android:paddingStart="12dp"
+                        android:paddingEnd="12dp"
+                        android:textColor="@color/white"
+                        android:textColorHint="@color/silver_chalice" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/tv_error_cover"
+                    style="@style/ErrorTextStyle"
+                    android:text="@{viewModel.coverError}"
+                    android:visibility="@{viewModel.coverError != null ? android.view.View.VISIBLE : android.view.View.GONE}" />
+
+                <!-- Fecha de Lanzamiento -->
+                <TextView
+                    style="@style/LabelStyle"
+                    android:layout_marginTop="24dp"
+                    android:text="@string/label_release_date" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <EditText
+                        android:id="@+id/et_day"
+                        style="@style/InputFieldStyle"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:hint="@string/hint_day"
+                        android:importantForAutofill="no"
+                        android:inputType="number"
+                        android:maxLength="2" />
+
+                    <View
+                        android:layout_width="12dp"
+                        android:layout_height="1dp" />
+
+                    <Spinner
+                        android:id="@+id/spinner_month"
+                        style="@style/InputFieldStyle"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1.5"
+                        android:gravity="center"
+                        android:dropDownHeight="wrap_content" />
+
+                    <View
+                        android:layout_width="12dp"
+                        android:layout_height="1dp" />
+
+                    <EditText
+                        android:id="@+id/et_year"
+                        style="@style/InputFieldStyle"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:hint="@string/hint_year"
+                        android:importantForAutofill="no"
+                        android:inputType="number"
+                        android:maxLength="4" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/tv_error_date"
+                    style="@style/ErrorTextStyle"
+                    android:text="@{viewModel.dateError}"
+                    android:visibility="@{viewModel.dateError != null ? android.view.View.VISIBLE : android.view.View.GONE}" />
+
+                <!-- Descripción -->
+                <TextView
+                    style="@style/LabelStyle"
+                    android:layout_marginTop="24dp"
+                    android:text="@string/label_description" />
+
+                <EditText
+                    android:id="@+id/et_description"
+                    style="@style/InputFieldStyle"
+                    android:layout_height="wrap_content"
+                    android:minLines="5"
+                    android:gravity="top|start"
+                    android:hint="@string/hint_description"
+                    android:importantForAutofill="no"
+                    android:inputType="textMultiLine" />
+
+                <TextView
+                    android:id="@+id/tv_error_description"
+                    style="@style/ErrorTextStyle"
+                    android:text="@{viewModel.descriptionError}"
+                    android:visibility="@{viewModel.descriptionError != null ? android.view.View.VISIBLE : android.view.View.GONE}" />
+
+                <!-- Género -->
+                <TextView
+                    style="@style/LabelStyle"
+                    android:layout_marginTop="24dp"
+                    android:text="@string/label_genre" />
+
+                <Spinner
+                    android:id="@+id/spinner_genre"
+                    style="@style/InputFieldStyle"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_input_field"
+                    android:dropDownHeight="wrap_content" />
+
+                <TextView
+                    android:id="@+id/tv_error_genre"
+                    style="@style/ErrorTextStyle"
+                    android:text="@{viewModel.genreError}"
+                    android:visibility="@{viewModel.genreError != null ? android.view.View.VISIBLE : android.view.View.GONE}" />
+
+                <!-- Sello Discográfico -->
+                <TextView
+                    style="@style/LabelStyle"
+                    android:layout_marginTop="24dp"
+                    android:text="@string/label_record_label" />
+
+                <Spinner
+                    android:id="@+id/spinner_record_label"
+                    style="@style/InputFieldStyle"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_input_field"
+                    android:dropDownHeight="wrap_content" />
+
+                <TextView
+                    android:id="@+id/tv_error_record_label"
+                    style="@style/ErrorTextStyle"
+                    android:text="@{viewModel.recordLabelError}"
+                    android:visibility="@{viewModel.recordLabelError != null ? android.view.View.VISIBLE : android.view.View.GONE}" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp" />
+
+            </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
+
+        <!-- Buttons -->
+        <LinearLayout
+            android:id="@+id/ll_buttons"
+            style="?android:attr/buttonBarStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="20dp"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+            <Button
+                android:id="@+id/btn_cancel"
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:paddingVertical="16dp"
+                android:layout_marginEnd="12dp"
+                android:layout_weight="1"
+                android:background="@drawable/bg_cancel_button"
+                android:text="@string/cancel_button"
+                android:textColor="@color/white"
+                app:backgroundTint="@null" />
+
+            <Button
+                android:id="@+id/btn_create"
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:paddingVertical="16dp"
+                android:layout_weight="1.5"
+                android:background="@drawable/pill_create_button"
+                android:text="@string/btn_create"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                app:backgroundTint="@null" />
+        </LinearLayout>
+
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="@{viewModel.isLoading ? android.view.View.VISIBLE : android.view.View.GONE}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

@@ -31,6 +31,11 @@ import java.util.Locale
 
 class MusicianDetailFragment : Fragment() {
 
+    companion object {
+        private val inputFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.ROOT)
+        private val outputFormat = SimpleDateFormat("MMM d, yyyy", Locale.forLanguageTag("es"))
+    }
+
     private val viewModel : MusicianDetailViewModel by viewModels()
     private lateinit var albumAdapter: AlbumAdapter
 
@@ -57,7 +62,7 @@ class MusicianDetailFragment : Fragment() {
             binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
             if (isLoading) {
                 binding.nestedScrollView.visibility = View.GONE
-                binding.llEmptyState.visibility = View.GONE
+                binding.llErrorState.visibility = View.GONE
             } else if (viewModel.error.value == null) {
                 binding.nestedScrollView.visibility = View.VISIBLE
             }
@@ -65,19 +70,24 @@ class MusicianDetailFragment : Fragment() {
 
         viewModel.error.observe(viewLifecycleOwner) { error ->
             if (error != null) {
-                binding.llEmptyState.visibility = View.VISIBLE
+                binding.llErrorState.visibility = View.VISIBLE
                 binding.nestedScrollView.visibility = View.GONE
-                binding.tvEmptyState.text = getString(R.string.error_loading_content)
+                binding.tvErrorState.text = getString(R.string.error_loading_content)
             } else if (viewModel.isLoading.value == false) {
-                binding.llEmptyState.visibility = View.GONE
+                binding.llErrorState.visibility = View.GONE
                 binding.nestedScrollView.visibility = View.VISIBLE
             }
         }
 
         viewModel.musician.observe(viewLifecycleOwner) { musician ->
             binding.tvMusicianName.text = musician.name
-            binding.tvMusicianBirthDate.text = formatDate(musician.birthDate)
+            val formattedDate = formatDate(musician.birthDate)
+            binding.tvMusicianBirthDate.text = formattedDate
             binding.tvDescription.text = musician.description
+
+            val prizesText = viewModel.prizes.value?.joinToString(", ") { it.name } ?: ""
+            binding.llContent.getChildAt(0).contentDescription = 
+                "Artista: ${musician.name}. Fecha de nacimiento: $formattedDate. Premios: ${if(prizesText.isEmpty()) "Ninguno" else prizesText}"
 
             binding.shimmerLayout.startShimmer()
 
@@ -117,6 +127,15 @@ class MusicianDetailFragment : Fragment() {
             val container = binding.flexPrizes
             container.removeAllViews()
 
+            val musician = viewModel.musician.value
+            val formattedDate = musician?.birthDate?.let { formatDate(it) } ?: ""
+            val prizesText = if (prizes.isEmpty()) "Ninguno" else prizes.joinToString(", ") { it.name }
+            
+            if (musician != null) {
+                binding.llContent.getChildAt(0).contentDescription = 
+                    "Artista: ${musician.name}. Fecha de nacimiento: $formattedDate. Premios: $prizesText"
+            }
+
             if (prizes.isEmpty()) {
                 val pillView = layoutInflater.inflate(
                     R.layout.item_prize,
@@ -155,6 +174,13 @@ class MusicianDetailFragment : Fragment() {
 
         viewModel.albums.observe(viewLifecycleOwner) { albums ->
             albumAdapter.updateAlbums(albums)
+            if (albums.isEmpty()) {
+                binding.llNoAlbumsState.visibility = View.VISIBLE
+                binding.rvAlbums.visibility = View.GONE
+            } else {
+                binding.llNoAlbumsState.visibility = View.GONE
+                binding.rvAlbums.visibility = View.VISIBLE
+            }
         }
 
         val musicianId = arguments?.getInt("musician_id") ?: 100
@@ -176,6 +202,8 @@ class MusicianDetailFragment : Fragment() {
             viewModel.toggleSortOrder()
             binding.btnSwapOrder.ibSwapOrder.animate().rotationBy(180f).setDuration(300).start()
         }
+
+        updateSortButtonsUI(isNameSelected = true)
     }
 
     private fun updateSortButtonsUI(isNameSelected: Boolean) {
@@ -216,9 +244,7 @@ class MusicianDetailFragment : Fragment() {
 
     private fun formatDate(dateString: String): String {
         return try {
-            val inputFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault())
-            val outputFormat = SimpleDateFormat("MMM d, yyyy", Locale.forLanguageTag("es"))
-            val date = inputFormat.parse((dateString))
+            val date = inputFormat.parse(dateString)
             val formatted = outputFormat.format(date!!)
             formatted.replaceFirstChar { it.uppercase() }
         } catch (_: Exception) {

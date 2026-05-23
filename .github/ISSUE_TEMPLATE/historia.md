@@ -6,10 +6,10 @@ labels: 'historia'
 assignees: ''
 ---
 
-| Identificador | HUXX |
-| --------------|------|
-| **Nombre**                  |  |
-| **Descripción**             |  | 
-| **Criterios de aceptación** |  |
-|                             |  |
-| **Wireframe**               |  |
+| Identificador               | HUXX |
+|-----------------------------|------|
+| **Nombre**                  |      |
+| **Descripción**             |      | 
+| **Criterios de aceptación** |      |
+|                             |      |
+| **Wireframe**               |      |
