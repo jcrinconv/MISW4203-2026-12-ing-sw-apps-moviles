@@ -18,7 +18,9 @@
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_marginBottom="16dp"
+            android:scrollbars="vertical"
+            android:scrollbarStyle="insideOverlay"
+            android:fadeScrollbars="false"
             app:layout_constraintBottom_toTopOf="@id/ll_buttons"
             app:layout_constraintTop_toTopOf="parent">
 
